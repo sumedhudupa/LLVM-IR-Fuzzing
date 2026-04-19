@@ -1,0 +1,84 @@
+# ─────────────────────────────────────────────────────────────
+# Docker Compose – LLVM IR Fuzzing Pipeline
+# Source: CONTEXT.json → architecture.infrastructure
+#         CONTEXT.json → setup.run_steps
+# ─────────────────────────────────────────────────────────────
+version: "3.9"
+
+services:
+  # ── Ollama LLM backend ──────────────────────────────────────
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
+  # ── Backend: LLM Mutator & API ──────────────────────────────
+  backend:
+    build:
+      context: ./llm-mutator
+      dockerfile: Dockerfile
+    container_name: backend
+    depends_on:
+      - ollama
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - LLM_MODEL=${LLM_MODEL:-qwen2.5:1.5b}
+      - SEED_DIR=/data/seeds
+      - MUTANT_DIR=/data/mutants_llm
+      - GRAMMAR_DIR=/data/mutants_grammar
+      - VALID_DIR=/data/valid_mutants
+      - INVALID_DIR=/data/invalid_mutants
+      - LOGS_DIR=/data/logs
+    volumes:
+      - ./seeds:/data/seeds
+      - ./mutants_llm:/data/mutants_llm
+      - ./mutants_grammar:/data/mutants_grammar
+      - ./valid_mutants:/data/valid_mutants
+      - ./invalid_mutants:/data/invalid_mutants
+      - ./logs:/data/logs
+    restart: unless-stopped
+
+  # ── LLVM Tester: Validation & Differential Testing ──────────
+  llvm-tester:
+    build:
+      context: ./llvm-tester
+      dockerfile: Dockerfile
+    container_name: llvm-tester
+    depends_on:
+      - backend
+    environment:
+      - MUTANT_DIR=/data/mutants_llm
+      - GRAMMAR_DIR=/data/mutants_grammar
+      - VALID_DIR=/data/valid_mutants
+      - INVALID_DIR=/data/invalid_mutants
+      - LOGS_DIR=/data/logs
+    volumes:
+      - ./mutants_llm:/data/mutants_llm
+      - ./mutants_grammar:/data/mutants_grammar
+      - ./valid_mutants:/data/valid_mutants
+      - ./invalid_mutants:/data/invalid_mutants
+      - ./logs:/data/logs
+    restart: on-failure
+
+  # ── Frontend Dashboard ──────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=http://localhost:8000
+    container_name: frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  ollama_data:

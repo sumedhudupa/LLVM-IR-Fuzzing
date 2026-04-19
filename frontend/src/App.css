@@ -1,0 +1,302 @@
+/* ─────────────────────────────────────────────────────────────────────────── 
+   App.css – Global styles for LLVM IR Fuzzing Pipeline Dashboard
+   Design: dark mode, professional, monospace accents for IR content
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ── CSS Custom Properties ─────────────────────────────────────────────────── */
+:root {
+  --bg:         #0d1117;
+  --surface:    #161b22;
+  --surface-2:  #21262d;
+  --border:     #30363d;
+  --accent:     #58a6ff;
+  --accent-dim: #1f6feb;
+  --success:    #3fb950;
+  --warning:    #d29922;
+  --danger:     #f85149;
+  --text:       #e6edf3;
+  --text-muted: #8b949e;
+  --mono:       'JetBrains Mono', 'Courier New', monospace;
+  --sans:       'Inter', system-ui, sans-serif;
+  --radius:     8px;
+  --shadow:     0 4px 16px rgba(0,0,0,.4);
+}
+
+/* ── Reset ─────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── Layout ─────────────────────────────────────────────────────────────────── */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── Navbar ─────────────────────────────────────────────────────────────────── */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  height: 56px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: .02em;
+}
+
+.brand-icon { font-size: 1.3rem; }
+
+.navbar-nav {
+  display: flex;
+  gap: .25rem;
+}
+
+.nav-link {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: .35rem .75rem;
+  border-radius: var(--radius);
+  font-size: .9rem;
+  font-family: var(--sans);
+  transition: color .15s, background .15s;
+}
+.nav-link:hover  { color: var(--text); background: var(--surface-2); }
+.nav-link.active { color: var(--accent); background: var(--surface-2); font-weight: 600; }
+
+/* ── Main content ────────────────────────────────────────────────────────────── */
+.main-content {
+  flex: 1;
+  padding: 2rem 2.5rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ── Page sections ───────────────────────────────────────────────────────────── */
+.page { animation: fadeIn .2s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: .5rem;
+}
+
+/* ── Tables ──────────────────────────────────────────────────────────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .9rem;
+  margin-top: 1rem;
+}
+
+th, td {
+  padding: .6rem .85rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+th {
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: .78rem;
+  letter-spacing: .05em;
+}
+
+tr:hover td { background: var(--surface-2); transition: background .1s; }
+tr.valid  td:nth-child(2) { color: var(--success); }
+tr.invalid td:nth-child(2) { color: var(--danger); }
+tr.mismatch td:nth-child(4) { color: var(--warning); }
+
+/* ── Buttons ─────────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .45rem 1rem;
+  border-radius: var(--radius);
+  border: none;
+  font-family: var(--sans);
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .15s, transform .1s;
+}
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.btn.primary {
+  background: var(--accent-dim);
+  color: #fff;
+}
+.btn.primary:hover:not(:disabled) { background: var(--accent); }
+
+.btn.secondary {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn.secondary:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+
+/* ── Forms ───────────────────────────────────────────────────────────────────── */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  max-width: 480px;
+  background: var(--surface);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+}
+
+label {
+  font-size: .85rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
+
+select, input[type="number"] {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: .45rem .75rem;
+  font-size: .9rem;
+  font-family: var(--sans);
+  outline: none;
+  transition: border-color .15s;
+}
+select:focus, input:focus { border-color: var(--accent); }
+
+/* ── Status badges ───────────────────────────────────────────────────────────── */
+.status-badge {
+  display: inline-block;
+  padding: .45rem 1rem;
+  border-radius: var(--radius);
+  font-size: .88rem;
+  font-weight: 500;
+  margin-top: .5rem;
+}
+.status-badge.running { background: var(--surface-2); color: var(--text-muted); }
+.status-badge.done    { background: #1c3a2e; color: var(--success); }
+.status-badge.error   { background: #3d1f1f; color: var(--danger); }
+
+.status.error { color: var(--danger); margin-top: .5rem; }
+.empty { color: var(--text-muted); font-style: italic; margin-top: 1rem; }
+
+/* ── Progress bar ────────────────────────────────────────────────────────────── */
+.progress-bar-wrapper {
+  position: relative;
+  background: var(--surface-2);
+  border-radius: 999px;
+  height: 28px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+  transition: width .4s ease;
+  border-radius: 999px;
+}
+.progress-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .82rem;
+  font-weight: 600;
+  mix-blend-mode: difference;
+}
+
+/* ── Summary cards ───────────────────────────────────────────────────────────── */
+.summary-cards {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.card {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  box-shadow: var(--shadow);
+  transition: border-color .15s;
+}
+.card:hover { border-color: var(--accent); }
+.card-label { font-size: .78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
+.card-value { font-size: 1.8rem; font-weight: 700; color: var(--text); }
+
+/* ── Filter controls ─────────────────────────────────────────────────────────── */
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  background: var(--surface);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+}
+
+/* ── Code text ───────────────────────────────────────────────────────────────── */
+code {
+  font-family: var(--mono);
+  font-size: .85em;
+  background: var(--surface-2);
+  padding: .1em .35em;
+  border-radius: 4px;
+  color: var(--accent);
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .main-content { padding: 1rem 1.25rem; }
+  .summary-cards { flex-direction: column; }
+  .filter-controls { gap: .75rem; }
+  .navbar-brand span:last-child { display: none; }
+}
