@@ -11,19 +11,64 @@ export default function SeedList({ onGenerate }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const [uploading, setUploading] = useState(false);
+
+  const fetchSeeds = () => {
+    setLoading(true);
     getSeeds()
       .then((data) => setSeeds(data.seeds))
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchSeeds();
   }, []);
 
-  if (loading) return <p className="status">Loading seeds…</p>;
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    setUploading(true);
+    setError(null);
+    try {
+      // Import missing uploadSeed lazily or at top level. Let's assume we import it correctly.
+      // Wait, we need to import it properly at the top. Let's do it in another replace if needed.
+      const { uploadSeed } = await import("../api");
+      await uploadSeed(file);
+      fetchSeeds(); // reload seeds
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  if (loading && !uploading) return <p className="status">Loading seeds…</p>;
   if (error) return <p className="status error">Error: {error}</p>;
 
   return (
     <section className="page seed-list">
-      <h2>Seed IR Files</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h2>Seed IR Files</h2>
+        <div>
+          <input 
+            type="file" 
+            accept=".ll" 
+            id="seed-upload" 
+            style={{ display: 'none' }} 
+            onChange={handleFileUpload}
+            disabled={uploading}
+          />
+          <button 
+            className="btn secondary" 
+            onClick={() => document.getElementById("seed-upload").click()}
+            disabled={uploading}
+          >
+            {uploading ? "Uploading..." : "Upload Seed"}
+          </button>
+        </div>
+      </div>
       {seeds.length === 0 ? (
         <p className="empty">No seed files found in <code>seeds/</code>. Add <code>.ll</code> files to get started.</p>
       ) : (

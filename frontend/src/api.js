@@ -24,6 +24,22 @@ async function request(method, path, body = null) {
 // GET /api/v1/seeds
 export const getSeeds = () => request("GET", "/api/v1/seeds");
 
+// POST /api/v1/seeds/upload
+export const uploadSeed = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  
+  const res = await fetch(`${BASE_URL}/api/v1/seeds/upload`, {
+    method: "POST",
+    body: formData,
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(err.detail ?? `HTTP ${res.status}`);
+  }
+  return res.json();
+};
+
 // POST /api/v1/mutants/generate
 // body: { seed_name, mutator_type, count }
 export const generateMutants = (body) =>
@@ -33,6 +49,10 @@ export const generateMutants = (body) =>
 // body: { mutant_ids }
 export const validateMutants = (body) =>
   request("POST", "/api/v1/mutants/validate", body);
+
+// GET /api/v1/mutants/list
+export const listMutants = () =>
+  request("GET", "/api/v1/mutants/list");
 
 // POST /api/v1/differential/run
 // body: { baseline_opt, target_opt, max_mutants }
@@ -46,4 +66,20 @@ export const getDifferentialResults = () =>
 // GET /api/v1/differential/comparison
 export const getComparisonMetrics = () =>
   request("GET", "/api/v1/differential/comparison");
+
+// GET /api/v1/analysis/invalid-taxonomy
+export const getInvalidTaxonomy = () =>
+  request("GET", "/api/v1/analysis/invalid-taxonomy");
+
+// POST /api/v1/analysis/run-study
+export const runControlledStudy = (body) =>
+  request("POST", "/api/v1/analysis/run-study", body);
+
+// GET /api/v1/analysis/seed-sensitivity
+export const getSeedSensitivity = () =>
+  request("GET", "/api/v1/analysis/seed-sensitivity");
+
+// GET /api/v1/analysis/study-history
+export const getStudyHistory = () =>
+  request("GET", "/api/v1/analysis/study-history");
 
