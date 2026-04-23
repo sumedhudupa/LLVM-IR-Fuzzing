@@ -8,7 +8,7 @@ Source: CONTEXT.json → architecture.components[LLM Mutator Service]
         CONTEXT.json → database.tables[validity_logs]
 """
 import datetime
-from app.config import SEED_DIR
+from app.config import SEED_DIR, VALID_DIR, INVALID_DIR
 from app.models.mutants import (
     GenerateMutantsRequest,
     GenerateMutantsResponse,
@@ -100,3 +100,22 @@ class MutantService:
         model_results = [MutantValidationResult(**r) for r in results]
         
         return ValidateMutantsResponse(results=model_results)
+
+    # ── List Existing Mutants ───────────────────────────────────────────────
+
+    @staticmethod
+    async def list_mutants() -> dict:
+        """
+        Scan VALID_DIR and INVALID_DIR to return lists of mutant IDs.
+        Returns: {"valid": [mutant_ids], "invalid": [mutant_ids]}
+        """
+        valid_ids = []
+        invalid_ids = []
+
+        if VALID_DIR.exists():
+            valid_ids = sorted(p.stem for p in VALID_DIR.glob("*.ll"))
+
+        if INVALID_DIR.exists():
+            invalid_ids = sorted(p.stem for p in INVALID_DIR.glob("*.ll"))
+
+        return {"valid": valid_ids, "invalid": invalid_ids}

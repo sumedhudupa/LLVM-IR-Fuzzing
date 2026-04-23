@@ -13,7 +13,7 @@ Registers routers from app/routes/:
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes import seeds, mutants, differential
+from app.routes import seeds, mutants, differential, analysis
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -41,6 +41,7 @@ app.add_middleware(
 app.include_router(seeds.router)
 app.include_router(mutants.router)
 app.include_router(differential.router)
+app.include_router(analysis.router)
 
 logger.info("Registered routes: %s", [r.path for r in app.routes])
 

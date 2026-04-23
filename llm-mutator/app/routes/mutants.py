@@ -75,3 +75,20 @@ async def validate_mutants(body: ValidateMutantsRequest) -> ValidateMutantsRespo
         raise HTTPException(
             status_code=500, detail="llvm-as / opt command failed"
         ) from exc
+
+
+@router.get(
+    "/list",
+    summary="List all validated mutants in valid_mutants/ and invalid_mutants/",
+    response_model=dict,
+)
+async def list_mutants():
+    """
+    GET /api/v1/mutants/list
+    Returns lists of valid and invalid mutant IDs.
+    """
+    logger.info("list_mutants called")
+    try:
+        return await MutantService.list_mutants()
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc

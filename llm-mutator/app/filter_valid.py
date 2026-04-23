@@ -12,10 +12,27 @@ import re
 from pathlib import Path
 from typing import Literal
 
-from .config import MUTANT_DIR, GRAMMAR_DIR, VALID_DIR, INVALID_DIR, LOGS_DIR
+from .config import MUTANT_DIR, GRAMMAR_DIR, VALID_DIR, INVALID_DIR, LOGS_DIR, SEED_DIR
+from .utils.semantic_helpers import is_semantically_trivial
 
 
 ErrorType = Literal["syntax", "ssa", "type", "cfg", "undef", "other"] | None
+
+
+def _extract_seed_name(mutant_id: str) -> str | None:
+    """Extract seed name from mutant_id like 'seed_arith_llm_mut_0' -> 'seed_arith.ll'."""
+    # Remove _llm_ or _grammar_ suffix and everything after
+    import re
+    match = re.match(r'^(.+)_(llm|grammar)_mut_\d+$', mutant_id)
+    if match:
+        base = match.group(1)
+        # The base might have underscores from original filename
+        # Try common extensions
+        for ext in ['.ll', '']:
+            candidate = base + ext
+            if (SEED_DIR / candidate).exists():
+                return candidate
+    return None
 
 
 def _classify_error(stderr: str) -> ErrorType:
@@ -86,12 +103,22 @@ def validate_mutant(mutant_id: str, mutator_type: str = "llm") -> dict:
     if bc_path.exists():
         bc_path.unlink()
 
-    # 5. Prepare log entry
+    # 5. Check semantic equivalence if valid
+    is_trivial = False
+    if is_valid:
+        seed_name = _extract_seed_name(mutant_id)
+        if seed_name:
+            seed_path = SEED_DIR / seed_name
+            target_path = target_dir / ll_path.name
+            is_trivial = is_semantically_trivial(seed_path, target_path)
+
+    # 6. Prepare log entry
     log_entry = {
         "mutant_id": mutant_id,
         "is_valid": is_valid,
         "error_type": error_type,
         "verifier_output": verifier_output.strip(),
+        "trivial": is_trivial,
         "created_at": datetime.datetime.utcnow().isoformat() + "Z",
     }
 

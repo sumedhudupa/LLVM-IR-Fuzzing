@@ -44,3 +44,25 @@ class SeedService:
             )
 
         return SeedListResponse(seeds=seeds)
+
+    @staticmethod
+    async def upload_seed(filename: str, content: bytes) -> SeedFile:
+        """
+        Saves a newly uploaded seed .ll file into SEED_DIR.
+        """
+        if not SEED_DIR.exists():
+            SEED_DIR.mkdir(parents=True, exist_ok=True)
+            
+        file_path = SEED_DIR / filename
+        with open(file_path, "wb") as f:
+            f.write(content)
+            
+        stat = file_path.stat()
+        return SeedFile(
+            name=filename,
+            path=str(file_path.resolve()),
+            size_bytes=float(stat.st_size),
+            created_at=datetime.datetime.fromtimestamp(
+                stat.st_ctime, tz=datetime.timezone.utc
+            ).isoformat(),
+        )

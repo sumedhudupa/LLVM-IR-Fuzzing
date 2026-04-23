@@ -8,7 +8,16 @@ Source: CONTEXT.json → apis.endpoints[POST /api/v1/differential/run]
 from typing import Literal
 from pydantic import BaseModel, Field
 
-MismatchType = Literal["crash", "wrong_output", "missed_optimization", "unknown"] | None
+MismatchType = Literal[
+    "output_mismatch",
+    "runtime_crash",
+    "timeout",
+    "verification_error",
+    "compile_error",
+    "link_error",
+    "missing_main",
+    "unknown",
+] | None
 
 # ── Source: CONTEXT.json apis.endpoints[POST /api/v1/differential/run] ────────
 
@@ -17,6 +26,8 @@ class DifferentialRunRequest(BaseModel):
     baseline_opt: str = Field(default="-O0", description="e.g. -O0")
     target_opt:   str = Field(default="-O2", description="e.g. -O2")
     max_mutants:  int | None = Field(default=None, description="cap on mutants tested")
+    mutant_ids:   list[str] | None = Field(default=None, description="specific valid mutant IDs to test")
+    run_id:       str | None = Field(default=None, description="optional run identifier for deduplication")
 
 
 class DifferentialRunResponse(BaseModel):
@@ -37,6 +48,10 @@ class DifferentialResult(BaseModel):
     target_level:       str            # e.g. -O2
     is_mismatch:        bool
     mismatch_type:      MismatchType = None
+    mutator_type:       Literal["llm", "grammar", "unknown"] = "unknown"
+    execution_mode:     Literal["direct", "harness", "unknown"] = "unknown"
+    failure_stage:      str | None = None
+    harness_entry:      str | None = None
     runtime_ms_baseline: float | None = None
     runtime_ms_target:   float | None = None
     created_at:         str            # ISO 8601

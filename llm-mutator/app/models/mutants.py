@@ -44,6 +44,7 @@ class MutantValidationResult(BaseModel):
     is_valid: bool
     error_type: ErrorType = None
     verifier_output: str = ""
+    trivial: bool = False  # True if valid but semantically equivalent to seed
     created_at: str        # ISO 8601
 
 

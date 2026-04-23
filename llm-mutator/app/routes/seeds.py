@@ -38,3 +38,27 @@ async def list_seeds() -> SeedListResponse:
         raise HTTPException(status_code=404, detail="seeds directory not found") from exc
     except OSError as exc:
         raise HTTPException(status_code=500, detail="filesystem read error") from exc
+
+from fastapi import UploadFile, File
+from app.models.seeds import SeedFile
+
+@router.post(
+    "/upload",
+    response_model=SeedFile,
+    summary="Upload a new seed IR file",
+)
+async def upload_seed(file: UploadFile = File(...)) -> SeedFile:
+    """
+    POST /api/v1/seeds/upload
+    Receives a multipart/form-data file and writes it to SEED_DIR.
+    """
+    logger.info("upload_seed called for file: %s", file.filename)
+    if not file.filename.endswith(".ll"):
+        raise HTTPException(status_code=400, detail="Only .ll files are allowed.")
+    
+    content = await file.read()
+    try:
+        return await SeedService.upload_seed(file.filename, content)
+    except Exception as exc:
+        logger.error("Failed to upload seed: %s", exc)
+        raise HTTPException(status_code=500, detail="Failed to upload file") from exc

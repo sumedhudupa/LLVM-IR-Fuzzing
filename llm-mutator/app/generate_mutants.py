@@ -307,13 +307,14 @@ class LLMMutator:
             append_json_log(
                 RAW_MUTANTS_LOG,
                 {
-                    "id":           mutant_id,
-                    "seed_name":    seed_name,
-                    "mutator_type": "llm",
-                    "path": str(MUTANT_DIR / f"{mutant_id}.ll") if ok else "",
-                    "strategy":     strategy["name"],
-                    "status":       "generated" if ok else "failed",
-                    "created_at":   created_at,
+                    "id":              mutant_id,
+                    "seed_name":       seed_name,
+                    "mutator_type":    "llm",
+                    "path":            str(MUTANT_DIR / f"{mutant_id}.ll") if ok else "",
+                    "strategy":        strategy["name"],
+                    "seed_size_bytes": len(seed_ir.encode("utf-8")),
+                    "status":          "generated" if ok else "failed",
+                    "created_at":      created_at,
                 },
             )
 
@@ -467,13 +468,14 @@ class GrammarMutator:
             append_json_log(
                 RAW_MUTANTS_LOG,
                 {
-                    "id":           mutant_id,
-                    "seed_name":    seed_name,
-                    "mutator_type": "grammar",
-                    "path":         str(out_path),
-                    "strategy":     strat,
-                    "status":       "generated",
-                    "created_at":   datetime.datetime.utcnow().isoformat() + "Z",
+                    "id":              mutant_id,
+                    "seed_name":       seed_name,
+                    "mutator_type":    "grammar",
+                    "path":            str(out_path),
+                    "strategy":        strat,
+                    "seed_size_bytes": len(seed_ir.encode("utf-8")),
+                    "status":          "generated",
+                    "created_at":      datetime.datetime.utcnow().isoformat() + "Z",
                 },
             )
 
