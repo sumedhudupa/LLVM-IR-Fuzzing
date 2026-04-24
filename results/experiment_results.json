@@ -1,0 +1,265 @@
+{
+  "metadata": {
+    "timestamp": "2026-04-24 14:32:21",
+    "total_samples": 145,
+    "llm_samples": 45,
+    "grammar_samples": 50,
+    "random_samples": 50,
+    "valid_total": 92,
+    "runtime_s": 181.55298233032227
+  },
+  "validity_by_source": {
+    "llm": {
+      "total": 45,
+      "valid": 39,
+      "valid_pct": 86.66666666666667,
+      "interesting": 45,
+      "interesting_pct": 100.0
+    },
+    "grammar": {
+      "total": 50,
+      "valid": 45,
+      "valid_pct": 90.0,
+      "interesting": 27,
+      "interesting_pct": 54.0
+    },
+    "random": {
+      "total": 50,
+      "valid": 8,
+      "valid_pct": 16.0,
+      "interesting": 7,
+      "interesting_pct": 14.0
+    }
+  },
+  "error_distribution": {
+    "broken_control_flow": {
+      "count": 29,
+      "pct": 27.61904761904762,
+      "example_errors": [
+        "Block 'entry' does not end with a terminator. Last: ']'",
+        "Block 'entry': instruction after terminator at position 0"
+      ]
+    },
+    "syntax_error": {
+      "count": 27,
+      "pct": 25.714285714285715,
+      "example_errors": [
+        "No function definition found (expected 'define <type> @<name>(...)')"
+      ]
+    },
+    "missing_terminator": {
+      "count": 22,
+      "pct": 20.952380952380953,
+      "example_errors": [
+        "Block 'entry' does not end with a terminator. Last: ']'",
+        "Block 'entry': instruction after terminator at position 0"
+      ]
+    },
+    "invalid_phi": {
+      "count": 11,
+      "pct": 10.476190476190476,
+      "example_errors": [
+        "Block 'positive': instruction after terminator at position 1",
+        "Block 'positive': instruction after terminator at position 2"
+      ]
+    },
+    "ssa_violation": {
+      "count": 10,
+      "pct": 9.523809523809524,
+      "example_errors": [
+        "SSA violation: '%cmp1' defined at line 4 and previously at line 3",
+        "LLVM verifier error: LLVM IR parsing error\n<string>:4:3: error: multiple definition of local value named 'cmp1'\n  %cmp1 = icmp sgt i32 %x, 0\n  ^\n"
+      ]
+    },
+    "unknown": {
+      "count": 4,
+      "pct": 3.8095238095238093,
+      "example_errors": [
+        "LLVM verifier error: LLVM IR parsing error\n<string>:3:11: error: use of undefined value '%result'\n  ret i32 %result\n          ^\n"
+      ]
+    },
+    "type_mismatch": {
+      "count": 2,
+      "pct": 1.9047619047619047,
+      "example_errors": [
+        "LLVM verifier error: LLVM IR parsing error\n<string>:8:10: error: integer constant must have integer type\nbr label 0\n         ^\n"
+      ]
+    }
+  },
+  "mutation_effectiveness": {
+    "from_scratch": {
+      "total": 15,
+      "valid": 13,
+      "valid_pct": 86.66666666666667,
+      "interesting": 15,
+      "interesting_pct": 100.0,
+      "avg_time_s": 7.724761962890625e-06
+    },
+    "mutation": {
+      "total": 15,
+      "valid": 11,
+      "valid_pct": 73.33333333333333,
+      "interesting": 15,
+      "interesting_pct": 100.0,
+      "avg_time_s": 5.7220458984375e-06
+    },
+    "refinement": {
+      "total": 15,
+      "valid": 15,
+      "valid_pct": 100.0,
+      "interesting": 15,
+      "interesting_pct": 100.0,
+      "avg_time_s": 6.532669067382812e-06
+    },
+    "grammar_swap_operands": {
+      "total": 7,
+      "valid": 7,
+      "valid_pct": 100.0,
+      "interesting": 4,
+      "interesting_pct": 57.142857142857146,
+      "avg_time_s": 0.0008836133139474052
+    },
+    "grammar_change_constant": {
+      "total": 5,
+      "valid": 4,
+      "valid_pct": 80.0,
+      "interesting": 2,
+      "interesting_pct": 40.0,
+      "avg_time_s": 6.780624389648437e-05
+    },
+    "grammar_toggle_overflow_flag": {
+      "total": 10,
+      "valid": 8,
+      "valid_pct": 80.0,
+      "interesting": 6,
+      "interesting_pct": 60.0,
+      "avg_time_s": 3.063678741455078e-05
+    },
+    "grammar_swap_branch_targets": {
+      "total": 3,
+      "valid": 3,
+      "valid_pct": 100.0,
+      "interesting": 2,
+      "interesting_pct": 66.66666666666667,
+      "avg_time_s": 8.074442545572917e-05
+    },
+    "grammar_duplicate_instruction": {
+      "total": 5,
+      "valid": 5,
+      "valid_pct": 100.0,
+      "interesting": 1,
+      "interesting_pct": 20.0,
+      "avg_time_s": 4.191398620605469e-05
+    },
+    "grammar_add_nsw_nuw": {
+      "total": 7,
+      "valid": 7,
+      "valid_pct": 100.0,
+      "interesting": 6,
+      "interesting_pct": 85.71428571428571,
+      "avg_time_s": 1.6450881958007812e-05
+    },
+    "grammar_replace_binop": {
+      "total": 2,
+      "valid": 2,
+      "valid_pct": 100.0,
+      "interesting": 1,
+      "interesting_pct": 50.0,
+      "avg_time_s": 0.0002071857452392578
+    },
+    "grammar_remove_nsw_nuw": {
+      "total": 5,
+      "valid": 4,
+      "valid_pct": 80.0,
+      "interesting": 2,
+      "interesting_pct": 40.0,
+      "avg_time_s": 3.1948089599609376e-06
+    },
+    "grammar_change_icmp_pred": {
+      "total": 3,
+      "valid": 3,
+      "valid_pct": 100.0,
+      "interesting": 2,
+      "interesting_pct": 66.66666666666667,
+      "avg_time_s": 3.8782755533854164e-05
+    },
+    "grammar_insert_dead_code": {
+      "total": 3,
+      "valid": 2,
+      "valid_pct": 66.66666666666667,
+      "interesting": 1,
+      "interesting_pct": 33.333333333333336,
+      "avg_time_s": 1.5497207641601562e-05
+    },
+    "random_random_char_flip": {
+      "total": 9,
+      "valid": 0,
+      "valid_pct": 0.0,
+      "interesting": 0,
+      "interesting_pct": 0.0,
+      "avg_time_s": 9.139378865559896e-06
+    },
+    "random_random_line_duplicate": {
+      "total": 11,
+      "valid": 2,
+      "valid_pct": 18.181818181818183,
+      "interesting": 2,
+      "interesting_pct": 18.181818181818183,
+      "avg_time_s": 5.5053017356178975e-06
+    },
+    "random_random_line_delete": {
+      "total": 13,
+      "valid": 2,
+      "valid_pct": 15.384615384615385,
+      "interesting": 2,
+      "interesting_pct": 15.384615384615385,
+      "avg_time_s": 5.080149723933293e-06
+    },
+    "random_random_word_replace": {
+      "total": 9,
+      "valid": 0,
+      "valid_pct": 0.0,
+      "interesting": 0,
+      "interesting_pct": 0.0,
+      "avg_time_s": 8.371141221788195e-06
+    },
+    "random_random_line_swap": {
+      "total": 8,
+      "valid": 4,
+      "valid_pct": 50.0,
+      "interesting": 3,
+      "interesting_pct": 37.5,
+      "avg_time_s": 1.6450881958007812e-05
+    }
+  },
+  "semantic_interest": {
+    "total_valid": 92,
+    "interesting": 73,
+    "interesting_pct": 79.34782608695652,
+    "trivial": 19,
+    "interesting_feature_dist": {
+      "num_blocks": 73,
+      "num_instructions": 73,
+      "has_phi": 71,
+      "has_branch": 71,
+      "has_memory_ops": 6,
+      "num_phi_nodes": 71,
+      "num_branches": 71,
+      "has_float": 15,
+      "has_nsw_nuw": 29,
+      "has_select": 1
+    },
+    "trivial_feature_dist": {
+      "num_blocks": 19,
+      "num_instructions": 19,
+      "has_nsw_nuw": 7,
+      "has_memory_ops": 4,
+      "has_select": 4
+    }
+  },
+  "summary_stats": {
+    "llm_stats": "\n=== IR Generation Statistics ===\nTotal generated: 45\nValid IR: 39 (86.7%)\nInteresting (non-trivial): 45 (100.0%)\nInvalid: 6 (13.3%)\n\nError Breakdown:\n  missing_terminator: 6 (100.0% of invalid)\n  broken_control_flow: 6 (100.0% of invalid)\n",
+    "grammar_stats": "\n=== IR Generation Statistics ===\nTotal generated: 50\nValid IR: 45 (90.0%)\nInteresting (non-trivial): 27 (54.0%)\nInvalid: 5 (10.0%)\n\nError Breakdown:\n  missing_terminator: 5 (100.0% of invalid)\n  broken_control_flow: 5 (100.0% of invalid)\n",
+    "random_stats": "\n=== IR Generation Statistics ===\nTotal generated: 50\nValid IR: 8 (16.0%)\nInteresting (non-trivial): 7 (14.0%)\nInvalid: 42 (84.0%)\n\nError Breakdown:\n  syntax_error: 27 (64.3% of invalid)\n  broken_control_flow: 18 (42.9% of invalid)\n  missing_terminator: 11 (26.2% of invalid)\n  invalid_phi: 11 (26.2% of invalid)\n  ssa_violation: 10 (23.8% of invalid)\n  unknown: 4 (9.5% of invalid)\n  type_mismatch: 2 (4.8% of invalid)\n"
+  }
+}
