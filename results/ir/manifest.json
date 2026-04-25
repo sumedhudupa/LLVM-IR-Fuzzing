@@ -1,0 +1,1017 @@
+[
+  {
+    "file": "ir\\valid\\001_llm_from_scratch_aa93c0e2.ll",
+    "source": "llm",
+    "mutation_type": "from_scratch",
+    "is_valid": true,
+    "hash": "aa93c0e2"
+  },
+  {
+    "file": "ir\\valid\\002_llm_from_scratch_6f6eff96.ll",
+    "source": "llm",
+    "mutation_type": "from_scratch",
+    "is_valid": true,
+    "hash": "6f6eff96"
+  },
+  {
+    "file": "ir\\valid\\003_llm_from_scratch_635963a1.ll",
+    "source": "llm",
+    "mutation_type": "from_scratch",
+    "is_valid": true,
+    "hash": "635963a1"
+  },
+  {
+    "file": "ir\\valid\\004_llm_from_scratch_6f05f56b.ll",
+    "source": "llm",
+    "mutation_type": "from_scratch",
+    "is_valid": true,
+    "hash": "6f05f56b"
+  },
+  {
+    "file": "ir\\valid\\005_llm_from_scratch_c70ade75.ll",
+    "source": "llm",
+    "mutation_type": "from_scratch",
+    "is_valid": true,
+    "hash": "c70ade75"
+  },
+  {
+    "file": "ir\\valid\\006_llm_from_scratch_fe5f8e24.ll",
+    "source": "llm",
+    "mutation_type": "from_scratch",
+    "is_valid": true,
+    "hash": "fe5f8e24"
+  },
+  {
+    "file": "ir\\invalid\\007_llm_from_scratch_88430580.ll",
+    "source": "llm",
+    "mutation_type": "from_scratch",
+    "is_valid": false,
+    "hash": "88430580"
+  },
+  {
+    "file": "ir\\valid\\008_llm_from_scratch_6bd99486.ll",
+    "source": "llm",
+    "mutation_type": "from_scratch",
+    "is_valid": true,
+    "hash": "6bd99486"
+  },
+  {
+    "file": "ir\\valid\\009_llm_from_scratch_b774784c.ll",
+    "source": "llm",
+    "mutation_type": "from_scratch",
+    "is_valid": true,
+    "hash": "b774784c"
+  },
+  {
+    "file": "ir\\valid\\010_llm_from_scratch_ac596bcc.ll",
+    "source": "llm",
+    "mutation_type": "from_scratch",
+    "is_valid": true,
+    "hash": "ac596bcc"
+  },
+  {
+    "file": "ir\\invalid\\011_llm_from_scratch_b5d4d4af.ll",
+    "source": "llm",
+    "mutation_type": "from_scratch",
+    "is_valid": false,
+    "hash": "b5d4d4af"
+  },
+  {
+    "file": "ir\\valid\\012_llm_from_scratch_57c43c9c.ll",
+    "source": "llm",
+    "mutation_type": "from_scratch",
+    "is_valid": true,
+    "hash": "57c43c9c"
+  },
+  {
+    "file": "ir\\invalid\\013_llm_from_scratch_21dbffba.ll",
+    "source": "llm",
+    "mutation_type": "from_scratch",
+    "is_valid": false,
+    "hash": "21dbffba"
+  },
+  {
+    "file": "ir\\invalid\\014_llm_from_scratch_b8783918.ll",
+    "source": "llm",
+    "mutation_type": "from_scratch",
+    "is_valid": false,
+    "hash": "b8783918"
+  },
+  {
+    "file": "ir\\valid\\015_llm_from_scratch_f53c26a1.ll",
+    "source": "llm",
+    "mutation_type": "from_scratch",
+    "is_valid": true,
+    "hash": "f53c26a1"
+  },
+  {
+    "file": "ir\\valid\\016_llm_mutation_9cbe130a.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "is_valid": true,
+    "hash": "9cbe130a"
+  },
+  {
+    "file": "ir\\valid\\017_llm_mutation_0cee45eb.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "is_valid": true,
+    "hash": "0cee45eb"
+  },
+  {
+    "file": "ir\\valid\\018_llm_mutation_d030571c.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "is_valid": true,
+    "hash": "d030571c"
+  },
+  {
+    "file": "ir\\invalid\\019_llm_mutation_b2eee35c.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "is_valid": false,
+    "hash": "b2eee35c"
+  },
+  {
+    "file": "ir\\valid\\020_llm_mutation_63da2aed.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "is_valid": true,
+    "hash": "63da2aed"
+  },
+  {
+    "file": "ir\\valid\\021_llm_mutation_a0cc83c0.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "is_valid": true,
+    "hash": "a0cc83c0"
+  },
+  {
+    "file": "ir\\invalid\\022_llm_mutation_dd257cf0.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "is_valid": false,
+    "hash": "dd257cf0"
+  },
+  {
+    "file": "ir\\valid\\023_llm_mutation_246254b9.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "is_valid": true,
+    "hash": "246254b9"
+  },
+  {
+    "file": "ir\\invalid\\024_llm_mutation_01160a69.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "is_valid": false,
+    "hash": "01160a69"
+  },
+  {
+    "file": "ir\\valid\\025_llm_mutation_07e66f23.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "is_valid": true,
+    "hash": "07e66f23"
+  },
+  {
+    "file": "ir\\valid\\026_llm_mutation_2fd1169d.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "is_valid": true,
+    "hash": "2fd1169d"
+  },
+  {
+    "file": "ir\\valid\\027_llm_mutation_af4d784a.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "is_valid": true,
+    "hash": "af4d784a"
+  },
+  {
+    "file": "ir\\valid\\028_llm_mutation_1839cf66.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "is_valid": true,
+    "hash": "1839cf66"
+  },
+  {
+    "file": "ir\\invalid\\029_llm_mutation_e77a12bc.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "is_valid": false,
+    "hash": "e77a12bc"
+  },
+  {
+    "file": "ir\\valid\\030_llm_mutation_78c2a9c8.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "is_valid": true,
+    "hash": "78c2a9c8"
+  },
+  {
+    "file": "ir\\valid\\031_llm_refinement_7a9accdb.ll",
+    "source": "llm",
+    "mutation_type": "refinement",
+    "is_valid": true,
+    "hash": "7a9accdb"
+  },
+  {
+    "file": "ir\\valid\\032_llm_refinement_f8b27ca4.ll",
+    "source": "llm",
+    "mutation_type": "refinement",
+    "is_valid": true,
+    "hash": "f8b27ca4"
+  },
+  {
+    "file": "ir\\valid\\033_llm_refinement_f44030d2.ll",
+    "source": "llm",
+    "mutation_type": "refinement",
+    "is_valid": true,
+    "hash": "f44030d2"
+  },
+  {
+    "file": "ir\\valid\\034_llm_refinement_96c96605.ll",
+    "source": "llm",
+    "mutation_type": "refinement",
+    "is_valid": true,
+    "hash": "96c96605"
+  },
+  {
+    "file": "ir\\valid\\035_llm_refinement_b8a20cb4.ll",
+    "source": "llm",
+    "mutation_type": "refinement",
+    "is_valid": true,
+    "hash": "b8a20cb4"
+  },
+  {
+    "file": "ir\\valid\\036_llm_refinement_99f42386.ll",
+    "source": "llm",
+    "mutation_type": "refinement",
+    "is_valid": true,
+    "hash": "99f42386"
+  },
+  {
+    "file": "ir\\valid\\037_llm_refinement_cb4dd4a4.ll",
+    "source": "llm",
+    "mutation_type": "refinement",
+    "is_valid": true,
+    "hash": "cb4dd4a4"
+  },
+  {
+    "file": "ir\\valid\\038_llm_refinement_8cac4658.ll",
+    "source": "llm",
+    "mutation_type": "refinement",
+    "is_valid": true,
+    "hash": "8cac4658"
+  },
+  {
+    "file": "ir\\valid\\039_llm_refinement_e9ecff93.ll",
+    "source": "llm",
+    "mutation_type": "refinement",
+    "is_valid": true,
+    "hash": "e9ecff93"
+  },
+  {
+    "file": "ir\\valid\\040_llm_refinement_3b0d6459.ll",
+    "source": "llm",
+    "mutation_type": "refinement",
+    "is_valid": true,
+    "hash": "3b0d6459"
+  },
+  {
+    "file": "ir\\valid\\041_llm_refinement_e7fdcb57.ll",
+    "source": "llm",
+    "mutation_type": "refinement",
+    "is_valid": true,
+    "hash": "e7fdcb57"
+  },
+  {
+    "file": "ir\\valid\\042_llm_refinement_3041cebd.ll",
+    "source": "llm",
+    "mutation_type": "refinement",
+    "is_valid": true,
+    "hash": "3041cebd"
+  },
+  {
+    "file": "ir\\valid\\043_llm_refinement_bb19555a.ll",
+    "source": "llm",
+    "mutation_type": "refinement",
+    "is_valid": true,
+    "hash": "bb19555a"
+  },
+  {
+    "file": "ir\\valid\\044_llm_refinement_143a03a1.ll",
+    "source": "llm",
+    "mutation_type": "refinement",
+    "is_valid": true,
+    "hash": "143a03a1"
+  },
+  {
+    "file": "ir\\valid\\045_llm_refinement_9aa26544.ll",
+    "source": "llm",
+    "mutation_type": "refinement",
+    "is_valid": true,
+    "hash": "9aa26544"
+  },
+  {
+    "file": "ir\\valid\\046_grammar_grammar_swap_operands_c5d0e1ce.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_swap_operands",
+    "is_valid": true,
+    "hash": "c5d0e1ce"
+  },
+  {
+    "file": "ir\\valid\\047_grammar_grammar_change_constant_32b8ee3a.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_change_constant",
+    "is_valid": true,
+    "hash": "32b8ee3a"
+  },
+  {
+    "file": "ir\\valid\\048_grammar_grammar_toggle_overflow_flag_0a6d66f9.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_toggle_overflow_flag",
+    "is_valid": true,
+    "hash": "0a6d66f9"
+  },
+  {
+    "file": "ir\\valid\\049_grammar_grammar_swap_operands_c5d0e1ce.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_swap_operands",
+    "is_valid": true,
+    "hash": "c5d0e1ce"
+  },
+  {
+    "file": "ir\\valid\\050_grammar_grammar_swap_branch_targets_32b8ee3a.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_swap_branch_targets",
+    "is_valid": true,
+    "hash": "32b8ee3a"
+  },
+  {
+    "file": "ir\\valid\\051_grammar_grammar_duplicate_instruction_a11da1fa.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_duplicate_instruction",
+    "is_valid": true,
+    "hash": "a11da1fa"
+  },
+  {
+    "file": "ir\\valid\\052_grammar_grammar_swap_operands_f85c7b9d.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_swap_operands",
+    "is_valid": true,
+    "hash": "f85c7b9d"
+  },
+  {
+    "file": "ir\\valid\\053_grammar_grammar_toggle_overflow_flag_ee13a8ad.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_toggle_overflow_flag",
+    "is_valid": true,
+    "hash": "ee13a8ad"
+  },
+  {
+    "file": "ir\\valid\\054_grammar_grammar_add_nsw_nuw_f85c7b9d.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_add_nsw_nuw",
+    "is_valid": true,
+    "hash": "f85c7b9d"
+  },
+  {
+    "file": "ir\\valid\\055_grammar_grammar_swap_branch_targets_0deac8b8.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_swap_branch_targets",
+    "is_valid": true,
+    "hash": "0deac8b8"
+  },
+  {
+    "file": "ir\\valid\\056_grammar_grammar_replace_binop_01c8714b.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_replace_binop",
+    "is_valid": true,
+    "hash": "01c8714b"
+  },
+  {
+    "file": "ir\\valid\\057_grammar_grammar_add_nsw_nuw_5adfb95e.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_add_nsw_nuw",
+    "is_valid": true,
+    "hash": "5adfb95e"
+  },
+  {
+    "file": "ir\\valid\\058_grammar_grammar_remove_nsw_nuw_9b1ac0c7.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_remove_nsw_nuw",
+    "is_valid": true,
+    "hash": "9b1ac0c7"
+  },
+  {
+    "file": "ir\\valid\\059_grammar_grammar_swap_branch_targets_d3aa5821.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_swap_branch_targets",
+    "is_valid": true,
+    "hash": "d3aa5821"
+  },
+  {
+    "file": "ir\\valid\\060_grammar_grammar_change_constant_82ab1ee4.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_change_constant",
+    "is_valid": true,
+    "hash": "82ab1ee4"
+  },
+  {
+    "file": "ir\\valid\\061_grammar_grammar_duplicate_instruction_03ab1dc6.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_duplicate_instruction",
+    "is_valid": true,
+    "hash": "03ab1dc6"
+  },
+  {
+    "file": "ir\\valid\\062_grammar_grammar_change_icmp_pred_b2c5bdc1.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_change_icmp_pred",
+    "is_valid": true,
+    "hash": "b2c5bdc1"
+  },
+  {
+    "file": "ir\\valid\\063_grammar_grammar_toggle_overflow_flag_0ea05c52.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_toggle_overflow_flag",
+    "is_valid": true,
+    "hash": "0ea05c52"
+  },
+  {
+    "file": "ir\\valid\\064_grammar_grammar_swap_operands_b2c5bdc1.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_swap_operands",
+    "is_valid": true,
+    "hash": "b2c5bdc1"
+  },
+  {
+    "file": "ir\\valid\\065_grammar_grammar_duplicate_instruction_5c60451f.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_duplicate_instruction",
+    "is_valid": true,
+    "hash": "5c60451f"
+  },
+  {
+    "file": "ir\\valid\\066_grammar_grammar_insert_dead_code_a3b6a1d4.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_insert_dead_code",
+    "is_valid": true,
+    "hash": "a3b6a1d4"
+  },
+  {
+    "file": "ir\\valid\\067_grammar_grammar_remove_nsw_nuw_f7c7b836.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_remove_nsw_nuw",
+    "is_valid": true,
+    "hash": "f7c7b836"
+  },
+  {
+    "file": "ir\\valid\\068_grammar_grammar_add_nsw_nuw_eb202cff.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_add_nsw_nuw",
+    "is_valid": true,
+    "hash": "eb202cff"
+  },
+  {
+    "file": "ir\\valid\\069_grammar_grammar_add_nsw_nuw_3b3e33fe.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_add_nsw_nuw",
+    "is_valid": true,
+    "hash": "3b3e33fe"
+  },
+  {
+    "file": "ir\\valid\\070_grammar_grammar_swap_operands_96dc153e.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_swap_operands",
+    "is_valid": true,
+    "hash": "96dc153e"
+  },
+  {
+    "file": "ir\\invalid\\071_grammar_grammar_toggle_overflow_flag_01308115.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_toggle_overflow_flag",
+    "is_valid": false,
+    "hash": "01308115"
+  },
+  {
+    "file": "ir\\invalid\\072_grammar_grammar_toggle_overflow_flag_4b748521.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_toggle_overflow_flag",
+    "is_valid": false,
+    "hash": "4b748521"
+  },
+  {
+    "file": "ir\\invalid\\073_grammar_grammar_change_constant_fc5a655a.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_change_constant",
+    "is_valid": false,
+    "hash": "fc5a655a"
+  },
+  {
+    "file": "ir\\invalid\\074_grammar_grammar_remove_nsw_nuw_fc5a655a.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_remove_nsw_nuw",
+    "is_valid": false,
+    "hash": "fc5a655a"
+  },
+  {
+    "file": "ir\\invalid\\075_grammar_grammar_insert_dead_code_c5cd0d21.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_insert_dead_code",
+    "is_valid": false,
+    "hash": "c5cd0d21"
+  },
+  {
+    "file": "ir\\valid\\076_grammar_grammar_toggle_overflow_flag_041e5d96.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_toggle_overflow_flag",
+    "is_valid": true,
+    "hash": "041e5d96"
+  },
+  {
+    "file": "ir\\valid\\077_grammar_grammar_change_constant_041e5d96.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_change_constant",
+    "is_valid": true,
+    "hash": "041e5d96"
+  },
+  {
+    "file": "ir\\valid\\078_grammar_grammar_add_nsw_nuw_041e5d96.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_add_nsw_nuw",
+    "is_valid": true,
+    "hash": "041e5d96"
+  },
+  {
+    "file": "ir\\valid\\079_grammar_grammar_toggle_overflow_flag_041e5d96.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_toggle_overflow_flag",
+    "is_valid": true,
+    "hash": "041e5d96"
+  },
+  {
+    "file": "ir\\valid\\080_grammar_grammar_change_icmp_pred_041e5d96.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_change_icmp_pred",
+    "is_valid": true,
+    "hash": "041e5d96"
+  },
+  {
+    "file": "ir\\valid\\081_grammar_grammar_remove_nsw_nuw_e91efd37.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_remove_nsw_nuw",
+    "is_valid": true,
+    "hash": "e91efd37"
+  },
+  {
+    "file": "ir\\valid\\082_grammar_grammar_duplicate_instruction_37064298.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_duplicate_instruction",
+    "is_valid": true,
+    "hash": "37064298"
+  },
+  {
+    "file": "ir\\valid\\083_grammar_grammar_add_nsw_nuw_daa97f46.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_add_nsw_nuw",
+    "is_valid": true,
+    "hash": "daa97f46"
+  },
+  {
+    "file": "ir\\valid\\084_grammar_grammar_toggle_overflow_flag_71fd7980.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_toggle_overflow_flag",
+    "is_valid": true,
+    "hash": "71fd7980"
+  },
+  {
+    "file": "ir\\valid\\085_grammar_grammar_replace_binop_49d75c7f.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_replace_binop",
+    "is_valid": true,
+    "hash": "49d75c7f"
+  },
+  {
+    "file": "ir\\valid\\086_grammar_grammar_insert_dead_code_03c1a8bb.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_insert_dead_code",
+    "is_valid": true,
+    "hash": "03c1a8bb"
+  },
+  {
+    "file": "ir\\valid\\087_grammar_grammar_toggle_overflow_flag_5b64778d.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_toggle_overflow_flag",
+    "is_valid": true,
+    "hash": "5b64778d"
+  },
+  {
+    "file": "ir\\valid\\088_grammar_grammar_remove_nsw_nuw_6bebbe2c.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_remove_nsw_nuw",
+    "is_valid": true,
+    "hash": "6bebbe2c"
+  },
+  {
+    "file": "ir\\valid\\089_grammar_grammar_duplicate_instruction_98d71304.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_duplicate_instruction",
+    "is_valid": true,
+    "hash": "98d71304"
+  },
+  {
+    "file": "ir\\valid\\090_grammar_grammar_change_constant_6bebbe2c.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_change_constant",
+    "is_valid": true,
+    "hash": "6bebbe2c"
+  },
+  {
+    "file": "ir\\valid\\091_grammar_grammar_change_icmp_pred_2eb9e240.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_change_icmp_pred",
+    "is_valid": true,
+    "hash": "2eb9e240"
+  },
+  {
+    "file": "ir\\valid\\092_grammar_grammar_add_nsw_nuw_d771c7c2.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_add_nsw_nuw",
+    "is_valid": true,
+    "hash": "d771c7c2"
+  },
+  {
+    "file": "ir\\valid\\093_grammar_grammar_toggle_overflow_flag_d910857d.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_toggle_overflow_flag",
+    "is_valid": true,
+    "hash": "d910857d"
+  },
+  {
+    "file": "ir\\valid\\094_grammar_grammar_swap_operands_f0079dcd.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_swap_operands",
+    "is_valid": true,
+    "hash": "f0079dcd"
+  },
+  {
+    "file": "ir\\valid\\095_grammar_grammar_swap_operands_f0079dcd.ll",
+    "source": "grammar",
+    "mutation_type": "grammar_swap_operands",
+    "is_valid": true,
+    "hash": "f0079dcd"
+  },
+  {
+    "file": "ir\\invalid\\096_random_random_random_char_flip_536b34e3.ll",
+    "source": "random",
+    "mutation_type": "random_random_char_flip",
+    "is_valid": false,
+    "hash": "536b34e3"
+  },
+  {
+    "file": "ir\\invalid\\097_random_random_random_line_duplicate_ccdf1656.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_duplicate",
+    "is_valid": false,
+    "hash": "ccdf1656"
+  },
+  {
+    "file": "ir\\invalid\\098_random_random_random_line_delete_6ba955b1.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_delete",
+    "is_valid": false,
+    "hash": "6ba955b1"
+  },
+  {
+    "file": "ir\\invalid\\099_random_random_random_char_flip_43e0900b.ll",
+    "source": "random",
+    "mutation_type": "random_random_char_flip",
+    "is_valid": false,
+    "hash": "43e0900b"
+  },
+  {
+    "file": "ir\\invalid\\100_random_random_random_word_replace_f577677e.ll",
+    "source": "random",
+    "mutation_type": "random_random_word_replace",
+    "is_valid": false,
+    "hash": "f577677e"
+  },
+  {
+    "file": "ir\\invalid\\101_random_random_random_char_flip_b90bac8a.ll",
+    "source": "random",
+    "mutation_type": "random_random_char_flip",
+    "is_valid": false,
+    "hash": "b90bac8a"
+  },
+  {
+    "file": "ir\\valid\\102_random_random_random_line_delete_279e5522.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_delete",
+    "is_valid": true,
+    "hash": "279e5522"
+  },
+  {
+    "file": "ir\\invalid\\103_random_random_random_word_replace_ac848554.ll",
+    "source": "random",
+    "mutation_type": "random_random_word_replace",
+    "is_valid": false,
+    "hash": "ac848554"
+  },
+  {
+    "file": "ir\\invalid\\104_random_random_random_line_delete_8882dd20.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_delete",
+    "is_valid": false,
+    "hash": "8882dd20"
+  },
+  {
+    "file": "ir\\invalid\\105_random_random_random_word_replace_2a369d8e.ll",
+    "source": "random",
+    "mutation_type": "random_random_word_replace",
+    "is_valid": false,
+    "hash": "2a369d8e"
+  },
+  {
+    "file": "ir\\valid\\106_random_random_random_line_swap_ca9db2e3.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_swap",
+    "is_valid": true,
+    "hash": "ca9db2e3"
+  },
+  {
+    "file": "ir\\invalid\\107_random_random_random_line_delete_849ddd6e.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_delete",
+    "is_valid": false,
+    "hash": "849ddd6e"
+  },
+  {
+    "file": "ir\\valid\\108_random_random_random_line_duplicate_9b1ac0c7.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_duplicate",
+    "is_valid": true,
+    "hash": "9b1ac0c7"
+  },
+  {
+    "file": "ir\\invalid\\109_random_random_random_char_flip_cefb0196.ll",
+    "source": "random",
+    "mutation_type": "random_random_char_flip",
+    "is_valid": false,
+    "hash": "cefb0196"
+  },
+  {
+    "file": "ir\\valid\\110_random_random_random_line_duplicate_9b1ac0c7.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_duplicate",
+    "is_valid": true,
+    "hash": "9b1ac0c7"
+  },
+  {
+    "file": "ir\\invalid\\111_random_random_random_word_replace_ba3f107f.ll",
+    "source": "random",
+    "mutation_type": "random_random_word_replace",
+    "is_valid": false,
+    "hash": "ba3f107f"
+  },
+  {
+    "file": "ir\\invalid\\112_random_random_random_word_replace_39679a12.ll",
+    "source": "random",
+    "mutation_type": "random_random_word_replace",
+    "is_valid": false,
+    "hash": "39679a12"
+  },
+  {
+    "file": "ir\\invalid\\113_random_random_random_word_replace_853d9746.ll",
+    "source": "random",
+    "mutation_type": "random_random_word_replace",
+    "is_valid": false,
+    "hash": "853d9746"
+  },
+  {
+    "file": "ir\\invalid\\114_random_random_random_char_flip_c52b9e95.ll",
+    "source": "random",
+    "mutation_type": "random_random_char_flip",
+    "is_valid": false,
+    "hash": "c52b9e95"
+  },
+  {
+    "file": "ir\\invalid\\115_random_random_random_line_delete_c48d1e07.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_delete",
+    "is_valid": false,
+    "hash": "c48d1e07"
+  },
+  {
+    "file": "ir\\invalid\\116_random_random_random_line_duplicate_bc08d937.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_duplicate",
+    "is_valid": false,
+    "hash": "bc08d937"
+  },
+  {
+    "file": "ir\\valid\\117_random_random_random_line_delete_f7c7b836.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_delete",
+    "is_valid": true,
+    "hash": "f7c7b836"
+  },
+  {
+    "file": "ir\\invalid\\118_random_random_random_line_swap_fcd28af9.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_swap",
+    "is_valid": false,
+    "hash": "fcd28af9"
+  },
+  {
+    "file": "ir\\invalid\\119_random_random_random_line_duplicate_0e9ea2fd.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_duplicate",
+    "is_valid": false,
+    "hash": "0e9ea2fd"
+  },
+  {
+    "file": "ir\\invalid\\120_random_random_random_line_duplicate_5184a1cb.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_duplicate",
+    "is_valid": false,
+    "hash": "5184a1cb"
+  },
+  {
+    "file": "ir\\invalid\\121_random_random_random_line_delete_fc5a655a.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_delete",
+    "is_valid": false,
+    "hash": "fc5a655a"
+  },
+  {
+    "file": "ir\\invalid\\122_random_random_random_line_duplicate_fc5a655a.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_duplicate",
+    "is_valid": false,
+    "hash": "fc5a655a"
+  },
+  {
+    "file": "ir\\invalid\\123_random_random_random_char_flip_9f2cc275.ll",
+    "source": "random",
+    "mutation_type": "random_random_char_flip",
+    "is_valid": false,
+    "hash": "9f2cc275"
+  },
+  {
+    "file": "ir\\invalid\\124_random_random_random_line_delete_27af43dd.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_delete",
+    "is_valid": false,
+    "hash": "27af43dd"
+  },
+  {
+    "file": "ir\\invalid\\125_random_random_random_line_delete_07ca4a9b.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_delete",
+    "is_valid": false,
+    "hash": "07ca4a9b"
+  },
+  {
+    "file": "ir\\valid\\126_random_random_random_line_swap_041e5d96.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_swap",
+    "is_valid": true,
+    "hash": "041e5d96"
+  },
+  {
+    "file": "ir\\invalid\\127_random_random_random_word_replace_f672b99c.ll",
+    "source": "random",
+    "mutation_type": "random_random_word_replace",
+    "is_valid": false,
+    "hash": "f672b99c"
+  },
+  {
+    "file": "ir\\invalid\\128_random_random_random_char_flip_d85e16fa.ll",
+    "source": "random",
+    "mutation_type": "random_random_char_flip",
+    "is_valid": false,
+    "hash": "d85e16fa"
+  },
+  {
+    "file": "ir\\invalid\\129_random_random_random_line_duplicate_b1edc50a.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_duplicate",
+    "is_valid": false,
+    "hash": "b1edc50a"
+  },
+  {
+    "file": "ir\\invalid\\130_random_random_random_line_duplicate_de9c83e8.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_duplicate",
+    "is_valid": false,
+    "hash": "de9c83e8"
+  },
+  {
+    "file": "ir\\invalid\\131_random_random_random_line_delete_11eb72ff.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_delete",
+    "is_valid": false,
+    "hash": "11eb72ff"
+  },
+  {
+    "file": "ir\\invalid\\132_random_random_random_line_duplicate_2786d4b0.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_duplicate",
+    "is_valid": false,
+    "hash": "2786d4b0"
+  },
+  {
+    "file": "ir\\invalid\\133_random_random_random_line_swap_f8cb26c7.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_swap",
+    "is_valid": false,
+    "hash": "f8cb26c7"
+  },
+  {
+    "file": "ir\\valid\\134_random_random_random_line_swap_f1ce86c6.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_swap",
+    "is_valid": true,
+    "hash": "f1ce86c6"
+  },
+  {
+    "file": "ir\\invalid\\135_random_random_random_line_delete_c52f48b4.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_delete",
+    "is_valid": false,
+    "hash": "c52f48b4"
+  },
+  {
+    "file": "ir\\invalid\\136_random_random_random_word_replace_414ec5ed.ll",
+    "source": "random",
+    "mutation_type": "random_random_word_replace",
+    "is_valid": false,
+    "hash": "414ec5ed"
+  },
+  {
+    "file": "ir\\invalid\\137_random_random_random_line_duplicate_a4ad3a13.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_duplicate",
+    "is_valid": false,
+    "hash": "a4ad3a13"
+  },
+  {
+    "file": "ir\\invalid\\138_random_random_random_line_delete_321090d9.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_delete",
+    "is_valid": false,
+    "hash": "321090d9"
+  },
+  {
+    "file": "ir\\invalid\\139_random_random_random_char_flip_826256c2.ll",
+    "source": "random",
+    "mutation_type": "random_random_char_flip",
+    "is_valid": false,
+    "hash": "826256c2"
+  },
+  {
+    "file": "ir\\invalid\\140_random_random_random_char_flip_fb0ebdf5.ll",
+    "source": "random",
+    "mutation_type": "random_random_char_flip",
+    "is_valid": false,
+    "hash": "fb0ebdf5"
+  },
+  {
+    "file": "ir\\invalid\\141_random_random_random_line_delete_32de8e1a.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_delete",
+    "is_valid": false,
+    "hash": "32de8e1a"
+  },
+  {
+    "file": "ir\\invalid\\142_random_random_random_line_swap_c488a01c.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_swap",
+    "is_valid": false,
+    "hash": "c488a01c"
+  },
+  {
+    "file": "ir\\valid\\143_random_random_random_line_swap_e054c10c.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_swap",
+    "is_valid": true,
+    "hash": "e054c10c"
+  },
+  {
+    "file": "ir\\invalid\\144_random_random_random_line_swap_a481676e.ll",
+    "source": "random",
+    "mutation_type": "random_random_line_swap",
+    "is_valid": false,
+    "hash": "a481676e"
+  },
+  {
+    "file": "ir\\invalid\\145_random_random_random_word_replace_ee82629d.ll",
+    "source": "random",
+    "mutation_type": "random_random_word_replace",
+    "is_valid": false,
+    "hash": "ee82629d"
+  }
+]

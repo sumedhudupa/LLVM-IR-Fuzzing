@@ -14,6 +14,7 @@ import time
 import sys
 import os
 import random
+import re
 
 # Add parent to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -23,8 +24,57 @@ from src.grammar_mutator import GrammarMutator, RandomMutator
 from src.ir_validator import validate_ir
 from src.differential_tester import differential_test
 from src.failure_analyzer import FailureAnalyzer
-from src.utils import GenerationResult, format_ir_stats, count_ir_features
+from src.utils import GenerationResult, format_ir_stats, count_ir_features, compute_ir_hash
 from seed_ir.seeds import SEED_IR_CASES
+
+
+def _slugify(value):
+    """Convert a short label to a filename-safe slug."""
+    cleaned = re.sub(r"[^a-zA-Z0-9]+", "_", value.strip().lower())
+    return cleaned.strip("_") or "sample"
+
+
+def export_ir_samples(results, results_dir):
+    """Export generated IR samples as .ll files for inspection."""
+    ir_root = os.path.join(results_dir, "ir")
+    valid_dir = os.path.join(ir_root, "valid")
+    invalid_dir = os.path.join(ir_root, "invalid")
+    os.makedirs(valid_dir, exist_ok=True)
+    os.makedirs(invalid_dir, exist_ok=True)
+
+    manifest = []
+
+    for index, result in enumerate(results, start=1):
+        is_valid = bool(result.validation and result.validation.is_valid)
+        status_dir = valid_dir if is_valid else invalid_dir
+        mutation = _slugify(result.mutation_type or "sample")
+        source = _slugify(result.source)
+        ir_hash = compute_ir_hash(result.ir_text)[:8]
+        filename = f"{index:03d}_{source}_{mutation}_{ir_hash}.ll"
+        output_path = os.path.join(status_dir, filename)
+
+        with open(output_path, "w", encoding="utf-8") as f:
+            f.write(result.ir_text.rstrip() + "\n")
+
+        manifest.append(
+            {
+                "file": os.path.relpath(output_path, results_dir),
+                "source": result.source,
+                "mutation_type": result.mutation_type,
+                "is_valid": is_valid,
+                "hash": ir_hash,
+            }
+        )
+
+    manifest_path = os.path.join(ir_root, "manifest.json")
+    with open(manifest_path, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, indent=2)
+
+    valid_count = sum(1 for item in manifest if item["is_valid"])
+    invalid_count = len(manifest) - valid_count
+    print(f"Exported {len(manifest)} IR files to: {ir_root}")
+    print(f"  Valid IR files: {valid_count}")
+    print(f"  Invalid IR files: {invalid_count}")
 
 
 def run_llm_experiment(generator, n_per_strategy=10):
@@ -135,10 +185,10 @@ def run_differential_testing(valid_results):
         result.opt_differential = diff
 
         if diff["is_interesting"]:
-            print(f"    → INTERESTING: Found optimization discrepancy!")
+            print("    INTERESTING: Found optimization discrepancy!")
         if diff["discrepancies"]:
             for d in diff["discrepancies"]:
-                print(f"    → Discrepancy: {d['detail']}")
+                print(f"    Discrepancy: {d['detail']}")
 
         diff_results.append(diff)
 
@@ -215,6 +265,8 @@ def main():
     # Save analysis report
     with open(os.path.join(results_dir, "analysis_output.md"), 'w') as f:
         f.write(report)
+
+    export_ir_samples(all_results, results_dir)
 
     # Save raw results
     raw_results = {

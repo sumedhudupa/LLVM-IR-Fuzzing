@@ -3,14 +3,14 @@
 
 ## Overview
 - **Total generated**: 145
-- **Valid**: 92 (63.4%)
-- **Invalid**: 53 (36.6%)
+- **Valid**: 90 (62.1%)
+- **Invalid**: 55 (37.9%)
 
 ## Validity by Source
 
 ### LLM
 - Total: 45
-- Valid: 39 (86.7%)
+- Valid: 37 (82.2%)
 - Interesting: 45 (100.0%)
 
 ### GRAMMAR
@@ -26,23 +26,23 @@
 ## Error Distribution
 
 ### broken_control_flow
-- Count: 29 (27.6% of errors)
+- Count: 31 (28.4% of errors)
 - Example errors: Block 'entry' does not end with a terminator. Last: ']'; Block 'entry': instruction after terminator at position 0
 
 ### syntax_error
-- Count: 27 (25.7% of errors)
+- Count: 27 (24.8% of errors)
 - Example errors: No function definition found (expected 'define <type> @<name>(...)')
 
 ### missing_terminator
-- Count: 22 (21.0% of errors)
+- Count: 24 (22.0% of errors)
 - Example errors: Block 'entry' does not end with a terminator. Last: ']'; Block 'entry': instruction after terminator at position 0
 
 ### invalid_phi
-- Count: 11 (10.5% of errors)
+- Count: 11 (10.1% of errors)
 - Example errors: Block 'positive': instruction after terminator at position 1; Block 'positive': instruction after terminator at position 2
 
 ### ssa_violation
-- Count: 10 (9.5% of errors)
+- Count: 10 (9.2% of errors)
 - Example errors: SSA violation: '%cmp1' defined at line 4 and previously at line 3; LLVM verifier error: LLVM IR parsing error
 <string>:4:3: error: multiple definition of local value named 'cmp1'
   %cmp1 = icmp sgt i32 %x, 0
@@ -50,7 +50,7 @@
 
 
 ### unknown
-- Count: 4 (3.8% of errors)
+- Count: 4 (3.7% of errors)
 - Example errors: LLVM verifier error: LLVM IR parsing error
 <string>:3:11: error: use of undefined value '%result'
   ret i32 %result
@@ -58,7 +58,7 @@
 
 
 ### type_mismatch
-- Count: 2 (1.9% of errors)
+- Count: 2 (1.8% of errors)
 - Example errors: LLVM verifier error: LLVM IR parsing error
 <string>:8:10: error: integer constant must have integer type
 br label 0
@@ -68,10 +68,10 @@ br label 0
 ## Mutation Type Effectiveness
 | Mutation Type | Total | Valid | Valid% | Interesting | Avg Time(s) |
 |---|---|---|---|---|---|
-| from_scratch | 15 | 13 | 86.7% | 15 | 0.000 |
+| from_scratch | 15 | 11 | 73.3% | 15 | 0.000 |
 | mutation | 15 | 11 | 73.3% | 15 | 0.000 |
 | refinement | 15 | 15 | 100.0% | 15 | 0.000 |
-| grammar_swap_operands | 7 | 7 | 100.0% | 4 | 0.001 |
+| grammar_swap_operands | 7 | 7 | 100.0% | 4 | 0.000 |
 | grammar_change_constant | 5 | 4 | 80.0% | 2 | 0.000 |
 | grammar_toggle_overflow_flag | 10 | 8 | 80.0% | 6 | 0.000 |
 | grammar_swap_branch_targets | 3 | 3 | 100.0% | 2 | 0.000 |
@@ -89,8 +89,8 @@ br label 0
 
 ## Semantic Interest Analysis
 
-- Valid IR total: 92
-- Semantically interesting: 73 (79.3%)
+- Valid IR total: 90
+- Semantically interesting: 71 (78.9%)
 - Trivial/low-value: 19
 
 ## Example Failures
@@ -99,7 +99,7 @@ br label 0
 **Errors**: missing_terminator, broken_control_flow
 **Details**: Block 'entry' does not end with a terminator. Last: ']'; Block 'entry': instruction after terminator at position 0
 ```llvm
-define i32 @switch_236(i32 %op, i32 %a, i32 %b) {
+define i32 @switch_250(i32 %op, i32 %a, i32 %b) {
 entry:
   switch i32 %op, label %default [
     i32 0, label %add_case
@@ -135,7 +135,7 @@ defaul
 **Errors**: missing_terminator, broken_control_flow
 **Details**: Block 'entry' does not end with a terminator. Last: ']'; Block 'entry': instruction after terminator at position 0
 ```llvm
-define i32 @switch_779(i32 %op, i32 %a, i32 %b) {
+define i32 @switch_644(i32 %op, i32 %a, i32 %b) {
 entry:
   switch i32 %op, label %default [
     i32 0, label %add_case
@@ -167,11 +167,11 @@ safe_div:
 defaul
 ```
 
-### Failure Example 3 (Source: llm, Type: mutation)
+### Failure Example 3 (Source: llm, Type: from_scratch)
 **Errors**: missing_terminator, broken_control_flow
 **Details**: Block 'entry' does not end with a terminator. Last: ']'; Block 'entry': instruction after terminator at position 0
 ```llvm
-define i32 @switch_136(i32 %op, i32 %a, i32 %b) {
+define i32 @switch_660(i32 %op, i32 %a, i32 %b) {
 entry:
   switch i32 %op, label %default [
     i32 0, label %add_case
@@ -203,11 +203,11 @@ safe_div:
 defaul
 ```
 
-### Failure Example 4 (Source: llm, Type: mutation)
+### Failure Example 4 (Source: llm, Type: from_scratch)
 **Errors**: missing_terminator, broken_control_flow
 **Details**: Block 'entry' does not end with a terminator. Last: ']'; Block 'entry': instruction after terminator at position 0
 ```llvm
-define i32 @switch_762(i32 %op, i32 %a, i32 %b) {
+define i32 @switch_285(i32 %op, i32 %a, i32 %b) {
 entry:
   switch i32 %op, label %default [
     i32 0, label %add_case
@@ -243,7 +243,7 @@ defaul
 **Errors**: missing_terminator, broken_control_flow
 **Details**: Block 'entry' does not end with a terminator. Last: ']'; Block 'entry': instruction after terminator at position 0
 ```llvm
-define i32 @switch_46(i32 %op, i32 %a, i32 %b) {
+define i32 @switch_84(i32 %op, i32 %a, i32 %b) {
 entry:
   switch i32 %op, label %default [
     i32 0, label %add_case

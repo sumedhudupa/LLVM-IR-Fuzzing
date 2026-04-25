@@ -41,6 +41,28 @@ python -m src.experiment_runner
 
 Set `HF_TOKEN` environment variable to use real LLM generation via HuggingFace Inference API. Without it, the system uses mock templates that demonstrate the workflow.
 
+## Generate Paper Figures
+
+Use the saved experiment JSON to generate publication-ready charts in both PNG and SVG format:
+
+```bash
+pip install matplotlib
+python scripts/generate_paper_figures.py
+```
+
+Optional custom paths:
+
+```bash
+python scripts/generate_paper_figures.py --input results/experiment_results.json --output results/figures
+```
+
+Generated outputs:
+- `results/figures/fig_validity_interest.(png|svg)`
+- `results/figures/fig_error_distribution.(png|svg)`
+- `results/figures/fig_mutation_effectiveness.(png|svg)`
+- `results/figures/fig_semantic_interest_breakdown.(png|svg)`
+- `results/figures/figure_manifest.md`
+
 ## Key Findings
 See `report.md` for the complete analysis including:
 - Survey of compiler fuzzing methods (Csmith, YARPGen, Fuzz4All, LLM-Compiler)
