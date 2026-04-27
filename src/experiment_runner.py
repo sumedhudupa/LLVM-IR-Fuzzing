@@ -15,6 +15,7 @@ import sys
 import os
 import random
 import re
+import importlib.util
 
 # Add parent to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -34,6 +35,59 @@ def _slugify(value):
     return cleaned.strip("_") or "sample"
 
 
+def deduplicate_results(results):
+    """Mark duplicate IR (same normalized hash) across all results.
+
+    The first occurrence keeps ``is_duplicate=False``; every subsequent
+    occurrence of the same hash is marked ``is_duplicate=True``.  Results
+    are modified in-place and the function also returns a (unique, dupes)
+    count tuple for reporting.
+    """
+    seen = {}
+    unique = 0
+    dupes = 0
+    for result in results:
+        h = compute_ir_hash(result.ir_text)
+        if h in seen:
+            result.is_duplicate = True
+            dupes += 1
+        else:
+            result.is_duplicate = False
+            seen[h] = True
+            unique += 1
+    return unique, dupes
+
+
+def _run_figure_generation(results_dir):
+    """Auto-generate paper figures from experiment_results.json."""
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    script_path = os.path.join(repo_root, "scripts", "generate_paper_figures.py")
+    if not os.path.exists(script_path):
+        print("  [figures] generate_paper_figures.py not found — skipping")
+        return
+    try:
+        spec = importlib.util.spec_from_file_location("generate_paper_figures", script_path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        from pathlib import Path
+        mod._set_plot_style()
+        data = mod._load_results(Path(results_dir) / "experiment_results.json")
+        output_dir = Path(results_dir) / "figures"
+        output_dir.mkdir(parents=True, exist_ok=True)
+        mod._plot_validity_and_interest(data, output_dir)
+        mod._plot_error_distribution(data, output_dir)
+        mod._plot_error_distribution_donut(data, output_dir)
+        mod._plot_mutation_effectiveness(data, output_dir)
+        mod._plot_mutation_validity_ranking(data, output_dir)
+        mod._plot_valid_vs_interesting_breakdown(data, output_dir)
+        mod._plot_source_outcome_stack(data, output_dir)
+        mod._plot_semantic_feature_heatmap(data, output_dir)
+        mod._write_manifest(data, output_dir)
+        print(f"  [figures] Paper figures regenerated in: {output_dir}")
+    except Exception as exc:
+        print(f"  [figures] Figure generation failed: {exc}")
+
+
 def export_ir_samples(results, results_dir):
     """Export generated IR samples as .ll files for inspection."""
     ir_root = os.path.join(results_dir, "ir")
@@ -42,9 +96,41 @@ def export_ir_samples(results, results_dir):
     os.makedirs(valid_dir, exist_ok=True)
     os.makedirs(invalid_dir, exist_ok=True)
 
+    timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     manifest = []
+    skipped_dupes = 0
 
     for index, result in enumerate(results, start=1):
+        # Skip writing duplicate IR to disk — record in manifest only
+        if result.is_duplicate:
+            skipped_dupes += 1
+            ir_hash = compute_ir_hash(result.ir_text)[:8]
+            is_valid = bool(result.validation and result.validation.is_valid)
+            error_types = []
+            if result.validation:
+                error_types = [
+                    e.value if hasattr(e, "value") else str(e)
+                    for e in result.validation.error_categories
+                ]
+            seed_hash = compute_ir_hash(result.seed_ir)[:8] if result.seed_ir else ""
+            manifest.append(
+                {
+                    "mutant_id": f"{index:04d}",
+                    "file": None,
+                    "source": result.source,
+                    "mutation_type": result.mutation_type,
+                    "seed_ir_hash": seed_hash,
+                    "is_valid": is_valid,
+                    "is_interesting": result.is_interesting,
+                    "is_duplicate": True,
+                    "content_hash": ir_hash,
+                    "error_types": error_types,
+                    "generation_time_s": round(result.generation_time_s, 4),
+                    "timestamp": timestamp,
+                }
+            )
+            continue
+
         is_valid = bool(result.validation and result.validation.is_valid)
         status_dir = valid_dir if is_valid else invalid_dir
         mutation = _slugify(result.mutation_type or "sample")
@@ -56,13 +142,28 @@ def export_ir_samples(results, results_dir):
         with open(output_path, "w", encoding="utf-8") as f:
             f.write(result.ir_text.rstrip() + "\n")
 
+        error_types = []
+        if result.validation:
+            error_types = [
+                e.value if hasattr(e, "value") else str(e)
+                for e in result.validation.error_categories
+            ]
+        seed_hash = compute_ir_hash(result.seed_ir)[:8] if result.seed_ir else ""
+
         manifest.append(
             {
+                "mutant_id": f"{index:04d}",
                 "file": os.path.relpath(output_path, results_dir),
                 "source": result.source,
                 "mutation_type": result.mutation_type,
+                "seed_ir_hash": seed_hash,
                 "is_valid": is_valid,
-                "hash": ir_hash,
+                "is_interesting": result.is_interesting,
+                "is_duplicate": False,
+                "content_hash": ir_hash,
+                "error_types": error_types,
+                "generation_time_s": round(result.generation_time_s, 4),
+                "timestamp": timestamp,
             }
         )
 
@@ -70,11 +171,13 @@ def export_ir_samples(results, results_dir):
     with open(manifest_path, "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)
 
-    valid_count = sum(1 for item in manifest if item["is_valid"])
-    invalid_count = len(manifest) - valid_count
-    print(f"Exported {len(manifest)} IR files to: {ir_root}")
+    valid_count = sum(1 for item in manifest if item["is_valid"] and not item["is_duplicate"])
+    invalid_count = sum(1 for item in manifest if not item["is_valid"] and not item["is_duplicate"])
+    print(f"Exported {len(manifest) - skipped_dupes} unique IR files to: {ir_root}")
     print(f"  Valid IR files: {valid_count}")
     print(f"  Invalid IR files: {invalid_count}")
+    if skipped_dupes:
+        print(f"  Duplicate IR (manifest-only, not written): {skipped_dupes}")
 
 
 def run_llm_experiment(generator, n_per_strategy=10):
@@ -242,6 +345,15 @@ def main():
 
     # Phase 4: Differential testing on all valid IR
     all_results = llm_results + grammar_results + random_results
+
+    # Deduplication: mark results with the same normalized IR hash
+    print("\n" + "="*60)
+    print("DEDUPLICATION")
+    print("="*60)
+    unique_count, dupe_count = deduplicate_results(all_results)
+    print(f"  Unique IR samples : {unique_count}")
+    print(f"  Duplicate IR found: {dupe_count} (marked, not written to disk)")
+
     valid_results = [r for r in all_results if r.validation and r.validation.is_valid]
 
     print(f"\n{len(valid_results)} valid IR samples for differential testing")
@@ -277,6 +389,8 @@ def main():
             "grammar_samples": len(grammar_results),
             "random_samples": len(random_results),
             "valid_total": len(valid_results),
+            "unique_samples": unique_count,
+            "duplicate_samples": dupe_count,
             "runtime_s": time.time() - start_time,
         },
         "validity_by_source": analyzer.get_validity_by_source(),
@@ -309,6 +423,12 @@ def main():
     total_time = time.time() - start_time
     print(f"\nTotal runtime: {total_time:.1f}s")
     print(f"Results saved to: {results_dir}/")
+
+    # Auto-generate paper figures from saved results
+    print("\n" + "="*60)
+    print("GENERATING PAPER FIGURES")
+    print("="*60)
+    _run_figure_generation(results_dir)
 
 
 if __name__ == "__main__":

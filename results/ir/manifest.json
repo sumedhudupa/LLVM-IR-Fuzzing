@@ -1,1017 +1,2184 @@
 [
   {
-    "file": "ir\\valid\\001_llm_from_scratch_aa93c0e2.ll",
+    "mutant_id": "0001",
+    "file": "ir/valid/001_llm_from_scratch_f2ad86c2.ll",
     "source": "llm",
     "mutation_type": "from_scratch",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "aa93c0e2"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "f2ad86c2",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\002_llm_from_scratch_6f6eff96.ll",
+    "mutant_id": "0002",
+    "file": "ir/valid/002_llm_from_scratch_f44030d2.ll",
     "source": "llm",
     "mutation_type": "from_scratch",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "6f6eff96"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "f44030d2",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\003_llm_from_scratch_635963a1.ll",
+    "mutant_id": "0003",
+    "file": "ir/valid/003_llm_from_scratch_ac43a18b.ll",
     "source": "llm",
     "mutation_type": "from_scratch",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "635963a1"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "ac43a18b",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\004_llm_from_scratch_6f05f56b.ll",
+    "mutant_id": "0004",
+    "file": "ir/valid/004_llm_from_scratch_ba41467d.ll",
     "source": "llm",
     "mutation_type": "from_scratch",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "6f05f56b"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "ba41467d",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\005_llm_from_scratch_c70ade75.ll",
+    "mutant_id": "0005",
+    "file": "ir/valid/005_llm_from_scratch_b852c26d.ll",
     "source": "llm",
     "mutation_type": "from_scratch",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "c70ade75"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "b852c26d",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\006_llm_from_scratch_fe5f8e24.ll",
+    "mutant_id": "0006",
+    "file": "ir/valid/006_llm_from_scratch_f3c4b0f3.ll",
     "source": "llm",
     "mutation_type": "from_scratch",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "fe5f8e24"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "f3c4b0f3",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\007_llm_from_scratch_88430580.ll",
+    "mutant_id": "0007",
+    "file": "ir/invalid/007_llm_from_scratch_a2dbf6f3.ll",
     "source": "llm",
     "mutation_type": "from_scratch",
+    "seed_ir_hash": "",
     "is_valid": false,
-    "hash": "88430580"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "a2dbf6f3",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\008_llm_from_scratch_6bd99486.ll",
+    "mutant_id": "0008",
+    "file": "ir/invalid/008_llm_from_scratch_b16bb7a9.ll",
     "source": "llm",
     "mutation_type": "from_scratch",
-    "is_valid": true,
-    "hash": "6bd99486"
-  },
-  {
-    "file": "ir\\valid\\009_llm_from_scratch_b774784c.ll",
-    "source": "llm",
-    "mutation_type": "from_scratch",
-    "is_valid": true,
-    "hash": "b774784c"
-  },
-  {
-    "file": "ir\\valid\\010_llm_from_scratch_ac596bcc.ll",
-    "source": "llm",
-    "mutation_type": "from_scratch",
-    "is_valid": true,
-    "hash": "ac596bcc"
-  },
-  {
-    "file": "ir\\invalid\\011_llm_from_scratch_b5d4d4af.ll",
-    "source": "llm",
-    "mutation_type": "from_scratch",
+    "seed_ir_hash": "",
     "is_valid": false,
-    "hash": "b5d4d4af"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "b16bb7a9",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\012_llm_from_scratch_57c43c9c.ll",
+    "mutant_id": "0009",
+    "file": "ir/invalid/009_llm_from_scratch_c00d3074.ll",
     "source": "llm",
     "mutation_type": "from_scratch",
-    "is_valid": true,
-    "hash": "57c43c9c"
+    "seed_ir_hash": "",
+    "is_valid": false,
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "c00d3074",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\013_llm_from_scratch_21dbffba.ll",
+    "mutant_id": "0010",
+    "file": "ir/valid/010_llm_from_scratch_54f7f1cf.ll",
     "source": "llm",
     "mutation_type": "from_scratch",
-    "is_valid": false,
-    "hash": "21dbffba"
+    "seed_ir_hash": "",
+    "is_valid": true,
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "54f7f1cf",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\014_llm_from_scratch_b8783918.ll",
+    "mutant_id": "0011",
+    "file": "ir/valid/011_llm_from_scratch_635963a1.ll",
     "source": "llm",
     "mutation_type": "from_scratch",
-    "is_valid": false,
-    "hash": "b8783918"
+    "seed_ir_hash": "",
+    "is_valid": true,
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "635963a1",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\015_llm_from_scratch_f53c26a1.ll",
+    "mutant_id": "0012",
+    "file": "ir/valid/012_llm_from_scratch_9f73ae8c.ll",
     "source": "llm",
     "mutation_type": "from_scratch",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "f53c26a1"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "9f73ae8c",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\016_llm_mutation_9cbe130a.ll",
+    "mutant_id": "0013",
+    "file": "ir/valid/013_llm_from_scratch_6e0cdd61.ll",
     "source": "llm",
-    "mutation_type": "mutation",
+    "mutation_type": "from_scratch",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "9cbe130a"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "6e0cdd61",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\017_llm_mutation_0cee45eb.ll",
+    "mutant_id": "0014",
+    "file": "ir/valid/014_llm_from_scratch_90634e8f.ll",
     "source": "llm",
-    "mutation_type": "mutation",
+    "mutation_type": "from_scratch",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "0cee45eb"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "90634e8f",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\018_llm_mutation_d030571c.ll",
+    "mutant_id": "0015",
+    "file": "ir/valid/015_llm_from_scratch_34ef1068.ll",
     "source": "llm",
-    "mutation_type": "mutation",
+    "mutation_type": "from_scratch",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "d030571c"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "34ef1068",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\019_llm_mutation_b2eee35c.ll",
+    "mutant_id": "0016",
+    "file": "ir/valid/016_llm_mutation_21394ad2.ll",
     "source": "llm",
     "mutation_type": "mutation",
+    "seed_ir_hash": "32b8ee3a",
+    "is_valid": true,
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "21394ad2",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
+  },
+  {
+    "mutant_id": "0017",
+    "file": "ir/valid/017_llm_mutation_a4e6fd1e.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "seed_ir_hash": "f85c7b9d",
+    "is_valid": true,
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "a4e6fd1e",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
+  },
+  {
+    "mutant_id": "0018",
+    "file": "ir/valid/018_llm_mutation_9d3d22d5.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "seed_ir_hash": "9b1ac0c7",
+    "is_valid": true,
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "9d3d22d5",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
+  },
+  {
+    "mutant_id": "0019",
+    "file": "ir/valid/019_llm_mutation_5baa385a.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "seed_ir_hash": "b2c5bdc1",
+    "is_valid": true,
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "5baa385a",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
+  },
+  {
+    "mutant_id": "0020",
+    "file": "ir/valid/020_llm_mutation_18bb0466.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "seed_ir_hash": "f7c7b836",
+    "is_valid": true,
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "18bb0466",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
+  },
+  {
+    "mutant_id": "0021",
+    "file": "ir/valid/021_llm_mutation_3e450c6d.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "seed_ir_hash": "fc5a655a",
+    "is_valid": true,
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "3e450c6d",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
+  },
+  {
+    "mutant_id": "0022",
+    "file": "ir/valid/022_llm_mutation_ddf03119.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "seed_ir_hash": "041e5d96",
+    "is_valid": true,
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "ddf03119",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
+  },
+  {
+    "mutant_id": "0023",
+    "file": "ir/valid/023_llm_mutation_625ccb4d.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "seed_ir_hash": "daa97f46",
+    "is_valid": true,
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "625ccb4d",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
+  },
+  {
+    "mutant_id": "0024",
+    "file": "ir/valid/024_llm_mutation_5a3c771e.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "seed_ir_hash": "6bebbe2c",
+    "is_valid": true,
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "5a3c771e",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
+  },
+  {
+    "mutant_id": "0025",
+    "file": "ir/valid/025_llm_mutation_f66a6ef1.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "seed_ir_hash": "08cd3de2",
+    "is_valid": true,
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "f66a6ef1",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
+  },
+  {
+    "mutant_id": "0026",
+    "file": "ir/invalid/026_llm_mutation_a5bde7cf.ll",
+    "source": "llm",
+    "mutation_type": "mutation",
+    "seed_ir_hash": "32b8ee3a",
     "is_valid": false,
-    "hash": "b2eee35c"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "a5bde7cf",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\020_llm_mutation_63da2aed.ll",
+    "mutant_id": "0027",
+    "file": "ir/valid/027_llm_mutation_95451bc7.ll",
     "source": "llm",
     "mutation_type": "mutation",
+    "seed_ir_hash": "f85c7b9d",
     "is_valid": true,
-    "hash": "63da2aed"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "95451bc7",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\021_llm_mutation_a0cc83c0.ll",
+    "mutant_id": "0028",
+    "file": "ir/valid/028_llm_mutation_a35763ae.ll",
     "source": "llm",
     "mutation_type": "mutation",
+    "seed_ir_hash": "9b1ac0c7",
     "is_valid": true,
-    "hash": "a0cc83c0"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "a35763ae",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\022_llm_mutation_dd257cf0.ll",
+    "mutant_id": "0029",
+    "file": "ir/valid/029_llm_mutation_07f2b87c.ll",
     "source": "llm",
     "mutation_type": "mutation",
-    "is_valid": false,
-    "hash": "dd257cf0"
+    "seed_ir_hash": "b2c5bdc1",
+    "is_valid": true,
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "07f2b87c",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\023_llm_mutation_246254b9.ll",
+    "mutant_id": "0030",
+    "file": "ir/valid/030_llm_mutation_39f5ba32.ll",
     "source": "llm",
     "mutation_type": "mutation",
+    "seed_ir_hash": "f7c7b836",
     "is_valid": true,
-    "hash": "246254b9"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "39f5ba32",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\024_llm_mutation_01160a69.ll",
-    "source": "llm",
-    "mutation_type": "mutation",
-    "is_valid": false,
-    "hash": "01160a69"
-  },
-  {
-    "file": "ir\\valid\\025_llm_mutation_07e66f23.ll",
-    "source": "llm",
-    "mutation_type": "mutation",
-    "is_valid": true,
-    "hash": "07e66f23"
-  },
-  {
-    "file": "ir\\valid\\026_llm_mutation_2fd1169d.ll",
-    "source": "llm",
-    "mutation_type": "mutation",
-    "is_valid": true,
-    "hash": "2fd1169d"
-  },
-  {
-    "file": "ir\\valid\\027_llm_mutation_af4d784a.ll",
-    "source": "llm",
-    "mutation_type": "mutation",
-    "is_valid": true,
-    "hash": "af4d784a"
-  },
-  {
-    "file": "ir\\valid\\028_llm_mutation_1839cf66.ll",
-    "source": "llm",
-    "mutation_type": "mutation",
-    "is_valid": true,
-    "hash": "1839cf66"
-  },
-  {
-    "file": "ir\\invalid\\029_llm_mutation_e77a12bc.ll",
-    "source": "llm",
-    "mutation_type": "mutation",
-    "is_valid": false,
-    "hash": "e77a12bc"
-  },
-  {
-    "file": "ir\\valid\\030_llm_mutation_78c2a9c8.ll",
-    "source": "llm",
-    "mutation_type": "mutation",
-    "is_valid": true,
-    "hash": "78c2a9c8"
-  },
-  {
-    "file": "ir\\valid\\031_llm_refinement_7a9accdb.ll",
+    "mutant_id": "0031",
+    "file": "ir/valid/031_llm_refinement_1e00190e.ll",
     "source": "llm",
     "mutation_type": "refinement",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "7a9accdb"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "1e00190e",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\032_llm_refinement_f8b27ca4.ll",
+    "mutant_id": "0032",
+    "file": "ir/valid/032_llm_refinement_c8564803.ll",
     "source": "llm",
     "mutation_type": "refinement",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "f8b27ca4"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "c8564803",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\033_llm_refinement_f44030d2.ll",
+    "mutant_id": "0033",
+    "file": "ir/valid/033_llm_refinement_04738fed.ll",
     "source": "llm",
     "mutation_type": "refinement",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "f44030d2"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "04738fed",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\034_llm_refinement_96c96605.ll",
+    "mutant_id": "0034",
+    "file": "ir/valid/034_llm_refinement_ffb94e49.ll",
     "source": "llm",
     "mutation_type": "refinement",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "96c96605"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "ffb94e49",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\035_llm_refinement_b8a20cb4.ll",
+    "mutant_id": "0035",
+    "file": "ir/valid/035_llm_refinement_75deb150.ll",
     "source": "llm",
     "mutation_type": "refinement",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "b8a20cb4"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "75deb150",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\036_llm_refinement_99f42386.ll",
+    "mutant_id": "0036",
+    "file": "ir/valid/036_llm_refinement_f57e16b9.ll",
     "source": "llm",
     "mutation_type": "refinement",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "99f42386"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "f57e16b9",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\037_llm_refinement_cb4dd4a4.ll",
+    "mutant_id": "0037",
+    "file": "ir/valid/037_llm_refinement_9e6748e2.ll",
     "source": "llm",
     "mutation_type": "refinement",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "cb4dd4a4"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "9e6748e2",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\038_llm_refinement_8cac4658.ll",
+    "mutant_id": "0038",
+    "file": "ir/valid/038_llm_refinement_9b58bc2b.ll",
     "source": "llm",
     "mutation_type": "refinement",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "8cac4658"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "9b58bc2b",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\039_llm_refinement_e9ecff93.ll",
+    "mutant_id": "0039",
+    "file": "ir/valid/039_llm_refinement_14261392.ll",
     "source": "llm",
     "mutation_type": "refinement",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "e9ecff93"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "14261392",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\040_llm_refinement_3b0d6459.ll",
+    "mutant_id": "0040",
+    "file": "ir/valid/040_llm_refinement_1199ba7c.ll",
     "source": "llm",
     "mutation_type": "refinement",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "3b0d6459"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "1199ba7c",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\041_llm_refinement_e7fdcb57.ll",
+    "mutant_id": "0041",
+    "file": "ir/valid/041_llm_refinement_b8a20cb4.ll",
     "source": "llm",
     "mutation_type": "refinement",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "e7fdcb57"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "b8a20cb4",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\042_llm_refinement_3041cebd.ll",
+    "mutant_id": "0042",
+    "file": "ir/valid/042_llm_refinement_5e040e30.ll",
     "source": "llm",
     "mutation_type": "refinement",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "3041cebd"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "5e040e30",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\043_llm_refinement_bb19555a.ll",
+    "mutant_id": "0043",
+    "file": "ir/valid/043_llm_refinement_9b7a57ae.ll",
     "source": "llm",
     "mutation_type": "refinement",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "bb19555a"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "9b7a57ae",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\044_llm_refinement_143a03a1.ll",
+    "mutant_id": "0044",
+    "file": "ir/valid/044_llm_refinement_8a22a2cd.ll",
     "source": "llm",
     "mutation_type": "refinement",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "143a03a1"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "8a22a2cd",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\045_llm_refinement_9aa26544.ll",
+    "mutant_id": "0045",
+    "file": "ir/valid/045_llm_refinement_e7b8958a.ll",
     "source": "llm",
     "mutation_type": "refinement",
+    "seed_ir_hash": "",
     "is_valid": true,
-    "hash": "9aa26544"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "e7b8958a",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\046_grammar_grammar_swap_operands_c5d0e1ce.ll",
+    "mutant_id": "0046",
+    "file": "ir/valid/046_grammar_grammar_swap_operands_c5d0e1ce.ll",
     "source": "grammar",
     "mutation_type": "grammar_swap_operands",
+    "seed_ir_hash": "32b8ee3a",
     "is_valid": true,
-    "hash": "c5d0e1ce"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "c5d0e1ce",
+    "error_types": [],
+    "generation_time_s": 0.0028,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\047_grammar_grammar_change_constant_32b8ee3a.ll",
+    "mutant_id": "0047",
+    "file": "ir/valid/047_grammar_grammar_change_constant_32b8ee3a.ll",
     "source": "grammar",
     "mutation_type": "grammar_change_constant",
+    "seed_ir_hash": "32b8ee3a",
     "is_valid": true,
-    "hash": "32b8ee3a"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "32b8ee3a",
+    "error_types": [],
+    "generation_time_s": 0.0001,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\048_grammar_grammar_toggle_overflow_flag_0a6d66f9.ll",
+    "mutant_id": "0048",
+    "file": "ir/valid/048_grammar_grammar_toggle_overflow_flag_0a6d66f9.ll",
     "source": "grammar",
     "mutation_type": "grammar_toggle_overflow_flag",
+    "seed_ir_hash": "32b8ee3a",
     "is_valid": true,
-    "hash": "0a6d66f9"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "0a6d66f9",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\049_grammar_grammar_swap_operands_c5d0e1ce.ll",
+    "mutant_id": "0049",
+    "file": null,
     "source": "grammar",
     "mutation_type": "grammar_swap_operands",
+    "seed_ir_hash": "32b8ee3a",
     "is_valid": true,
-    "hash": "c5d0e1ce"
+    "is_interesting": false,
+    "is_duplicate": true,
+    "content_hash": "c5d0e1ce",
+    "error_types": [],
+    "generation_time_s": 0.0001,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\050_grammar_grammar_swap_branch_targets_32b8ee3a.ll",
+    "mutant_id": "0050",
+    "file": null,
     "source": "grammar",
     "mutation_type": "grammar_swap_branch_targets",
+    "seed_ir_hash": "32b8ee3a",
     "is_valid": true,
-    "hash": "32b8ee3a"
+    "is_interesting": false,
+    "is_duplicate": true,
+    "content_hash": "32b8ee3a",
+    "error_types": [],
+    "generation_time_s": 0.0001,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\051_grammar_grammar_duplicate_instruction_a11da1fa.ll",
+    "mutant_id": "0051",
+    "file": "ir/valid/051_grammar_grammar_duplicate_instruction_a11da1fa.ll",
     "source": "grammar",
     "mutation_type": "grammar_duplicate_instruction",
+    "seed_ir_hash": "f85c7b9d",
     "is_valid": true,
-    "hash": "a11da1fa"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "a11da1fa",
+    "error_types": [],
+    "generation_time_s": 0.0001,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\052_grammar_grammar_swap_operands_f85c7b9d.ll",
+    "mutant_id": "0052",
+    "file": "ir/valid/052_grammar_grammar_swap_operands_f85c7b9d.ll",
     "source": "grammar",
     "mutation_type": "grammar_swap_operands",
+    "seed_ir_hash": "f85c7b9d",
     "is_valid": true,
-    "hash": "f85c7b9d"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "f85c7b9d",
+    "error_types": [],
+    "generation_time_s": 0.0002,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\053_grammar_grammar_toggle_overflow_flag_ee13a8ad.ll",
+    "mutant_id": "0053",
+    "file": "ir/valid/053_grammar_grammar_toggle_overflow_flag_ee13a8ad.ll",
     "source": "grammar",
     "mutation_type": "grammar_toggle_overflow_flag",
+    "seed_ir_hash": "f85c7b9d",
     "is_valid": true,
-    "hash": "ee13a8ad"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "ee13a8ad",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\054_grammar_grammar_add_nsw_nuw_f85c7b9d.ll",
+    "mutant_id": "0054",
+    "file": null,
     "source": "grammar",
     "mutation_type": "grammar_add_nsw_nuw",
+    "seed_ir_hash": "f85c7b9d",
     "is_valid": true,
-    "hash": "f85c7b9d"
+    "is_interesting": true,
+    "is_duplicate": true,
+    "content_hash": "f85c7b9d",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\055_grammar_grammar_swap_branch_targets_0deac8b8.ll",
+    "mutant_id": "0055",
+    "file": "ir/valid/055_grammar_grammar_swap_branch_targets_0deac8b8.ll",
     "source": "grammar",
     "mutation_type": "grammar_swap_branch_targets",
+    "seed_ir_hash": "f85c7b9d",
     "is_valid": true,
-    "hash": "0deac8b8"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "0deac8b8",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\056_grammar_grammar_replace_binop_01c8714b.ll",
+    "mutant_id": "0056",
+    "file": "ir/valid/056_grammar_grammar_replace_binop_01c8714b.ll",
     "source": "grammar",
     "mutation_type": "grammar_replace_binop",
+    "seed_ir_hash": "9b1ac0c7",
     "is_valid": true,
-    "hash": "01c8714b"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "01c8714b",
+    "error_types": [],
+    "generation_time_s": 0.0004,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\057_grammar_grammar_add_nsw_nuw_5adfb95e.ll",
+    "mutant_id": "0057",
+    "file": "ir/valid/057_grammar_grammar_add_nsw_nuw_5adfb95e.ll",
     "source": "grammar",
     "mutation_type": "grammar_add_nsw_nuw",
+    "seed_ir_hash": "9b1ac0c7",
     "is_valid": true,
-    "hash": "5adfb95e"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "5adfb95e",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\058_grammar_grammar_remove_nsw_nuw_9b1ac0c7.ll",
+    "mutant_id": "0058",
+    "file": "ir/valid/058_grammar_grammar_remove_nsw_nuw_9b1ac0c7.ll",
     "source": "grammar",
     "mutation_type": "grammar_remove_nsw_nuw",
+    "seed_ir_hash": "9b1ac0c7",
     "is_valid": true,
-    "hash": "9b1ac0c7"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "9b1ac0c7",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\059_grammar_grammar_swap_branch_targets_d3aa5821.ll",
+    "mutant_id": "0059",
+    "file": "ir/valid/059_grammar_grammar_swap_branch_targets_d3aa5821.ll",
     "source": "grammar",
     "mutation_type": "grammar_swap_branch_targets",
+    "seed_ir_hash": "9b1ac0c7",
     "is_valid": true,
-    "hash": "d3aa5821"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "d3aa5821",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\060_grammar_grammar_change_constant_82ab1ee4.ll",
+    "mutant_id": "0060",
+    "file": "ir/valid/060_grammar_grammar_change_constant_82ab1ee4.ll",
     "source": "grammar",
     "mutation_type": "grammar_change_constant",
+    "seed_ir_hash": "9b1ac0c7",
     "is_valid": true,
-    "hash": "82ab1ee4"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "82ab1ee4",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\061_grammar_grammar_duplicate_instruction_03ab1dc6.ll",
+    "mutant_id": "0061",
+    "file": "ir/valid/061_grammar_grammar_duplicate_instruction_03ab1dc6.ll",
     "source": "grammar",
     "mutation_type": "grammar_duplicate_instruction",
+    "seed_ir_hash": "b2c5bdc1",
     "is_valid": true,
-    "hash": "03ab1dc6"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "03ab1dc6",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\062_grammar_grammar_change_icmp_pred_b2c5bdc1.ll",
+    "mutant_id": "0062",
+    "file": "ir/valid/062_grammar_grammar_change_icmp_pred_b2c5bdc1.ll",
     "source": "grammar",
     "mutation_type": "grammar_change_icmp_pred",
+    "seed_ir_hash": "b2c5bdc1",
     "is_valid": true,
-    "hash": "b2c5bdc1"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "b2c5bdc1",
+    "error_types": [],
+    "generation_time_s": 0.0001,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\063_grammar_grammar_toggle_overflow_flag_0ea05c52.ll",
+    "mutant_id": "0063",
+    "file": "ir/valid/063_grammar_grammar_toggle_overflow_flag_0ea05c52.ll",
     "source": "grammar",
     "mutation_type": "grammar_toggle_overflow_flag",
+    "seed_ir_hash": "b2c5bdc1",
     "is_valid": true,
-    "hash": "0ea05c52"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "0ea05c52",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\064_grammar_grammar_swap_operands_b2c5bdc1.ll",
+    "mutant_id": "0064",
+    "file": null,
     "source": "grammar",
     "mutation_type": "grammar_swap_operands",
+    "seed_ir_hash": "b2c5bdc1",
     "is_valid": true,
-    "hash": "b2c5bdc1"
+    "is_interesting": false,
+    "is_duplicate": true,
+    "content_hash": "b2c5bdc1",
+    "error_types": [],
+    "generation_time_s": 0.0002,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\065_grammar_grammar_duplicate_instruction_5c60451f.ll",
+    "mutant_id": "0065",
+    "file": "ir/valid/065_grammar_grammar_duplicate_instruction_5c60451f.ll",
     "source": "grammar",
     "mutation_type": "grammar_duplicate_instruction",
+    "seed_ir_hash": "b2c5bdc1",
     "is_valid": true,
-    "hash": "5c60451f"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "5c60451f",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\066_grammar_grammar_insert_dead_code_a3b6a1d4.ll",
+    "mutant_id": "0066",
+    "file": "ir/valid/066_grammar_grammar_insert_dead_code_a3b6a1d4.ll",
     "source": "grammar",
     "mutation_type": "grammar_insert_dead_code",
+    "seed_ir_hash": "f7c7b836",
     "is_valid": true,
-    "hash": "a3b6a1d4"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "a3b6a1d4",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\067_grammar_grammar_remove_nsw_nuw_f7c7b836.ll",
+    "mutant_id": "0067",
+    "file": "ir/valid/067_grammar_grammar_remove_nsw_nuw_f7c7b836.ll",
     "source": "grammar",
     "mutation_type": "grammar_remove_nsw_nuw",
+    "seed_ir_hash": "f7c7b836",
     "is_valid": true,
-    "hash": "f7c7b836"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "f7c7b836",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\068_grammar_grammar_add_nsw_nuw_eb202cff.ll",
+    "mutant_id": "0068",
+    "file": "ir/valid/068_grammar_grammar_add_nsw_nuw_eb202cff.ll",
     "source": "grammar",
     "mutation_type": "grammar_add_nsw_nuw",
+    "seed_ir_hash": "f7c7b836",
     "is_valid": true,
-    "hash": "eb202cff"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "eb202cff",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\069_grammar_grammar_add_nsw_nuw_3b3e33fe.ll",
+    "mutant_id": "0069",
+    "file": "ir/valid/069_grammar_grammar_add_nsw_nuw_3b3e33fe.ll",
     "source": "grammar",
     "mutation_type": "grammar_add_nsw_nuw",
+    "seed_ir_hash": "f7c7b836",
     "is_valid": true,
-    "hash": "3b3e33fe"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "3b3e33fe",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\070_grammar_grammar_swap_operands_96dc153e.ll",
+    "mutant_id": "0070",
+    "file": "ir/valid/070_grammar_grammar_swap_operands_96dc153e.ll",
     "source": "grammar",
     "mutation_type": "grammar_swap_operands",
+    "seed_ir_hash": "f7c7b836",
     "is_valid": true,
-    "hash": "96dc153e"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "96dc153e",
+    "error_types": [],
+    "generation_time_s": 0.0003,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\071_grammar_grammar_toggle_overflow_flag_01308115.ll",
+    "mutant_id": "0071",
+    "file": "ir/invalid/071_grammar_grammar_toggle_overflow_flag_01308115.ll",
     "source": "grammar",
     "mutation_type": "grammar_toggle_overflow_flag",
+    "seed_ir_hash": "fc5a655a",
     "is_valid": false,
-    "hash": "01308115"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "01308115",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow"
+    ],
+    "generation_time_s": 0.0001,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\072_grammar_grammar_toggle_overflow_flag_4b748521.ll",
+    "mutant_id": "0072",
+    "file": "ir/invalid/072_grammar_grammar_toggle_overflow_flag_4b748521.ll",
     "source": "grammar",
     "mutation_type": "grammar_toggle_overflow_flag",
+    "seed_ir_hash": "fc5a655a",
     "is_valid": false,
-    "hash": "4b748521"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "4b748521",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow"
+    ],
+    "generation_time_s": 0.0001,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\073_grammar_grammar_change_constant_fc5a655a.ll",
+    "mutant_id": "0073",
+    "file": "ir/invalid/073_grammar_grammar_change_constant_fc5a655a.ll",
     "source": "grammar",
     "mutation_type": "grammar_change_constant",
+    "seed_ir_hash": "fc5a655a",
     "is_valid": false,
-    "hash": "fc5a655a"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "fc5a655a",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\074_grammar_grammar_remove_nsw_nuw_fc5a655a.ll",
+    "mutant_id": "0074",
+    "file": null,
     "source": "grammar",
     "mutation_type": "grammar_remove_nsw_nuw",
+    "seed_ir_hash": "fc5a655a",
     "is_valid": false,
-    "hash": "fc5a655a"
+    "is_interesting": false,
+    "is_duplicate": true,
+    "content_hash": "fc5a655a",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\075_grammar_grammar_insert_dead_code_c5cd0d21.ll",
+    "mutant_id": "0075",
+    "file": "ir/invalid/075_grammar_grammar_insert_dead_code_c5cd0d21.ll",
     "source": "grammar",
     "mutation_type": "grammar_insert_dead_code",
+    "seed_ir_hash": "fc5a655a",
     "is_valid": false,
-    "hash": "c5cd0d21"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "c5cd0d21",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\076_grammar_grammar_toggle_overflow_flag_041e5d96.ll",
+    "mutant_id": "0076",
+    "file": "ir/valid/076_grammar_grammar_toggle_overflow_flag_041e5d96.ll",
     "source": "grammar",
     "mutation_type": "grammar_toggle_overflow_flag",
+    "seed_ir_hash": "041e5d96",
     "is_valid": true,
-    "hash": "041e5d96"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "041e5d96",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\077_grammar_grammar_change_constant_041e5d96.ll",
+    "mutant_id": "0077",
+    "file": null,
     "source": "grammar",
     "mutation_type": "grammar_change_constant",
+    "seed_ir_hash": "041e5d96",
     "is_valid": true,
-    "hash": "041e5d96"
+    "is_interesting": true,
+    "is_duplicate": true,
+    "content_hash": "041e5d96",
+    "error_types": [],
+    "generation_time_s": 0.0001,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\078_grammar_grammar_add_nsw_nuw_041e5d96.ll",
+    "mutant_id": "0078",
+    "file": null,
     "source": "grammar",
     "mutation_type": "grammar_add_nsw_nuw",
+    "seed_ir_hash": "041e5d96",
     "is_valid": true,
-    "hash": "041e5d96"
+    "is_interesting": true,
+    "is_duplicate": true,
+    "content_hash": "041e5d96",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\079_grammar_grammar_toggle_overflow_flag_041e5d96.ll",
+    "mutant_id": "0079",
+    "file": null,
     "source": "grammar",
     "mutation_type": "grammar_toggle_overflow_flag",
+    "seed_ir_hash": "041e5d96",
     "is_valid": true,
-    "hash": "041e5d96"
+    "is_interesting": true,
+    "is_duplicate": true,
+    "content_hash": "041e5d96",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\080_grammar_grammar_change_icmp_pred_041e5d96.ll",
+    "mutant_id": "0080",
+    "file": null,
     "source": "grammar",
     "mutation_type": "grammar_change_icmp_pred",
+    "seed_ir_hash": "041e5d96",
     "is_valid": true,
-    "hash": "041e5d96"
+    "is_interesting": true,
+    "is_duplicate": true,
+    "content_hash": "041e5d96",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\081_grammar_grammar_remove_nsw_nuw_e91efd37.ll",
+    "mutant_id": "0081",
+    "file": "ir/valid/081_grammar_grammar_remove_nsw_nuw_e91efd37.ll",
     "source": "grammar",
     "mutation_type": "grammar_remove_nsw_nuw",
+    "seed_ir_hash": "daa97f46",
     "is_valid": true,
-    "hash": "e91efd37"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "e91efd37",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\082_grammar_grammar_duplicate_instruction_37064298.ll",
+    "mutant_id": "0082",
+    "file": "ir/valid/082_grammar_grammar_duplicate_instruction_37064298.ll",
     "source": "grammar",
     "mutation_type": "grammar_duplicate_instruction",
+    "seed_ir_hash": "daa97f46",
     "is_valid": true,
-    "hash": "37064298"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "37064298",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\083_grammar_grammar_add_nsw_nuw_daa97f46.ll",
+    "mutant_id": "0083",
+    "file": "ir/valid/083_grammar_grammar_add_nsw_nuw_daa97f46.ll",
     "source": "grammar",
     "mutation_type": "grammar_add_nsw_nuw",
+    "seed_ir_hash": "daa97f46",
     "is_valid": true,
-    "hash": "daa97f46"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "daa97f46",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\084_grammar_grammar_toggle_overflow_flag_71fd7980.ll",
+    "mutant_id": "0084",
+    "file": "ir/valid/084_grammar_grammar_toggle_overflow_flag_71fd7980.ll",
     "source": "grammar",
     "mutation_type": "grammar_toggle_overflow_flag",
+    "seed_ir_hash": "daa97f46",
     "is_valid": true,
-    "hash": "71fd7980"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "71fd7980",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\085_grammar_grammar_replace_binop_49d75c7f.ll",
+    "mutant_id": "0085",
+    "file": "ir/valid/085_grammar_grammar_replace_binop_49d75c7f.ll",
     "source": "grammar",
     "mutation_type": "grammar_replace_binop",
+    "seed_ir_hash": "daa97f46",
     "is_valid": true,
-    "hash": "49d75c7f"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "49d75c7f",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\086_grammar_grammar_insert_dead_code_03c1a8bb.ll",
+    "mutant_id": "0086",
+    "file": "ir/valid/086_grammar_grammar_insert_dead_code_03c1a8bb.ll",
     "source": "grammar",
     "mutation_type": "grammar_insert_dead_code",
+    "seed_ir_hash": "6bebbe2c",
     "is_valid": true,
-    "hash": "03c1a8bb"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "03c1a8bb",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\087_grammar_grammar_toggle_overflow_flag_5b64778d.ll",
+    "mutant_id": "0087",
+    "file": "ir/valid/087_grammar_grammar_toggle_overflow_flag_5b64778d.ll",
     "source": "grammar",
     "mutation_type": "grammar_toggle_overflow_flag",
+    "seed_ir_hash": "6bebbe2c",
     "is_valid": true,
-    "hash": "5b64778d"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "5b64778d",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\088_grammar_grammar_remove_nsw_nuw_6bebbe2c.ll",
+    "mutant_id": "0088",
+    "file": "ir/valid/088_grammar_grammar_remove_nsw_nuw_6bebbe2c.ll",
     "source": "grammar",
     "mutation_type": "grammar_remove_nsw_nuw",
+    "seed_ir_hash": "6bebbe2c",
     "is_valid": true,
-    "hash": "6bebbe2c"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "6bebbe2c",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\089_grammar_grammar_duplicate_instruction_98d71304.ll",
+    "mutant_id": "0089",
+    "file": "ir/valid/089_grammar_grammar_duplicate_instruction_98d71304.ll",
     "source": "grammar",
     "mutation_type": "grammar_duplicate_instruction",
+    "seed_ir_hash": "6bebbe2c",
     "is_valid": true,
-    "hash": "98d71304"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "98d71304",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\090_grammar_grammar_change_constant_6bebbe2c.ll",
+    "mutant_id": "0090",
+    "file": null,
     "source": "grammar",
     "mutation_type": "grammar_change_constant",
+    "seed_ir_hash": "6bebbe2c",
     "is_valid": true,
-    "hash": "6bebbe2c"
+    "is_interesting": false,
+    "is_duplicate": true,
+    "content_hash": "6bebbe2c",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\091_grammar_grammar_change_icmp_pred_2eb9e240.ll",
+    "mutant_id": "0091",
+    "file": "ir/valid/091_grammar_grammar_change_icmp_pred_2eb9e240.ll",
     "source": "grammar",
     "mutation_type": "grammar_change_icmp_pred",
+    "seed_ir_hash": "08cd3de2",
     "is_valid": true,
-    "hash": "2eb9e240"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "2eb9e240",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\092_grammar_grammar_add_nsw_nuw_d771c7c2.ll",
+    "mutant_id": "0092",
+    "file": "ir/valid/092_grammar_grammar_add_nsw_nuw_d771c7c2.ll",
     "source": "grammar",
     "mutation_type": "grammar_add_nsw_nuw",
+    "seed_ir_hash": "08cd3de2",
     "is_valid": true,
-    "hash": "d771c7c2"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "d771c7c2",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\093_grammar_grammar_toggle_overflow_flag_d910857d.ll",
+    "mutant_id": "0093",
+    "file": "ir/valid/093_grammar_grammar_toggle_overflow_flag_d910857d.ll",
     "source": "grammar",
     "mutation_type": "grammar_toggle_overflow_flag",
+    "seed_ir_hash": "08cd3de2",
     "is_valid": true,
-    "hash": "d910857d"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "d910857d",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\094_grammar_grammar_swap_operands_f0079dcd.ll",
+    "mutant_id": "0094",
+    "file": "ir/valid/094_grammar_grammar_swap_operands_f0079dcd.ll",
     "source": "grammar",
     "mutation_type": "grammar_swap_operands",
+    "seed_ir_hash": "08cd3de2",
     "is_valid": true,
-    "hash": "f0079dcd"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "f0079dcd",
+    "error_types": [],
+    "generation_time_s": 0.0003,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\095_grammar_grammar_swap_operands_f0079dcd.ll",
+    "mutant_id": "0095",
+    "file": null,
     "source": "grammar",
     "mutation_type": "grammar_swap_operands",
+    "seed_ir_hash": "08cd3de2",
     "is_valid": true,
-    "hash": "f0079dcd"
+    "is_interesting": true,
+    "is_duplicate": true,
+    "content_hash": "f0079dcd",
+    "error_types": [],
+    "generation_time_s": 0.0003,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\096_random_random_random_char_flip_536b34e3.ll",
+    "mutant_id": "0096",
+    "file": "ir/invalid/096_random_random_random_char_flip_536b34e3.ll",
     "source": "random",
     "mutation_type": "random_random_char_flip",
+    "seed_ir_hash": "32b8ee3a",
     "is_valid": false,
-    "hash": "536b34e3"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "536b34e3",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\097_random_random_random_line_duplicate_ccdf1656.ll",
+    "mutant_id": "0097",
+    "file": "ir/invalid/097_random_random_random_line_duplicate_ccdf1656.ll",
     "source": "random",
     "mutation_type": "random_random_line_duplicate",
+    "seed_ir_hash": "32b8ee3a",
     "is_valid": false,
-    "hash": "ccdf1656"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "ccdf1656",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\098_random_random_random_line_delete_6ba955b1.ll",
+    "mutant_id": "0098",
+    "file": "ir/invalid/098_random_random_random_line_delete_6ba955b1.ll",
     "source": "random",
     "mutation_type": "random_random_line_delete",
+    "seed_ir_hash": "32b8ee3a",
     "is_valid": false,
-    "hash": "6ba955b1"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "6ba955b1",
+    "error_types": [
+      "unknown"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\099_random_random_random_char_flip_43e0900b.ll",
+    "mutant_id": "0099",
+    "file": "ir/invalid/099_random_random_random_char_flip_43e0900b.ll",
     "source": "random",
     "mutation_type": "random_random_char_flip",
+    "seed_ir_hash": "32b8ee3a",
     "is_valid": false,
-    "hash": "43e0900b"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "43e0900b",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\100_random_random_random_word_replace_f577677e.ll",
+    "mutant_id": "0100",
+    "file": "ir/invalid/100_random_random_random_word_replace_f577677e.ll",
     "source": "random",
     "mutation_type": "random_random_word_replace",
+    "seed_ir_hash": "32b8ee3a",
     "is_valid": false,
-    "hash": "f577677e"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "f577677e",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\101_random_random_random_char_flip_b90bac8a.ll",
+    "mutant_id": "0101",
+    "file": "ir/invalid/101_random_random_random_char_flip_b90bac8a.ll",
     "source": "random",
     "mutation_type": "random_random_char_flip",
+    "seed_ir_hash": "f85c7b9d",
     "is_valid": false,
-    "hash": "b90bac8a"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "b90bac8a",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\102_random_random_random_line_delete_279e5522.ll",
+    "mutant_id": "0102",
+    "file": "ir/valid/102_random_random_random_line_delete_279e5522.ll",
     "source": "random",
     "mutation_type": "random_random_line_delete",
+    "seed_ir_hash": "f85c7b9d",
     "is_valid": true,
-    "hash": "279e5522"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "279e5522",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\103_random_random_random_word_replace_ac848554.ll",
+    "mutant_id": "0103",
+    "file": "ir/invalid/103_random_random_random_word_replace_ac848554.ll",
     "source": "random",
     "mutation_type": "random_random_word_replace",
+    "seed_ir_hash": "f85c7b9d",
     "is_valid": false,
-    "hash": "ac848554"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "ac848554",
+    "error_types": [
+      "type_mismatch"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\104_random_random_random_line_delete_8882dd20.ll",
+    "mutant_id": "0104",
+    "file": "ir/invalid/104_random_random_random_line_delete_8882dd20.ll",
     "source": "random",
     "mutation_type": "random_random_line_delete",
+    "seed_ir_hash": "f85c7b9d",
     "is_valid": false,
-    "hash": "8882dd20"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "8882dd20",
+    "error_types": [
+      "missing_terminator",
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\105_random_random_random_word_replace_2a369d8e.ll",
+    "mutant_id": "0105",
+    "file": "ir/invalid/105_random_random_random_word_replace_2a369d8e.ll",
     "source": "random",
     "mutation_type": "random_random_word_replace",
+    "seed_ir_hash": "f85c7b9d",
     "is_valid": false,
-    "hash": "2a369d8e"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "2a369d8e",
+    "error_types": [
+      "broken_control_flow",
+      "broken_control_flow",
+      "invalid_phi",
+      "broken_control_flow",
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\106_random_random_random_line_swap_ca9db2e3.ll",
+    "mutant_id": "0106",
+    "file": "ir/valid/106_random_random_random_line_swap_ca9db2e3.ll",
     "source": "random",
     "mutation_type": "random_random_line_swap",
+    "seed_ir_hash": "9b1ac0c7",
     "is_valid": true,
-    "hash": "ca9db2e3"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "ca9db2e3",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\107_random_random_random_line_delete_849ddd6e.ll",
+    "mutant_id": "0107",
+    "file": "ir/invalid/107_random_random_random_line_delete_849ddd6e.ll",
     "source": "random",
     "mutation_type": "random_random_line_delete",
+    "seed_ir_hash": "9b1ac0c7",
     "is_valid": false,
-    "hash": "849ddd6e"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "849ddd6e",
+    "error_types": [
+      "broken_control_flow",
+      "invalid_phi",
+      "invalid_phi",
+      "invalid_phi",
+      "invalid_phi",
+      "invalid_phi",
+      "invalid_phi",
+      "broken_control_flow",
+      "broken_control_flow",
+      "unknown"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\108_random_random_random_line_duplicate_9b1ac0c7.ll",
+    "mutant_id": "0108",
+    "file": null,
     "source": "random",
     "mutation_type": "random_random_line_duplicate",
+    "seed_ir_hash": "9b1ac0c7",
     "is_valid": true,
-    "hash": "9b1ac0c7"
+    "is_interesting": true,
+    "is_duplicate": true,
+    "content_hash": "9b1ac0c7",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\109_random_random_random_char_flip_cefb0196.ll",
+    "mutant_id": "0109",
+    "file": "ir/invalid/109_random_random_random_char_flip_cefb0196.ll",
     "source": "random",
     "mutation_type": "random_random_char_flip",
+    "seed_ir_hash": "9b1ac0c7",
     "is_valid": false,
-    "hash": "cefb0196"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "cefb0196",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\110_random_random_random_line_duplicate_9b1ac0c7.ll",
+    "mutant_id": "0110",
+    "file": null,
     "source": "random",
     "mutation_type": "random_random_line_duplicate",
+    "seed_ir_hash": "9b1ac0c7",
     "is_valid": true,
-    "hash": "9b1ac0c7"
+    "is_interesting": true,
+    "is_duplicate": true,
+    "content_hash": "9b1ac0c7",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\111_random_random_random_word_replace_ba3f107f.ll",
+    "mutant_id": "0111",
+    "file": "ir/invalid/111_random_random_random_word_replace_ba3f107f.ll",
     "source": "random",
     "mutation_type": "random_random_word_replace",
+    "seed_ir_hash": "b2c5bdc1",
     "is_valid": false,
-    "hash": "ba3f107f"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "ba3f107f",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\112_random_random_random_word_replace_39679a12.ll",
+    "mutant_id": "0112",
+    "file": "ir/invalid/112_random_random_random_word_replace_39679a12.ll",
     "source": "random",
     "mutation_type": "random_random_word_replace",
+    "seed_ir_hash": "b2c5bdc1",
     "is_valid": false,
-    "hash": "39679a12"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "39679a12",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\113_random_random_random_word_replace_853d9746.ll",
+    "mutant_id": "0113",
+    "file": "ir/invalid/113_random_random_random_word_replace_853d9746.ll",
     "source": "random",
     "mutation_type": "random_random_word_replace",
+    "seed_ir_hash": "b2c5bdc1",
     "is_valid": false,
-    "hash": "853d9746"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "853d9746",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\114_random_random_random_char_flip_c52b9e95.ll",
+    "mutant_id": "0114",
+    "file": "ir/invalid/114_random_random_random_char_flip_c52b9e95.ll",
     "source": "random",
     "mutation_type": "random_random_char_flip",
+    "seed_ir_hash": "b2c5bdc1",
     "is_valid": false,
-    "hash": "c52b9e95"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "c52b9e95",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\115_random_random_random_line_delete_c48d1e07.ll",
+    "mutant_id": "0115",
+    "file": "ir/invalid/115_random_random_random_line_delete_c48d1e07.ll",
     "source": "random",
     "mutation_type": "random_random_line_delete",
+    "seed_ir_hash": "b2c5bdc1",
     "is_valid": false,
-    "hash": "c48d1e07"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "c48d1e07",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\116_random_random_random_line_duplicate_bc08d937.ll",
+    "mutant_id": "0116",
+    "file": "ir/invalid/116_random_random_random_line_duplicate_bc08d937.ll",
     "source": "random",
     "mutation_type": "random_random_line_duplicate",
+    "seed_ir_hash": "f7c7b836",
     "is_valid": false,
-    "hash": "bc08d937"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "bc08d937",
+    "error_types": [
+      "ssa_violation",
+      "ssa_violation"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\117_random_random_random_line_delete_f7c7b836.ll",
+    "mutant_id": "0117",
+    "file": null,
     "source": "random",
     "mutation_type": "random_random_line_delete",
+    "seed_ir_hash": "f7c7b836",
     "is_valid": true,
-    "hash": "f7c7b836"
+    "is_interesting": true,
+    "is_duplicate": true,
+    "content_hash": "f7c7b836",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\118_random_random_random_line_swap_fcd28af9.ll",
+    "mutant_id": "0118",
+    "file": "ir/invalid/118_random_random_random_line_swap_fcd28af9.ll",
     "source": "random",
     "mutation_type": "random_random_line_swap",
+    "seed_ir_hash": "f7c7b836",
     "is_valid": false,
-    "hash": "fcd28af9"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "fcd28af9",
+    "error_types": [
+      "broken_control_flow",
+      "broken_control_flow",
+      "missing_terminator",
+      "invalid_phi",
+      "broken_control_flow",
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\119_random_random_random_line_duplicate_0e9ea2fd.ll",
+    "mutant_id": "0119",
+    "file": "ir/invalid/119_random_random_random_line_duplicate_0e9ea2fd.ll",
     "source": "random",
     "mutation_type": "random_random_line_duplicate",
+    "seed_ir_hash": "f7c7b836",
     "is_valid": false,
-    "hash": "0e9ea2fd"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "0e9ea2fd",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\120_random_random_random_line_duplicate_5184a1cb.ll",
+    "mutant_id": "0120",
+    "file": "ir/invalid/120_random_random_random_line_duplicate_5184a1cb.ll",
     "source": "random",
     "mutation_type": "random_random_line_duplicate",
+    "seed_ir_hash": "f7c7b836",
     "is_valid": false,
-    "hash": "5184a1cb"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "5184a1cb",
+    "error_types": [
+      "broken_control_flow"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\121_random_random_random_line_delete_fc5a655a.ll",
+    "mutant_id": "0121",
+    "file": null,
     "source": "random",
     "mutation_type": "random_random_line_delete",
+    "seed_ir_hash": "fc5a655a",
     "is_valid": false,
-    "hash": "fc5a655a"
+    "is_interesting": false,
+    "is_duplicate": true,
+    "content_hash": "fc5a655a",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\122_random_random_random_line_duplicate_fc5a655a.ll",
+    "mutant_id": "0122",
+    "file": null,
     "source": "random",
     "mutation_type": "random_random_line_duplicate",
+    "seed_ir_hash": "fc5a655a",
     "is_valid": false,
-    "hash": "fc5a655a"
+    "is_interesting": false,
+    "is_duplicate": true,
+    "content_hash": "fc5a655a",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\123_random_random_random_char_flip_9f2cc275.ll",
+    "mutant_id": "0123",
+    "file": "ir/invalid/123_random_random_random_char_flip_9f2cc275.ll",
     "source": "random",
     "mutation_type": "random_random_char_flip",
+    "seed_ir_hash": "fc5a655a",
     "is_valid": false,
-    "hash": "9f2cc275"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "9f2cc275",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow",
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\124_random_random_random_line_delete_27af43dd.ll",
+    "mutant_id": "0124",
+    "file": "ir/invalid/124_random_random_random_line_delete_27af43dd.ll",
     "source": "random",
     "mutation_type": "random_random_line_delete",
+    "seed_ir_hash": "fc5a655a",
     "is_valid": false,
-    "hash": "27af43dd"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "27af43dd",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow",
+      "missing_terminator",
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\125_random_random_random_line_delete_07ca4a9b.ll",
+    "mutant_id": "0125",
+    "file": "ir/invalid/125_random_random_random_line_delete_07ca4a9b.ll",
     "source": "random",
     "mutation_type": "random_random_line_delete",
+    "seed_ir_hash": "fc5a655a",
     "is_valid": false,
-    "hash": "07ca4a9b"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "07ca4a9b",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow",
+      "type_mismatch"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\126_random_random_random_line_swap_041e5d96.ll",
+    "mutant_id": "0126",
+    "file": null,
     "source": "random",
     "mutation_type": "random_random_line_swap",
+    "seed_ir_hash": "041e5d96",
     "is_valid": true,
-    "hash": "041e5d96"
+    "is_interesting": true,
+    "is_duplicate": true,
+    "content_hash": "041e5d96",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\127_random_random_random_word_replace_f672b99c.ll",
+    "mutant_id": "0127",
+    "file": "ir/invalid/127_random_random_random_word_replace_f672b99c.ll",
     "source": "random",
     "mutation_type": "random_random_word_replace",
+    "seed_ir_hash": "041e5d96",
     "is_valid": false,
-    "hash": "f672b99c"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "f672b99c",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\128_random_random_random_char_flip_d85e16fa.ll",
+    "mutant_id": "0128",
+    "file": "ir/invalid/128_random_random_random_char_flip_d85e16fa.ll",
     "source": "random",
     "mutation_type": "random_random_char_flip",
+    "seed_ir_hash": "041e5d96",
     "is_valid": false,
-    "hash": "d85e16fa"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "d85e16fa",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\129_random_random_random_line_duplicate_b1edc50a.ll",
+    "mutant_id": "0129",
+    "file": "ir/invalid/129_random_random_random_line_duplicate_b1edc50a.ll",
     "source": "random",
     "mutation_type": "random_random_line_duplicate",
+    "seed_ir_hash": "041e5d96",
     "is_valid": false,
-    "hash": "b1edc50a"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "b1edc50a",
+    "error_types": [
+      "ssa_violation",
+      "ssa_violation"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\130_random_random_random_line_duplicate_de9c83e8.ll",
+    "mutant_id": "0130",
+    "file": "ir/invalid/130_random_random_random_line_duplicate_de9c83e8.ll",
     "source": "random",
     "mutation_type": "random_random_line_duplicate",
+    "seed_ir_hash": "041e5d96",
     "is_valid": false,
-    "hash": "de9c83e8"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "de9c83e8",
+    "error_types": [
+      "ssa_violation",
+      "ssa_violation"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\131_random_random_random_line_delete_11eb72ff.ll",
+    "mutant_id": "0131",
+    "file": "ir/invalid/131_random_random_random_line_delete_11eb72ff.ll",
     "source": "random",
     "mutation_type": "random_random_line_delete",
+    "seed_ir_hash": "daa97f46",
     "is_valid": false,
-    "hash": "11eb72ff"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "11eb72ff",
+    "error_types": [
+      "unknown"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\132_random_random_random_line_duplicate_2786d4b0.ll",
+    "mutant_id": "0132",
+    "file": "ir/invalid/132_random_random_random_line_duplicate_2786d4b0.ll",
     "source": "random",
     "mutation_type": "random_random_line_duplicate",
+    "seed_ir_hash": "daa97f46",
     "is_valid": false,
-    "hash": "2786d4b0"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "2786d4b0",
+    "error_types": [
+      "ssa_violation",
+      "ssa_violation"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\133_random_random_random_line_swap_f8cb26c7.ll",
+    "mutant_id": "0133",
+    "file": "ir/invalid/133_random_random_random_line_swap_f8cb26c7.ll",
     "source": "random",
     "mutation_type": "random_random_line_swap",
+    "seed_ir_hash": "daa97f46",
     "is_valid": false,
-    "hash": "f8cb26c7"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "f8cb26c7",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow",
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\134_random_random_random_line_swap_f1ce86c6.ll",
+    "mutant_id": "0134",
+    "file": "ir/valid/134_random_random_random_line_swap_f1ce86c6.ll",
     "source": "random",
     "mutation_type": "random_random_line_swap",
+    "seed_ir_hash": "daa97f46",
     "is_valid": true,
-    "hash": "f1ce86c6"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "f1ce86c6",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\135_random_random_random_line_delete_c52f48b4.ll",
+    "mutant_id": "0135",
+    "file": "ir/invalid/135_random_random_random_line_delete_c52f48b4.ll",
     "source": "random",
     "mutation_type": "random_random_line_delete",
+    "seed_ir_hash": "daa97f46",
     "is_valid": false,
-    "hash": "c52f48b4"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "c52f48b4",
+    "error_types": [
+      "unknown"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\136_random_random_random_word_replace_414ec5ed.ll",
+    "mutant_id": "0136",
+    "file": "ir/invalid/136_random_random_random_word_replace_414ec5ed.ll",
     "source": "random",
     "mutation_type": "random_random_word_replace",
+    "seed_ir_hash": "6bebbe2c",
     "is_valid": false,
-    "hash": "414ec5ed"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "414ec5ed",
+    "error_types": [
+      "invalid_phi"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\137_random_random_random_line_duplicate_a4ad3a13.ll",
+    "mutant_id": "0137",
+    "file": "ir/invalid/137_random_random_random_line_duplicate_a4ad3a13.ll",
     "source": "random",
     "mutation_type": "random_random_line_duplicate",
+    "seed_ir_hash": "6bebbe2c",
     "is_valid": false,
-    "hash": "a4ad3a13"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "a4ad3a13",
+    "error_types": [
+      "ssa_violation",
+      "ssa_violation"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\138_random_random_random_line_delete_321090d9.ll",
+    "mutant_id": "0138",
+    "file": "ir/invalid/138_random_random_random_line_delete_321090d9.ll",
     "source": "random",
     "mutation_type": "random_random_line_delete",
+    "seed_ir_hash": "6bebbe2c",
     "is_valid": false,
-    "hash": "321090d9"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "321090d9",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\139_random_random_random_char_flip_826256c2.ll",
+    "mutant_id": "0139",
+    "file": "ir/invalid/139_random_random_random_char_flip_826256c2.ll",
     "source": "random",
     "mutation_type": "random_random_char_flip",
+    "seed_ir_hash": "6bebbe2c",
     "is_valid": false,
-    "hash": "826256c2"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "826256c2",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\140_random_random_random_char_flip_fb0ebdf5.ll",
+    "mutant_id": "0140",
+    "file": "ir/invalid/140_random_random_random_char_flip_fb0ebdf5.ll",
     "source": "random",
     "mutation_type": "random_random_char_flip",
+    "seed_ir_hash": "6bebbe2c",
     "is_valid": false,
-    "hash": "fb0ebdf5"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "fb0ebdf5",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\141_random_random_random_line_delete_32de8e1a.ll",
+    "mutant_id": "0141",
+    "file": "ir/invalid/141_random_random_random_line_delete_32de8e1a.ll",
     "source": "random",
     "mutation_type": "random_random_line_delete",
+    "seed_ir_hash": "08cd3de2",
     "is_valid": false,
-    "hash": "32de8e1a"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "32de8e1a",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\142_random_random_random_line_swap_c488a01c.ll",
+    "mutant_id": "0142",
+    "file": "ir/invalid/142_random_random_random_line_swap_c488a01c.ll",
     "source": "random",
     "mutation_type": "random_random_line_swap",
+    "seed_ir_hash": "08cd3de2",
     "is_valid": false,
-    "hash": "c488a01c"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "c488a01c",
+    "error_types": [
+      "missing_terminator",
+      "broken_control_flow",
+      "invalid_phi",
+      "invalid_phi",
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\valid\\143_random_random_random_line_swap_e054c10c.ll",
+    "mutant_id": "0143",
+    "file": "ir/valid/143_random_random_random_line_swap_e054c10c.ll",
     "source": "random",
     "mutation_type": "random_random_line_swap",
+    "seed_ir_hash": "08cd3de2",
     "is_valid": true,
-    "hash": "e054c10c"
+    "is_interesting": true,
+    "is_duplicate": false,
+    "content_hash": "e054c10c",
+    "error_types": [],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\144_random_random_random_line_swap_a481676e.ll",
+    "mutant_id": "0144",
+    "file": "ir/invalid/144_random_random_random_line_swap_a481676e.ll",
     "source": "random",
     "mutation_type": "random_random_line_swap",
+    "seed_ir_hash": "08cd3de2",
     "is_valid": false,
-    "hash": "a481676e"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "a481676e",
+    "error_types": [
+      "broken_control_flow",
+      "missing_terminator",
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   },
   {
-    "file": "ir\\invalid\\145_random_random_random_word_replace_ee82629d.ll",
+    "mutant_id": "0145",
+    "file": "ir/invalid/145_random_random_random_word_replace_ee82629d.ll",
     "source": "random",
     "mutation_type": "random_random_word_replace",
+    "seed_ir_hash": "08cd3de2",
     "is_valid": false,
-    "hash": "ee82629d"
+    "is_interesting": false,
+    "is_duplicate": false,
+    "content_hash": "ee82629d",
+    "error_types": [
+      "syntax_error"
+    ],
+    "generation_time_s": 0.0,
+    "timestamp": "2026-04-27T07:12:05Z"
   }
 ]

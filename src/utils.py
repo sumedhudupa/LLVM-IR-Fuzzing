@@ -56,6 +56,7 @@ class GenerationResult:
     seed_ir: str = ""
     mutation_type: str = ""
     is_interesting: bool = False  # Exercises non-trivial paths
+    is_duplicate: bool = False  # IR hash seen earlier in the same run
     opt_differential: dict = field(default_factory=dict)  # Results from differential testing
 
     def to_dict(self):
@@ -66,6 +67,7 @@ class GenerationResult:
             "generation_time_s": self.generation_time_s,
             "mutation_type": self.mutation_type,
             "is_interesting": self.is_interesting,
+            "is_duplicate": self.is_duplicate,
             "opt_differential": self.opt_differential,
         }
 
