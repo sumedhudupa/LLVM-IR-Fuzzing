@@ -18,6 +18,8 @@ const COLUMNS = [
   "runtime_failures",
 ];
 
+const DISPLAY_MUTATORS = ["llm", "grammar", "random"];
+
 export default function ComparisonView() {
   const [metrics, setMetrics] = useState(null);
   const [taxonomy, setTaxonomy] = useState(null);
@@ -76,13 +78,15 @@ export default function ComparisonView() {
       const data = await getComparisonMetrics();
       // Format rates for display (e.g. 0.85 -> 85%)
       const formatted = {};
-      ["llm", "grammar"].forEach(type => {
+      DISPLAY_MUTATORS.forEach((type) => {
+        if (!data[type]) return;
         formatted[type] = {
-           ...data[type],
-           validity_rate: `${(data[type].validity_rate * 100).toFixed(1)}%`,
-           bug_rate: `${(data[type].bug_rate * 100).toFixed(1)}%`
+          ...data[type],
+          validity_rate: `${(data[type].validity_rate * 100).toFixed(1)}%`,
+          bug_rate: `${(data[type].bug_rate * 100).toFixed(1)}%`
         };
       });
+      formatted.per_strategy = data.per_strategy ?? {};
       setMetrics(formatted);
       const taxonomyData = await getInvalidTaxonomy();
       setTaxonomy(taxonomyData);
@@ -102,7 +106,7 @@ export default function ComparisonView() {
         count_per_seed: Number(countPerSeed),
         baseline_opt: "-O0",
         target_opt: "-O2",
-        mutators: ["llm", "grammar"],
+        mutators: DISPLAY_MUTATORS,
       };
       if (payload.seed_names.length === 0) {
         throw new Error("Select at least one seed file before starting the study.");
@@ -121,7 +125,7 @@ export default function ComparisonView() {
   function downloadCSV() {
     if (!metrics) return;
     const header = ["mutator_type", ...COLUMNS].join(",");
-    const rows = ["llm", "grammar"].map(
+    const rows = DISPLAY_MUTATORS.filter((t) => metrics[t]).map(
       (t) => [t, ...COLUMNS.map((c) => metrics[t][c])].join(",")
     );
     const blob = new Blob([[header, ...rows].join("\n")], { type: "text/csv" });
@@ -182,7 +186,7 @@ export default function ComparisonView() {
           />
         </label>
         <button className="btn secondary" onClick={handleRunStudy} disabled={studyRunning}>
-          {studyRunning ? "Running Study..." : "Run Controlled LLM vs Grammar Study"}
+          {studyRunning ? "Running Study..." : "Run Controlled Mutation Study"}
         </button>
         {studyResult && (
           <p className="status">
@@ -202,7 +206,7 @@ export default function ComparisonView() {
               </tr>
             </thead>
             <tbody>
-              {["llm", "grammar"].map((t) => (
+              {DISPLAY_MUTATORS.filter((t) => metrics[t]).map((t) => (
                 <tr key={t}>
                   <td><strong>{t}</strong></td>
                   {COLUMNS.map((c) => (
@@ -228,23 +232,27 @@ export default function ComparisonView() {
                 <th>Strategy</th>
                 <th>LLM Valid%</th>
                 <th>Grammar Valid%</th>
+                <th>Random Valid%</th>
               </tr>
             </thead>
             <tbody>
               {(() => {
-                // Get all unique strategies from both mutator types
+                // Get all unique strategies from all mutator types
                 const allStrategies = new Set([
                   ...Object.keys(metrics.per_strategy.llm || {}),
                   ...Object.keys(metrics.per_strategy.grammar || {}),
+                  ...Object.keys(metrics.per_strategy.random || {}),
                 ]);
                 return Array.from(allStrategies).sort().map((strategy) => {
                   const llmData = metrics.per_strategy.llm?.[strategy];
                   const grammarData = metrics.per_strategy.grammar?.[strategy];
+                  const randomData = metrics.per_strategy.random?.[strategy];
                   return (
                     <tr key={strategy}>
                       <td>{strategy}</td>
                       <td>{llmData ? `${(llmData.validity_rate * 100).toFixed(1)}%` : "—"}</td>
                       <td>{grammarData ? `${(grammarData.validity_rate * 100).toFixed(1)}%` : "—"}</td>
+                      <td>{randomData ? `${(randomData.validity_rate * 100).toFixed(1)}%` : "â€”"}</td>
                     </tr>
                   );
                 });
@@ -303,6 +311,8 @@ export default function ComparisonView() {
                 <th>LLM Valid%</th>
                 <th>Grammar Generated</th>
                 <th>Grammar Valid%</th>
+                <th>Random Generated</th>
+                <th>Random Valid%</th>
               </tr>
             </thead>
             <tbody>
@@ -314,6 +324,8 @@ export default function ComparisonView() {
                   <td>{(seed.llm_validity_rate * 100).toFixed(1)}%</td>
                   <td>{seed.grammar_generated}</td>
                   <td>{(seed.grammar_validity_rate * 100).toFixed(1)}%</td>
+                  <td>{seed.random_generated}</td>
+                  <td>{(seed.random_validity_rate * 100).toFixed(1)}%</td>
                 </tr>
               ))}
             </tbody>

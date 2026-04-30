@@ -6,7 +6,7 @@
 import { useState } from "react";
 import { generateMutants } from "../api";
 
-const MUTATOR_TYPES = ["llm", "grammar"];
+const MUTATOR_TYPES = ["llm", "grammar", "random"];
 
 export default function MutationJobForm({ seeds, initialSeed, onJobComplete }) {
   const [seedName, setSeedName] = useState(initialSeed ?? (seeds?.[0] ?? ""));

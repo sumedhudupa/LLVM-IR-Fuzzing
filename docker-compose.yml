@@ -19,7 +19,7 @@ services:
   # ── Backend: LLM Mutator & API ──────────────────────────────
   backend:
     build:
-      context: ./llm-mutator
+      context: ./backend/api
       dockerfile: Dockerfile
     container_name: backend
     depends_on:
@@ -32,22 +32,24 @@ services:
       - SEED_DIR=/data/seeds
       - MUTANT_DIR=/data/mutants_llm
       - GRAMMAR_DIR=/data/mutants_grammar
+      - RANDOM_DIR=/data/mutants_random
       - VALID_DIR=/data/valid_mutants
       - INVALID_DIR=/data/invalid_mutants
       - LOGS_DIR=/data/logs
     volumes:
-      - ./seeds:/data/seeds
-      - ./mutants_llm:/data/mutants_llm
-      - ./mutants_grammar:/data/mutants_grammar
-      - ./valid_mutants:/data/valid_mutants
-      - ./invalid_mutants:/data/invalid_mutants
-      - ./logs:/data/logs
+      - ./backend/data/seeds:/data/seeds
+      - ./backend/data/mutants_llm:/data/mutants_llm
+      - ./backend/data/mutants_grammar:/data/mutants_grammar
+      - ./backend/data/mutants_random:/data/mutants_random
+      - ./backend/data/valid_mutants:/data/valid_mutants
+      - ./backend/data/invalid_mutants:/data/invalid_mutants
+      - ./backend/data/logs:/data/logs
     restart: unless-stopped
 
   # ── LLVM Tester: Validation & Differential Testing ──────────
   llvm-tester:
     build:
-      context: ./llvm-tester
+      context: ./backend/llvm-tester
       dockerfile: Dockerfile
     container_name: llvm-tester
     depends_on:
@@ -55,15 +57,17 @@ services:
     environment:
       - MUTANT_DIR=/data/mutants_llm
       - GRAMMAR_DIR=/data/mutants_grammar
+      - RANDOM_DIR=/data/mutants_random
       - VALID_DIR=/data/valid_mutants
       - INVALID_DIR=/data/invalid_mutants
       - LOGS_DIR=/data/logs
     volumes:
-      - ./mutants_llm:/data/mutants_llm
-      - ./mutants_grammar:/data/mutants_grammar
-      - ./valid_mutants:/data/valid_mutants
-      - ./invalid_mutants:/data/invalid_mutants
-      - ./logs:/data/logs
+      - ./backend/data/mutants_llm:/data/mutants_llm
+      - ./backend/data/mutants_grammar:/data/mutants_grammar
+      - ./backend/data/mutants_random:/data/mutants_random
+      - ./backend/data/valid_mutants:/data/valid_mutants
+      - ./backend/data/invalid_mutants:/data/invalid_mutants
+      - ./backend/data/logs:/data/logs
     restart: on-failure
 
   # ── Frontend Dashboard ──────────────────────────────────────

@@ -1,0 +1,263 @@
+{
+  "metadata": {
+    "checked_date": "2026-04-30",
+    "requirements_file": ".kiro/specs/sumadhvabranch-integration/requirements.md",
+    "overall_status": "8/10 fully implemented, 2/10 partially implemented",
+    "next_action": "Add refinement_enabled and max_attempts to API models"
+  },
+  "requirements": {
+    "1_random_mutation_baseline": {
+      "status": "COMPLETE",
+      "criteria": 8,
+      "criteria_met": 8,
+      "implementation_file": "llm-mutator/app/generate_mutants.py#L608",
+      "key_features": [
+        "5 strategies: random_char_flip, random_line_delete, random_line_duplicate, random_line_swap, random_word_replace",
+        "Writes to RANDOM_DIR (configurable)",
+        "Logs seed_size_bytes to raw_mutants.json",
+        "Validates with pipeline"
+      ]
+    },
+    "2_llm_refinement_loop": {
+      "status": "PARTIAL",
+      "implemented": true,
+      "blocking_issue": "NOT EXPOSED VIA API",
+      "criteria": 8,
+      "criteria_met": 6,
+      "implementation_file": "llm-mutator/app/generate_mutants.py#L235",
+      "missing": [
+        "GenerateMutantsRequest lacks refinement_enabled parameter",
+        "GenerateMutantsRequest lacks max_attempts parameter",
+        "raw_mutants.json missing attempt_number field",
+        "raw_mutants.json missing refinement_succeeded field"
+      ],
+      "fix": {
+        "files": [
+          "llm-mutator/app/models/mutants.py",
+          "llm-mutator/app/services/mutant_service.py",
+          "llm-mutator/app/generate_mutants.py"
+        ],
+        "complexity": "LOW - 15 lines of changes"
+      }
+    },
+    "3_subprocess_crash_isolation": {
+      "status": "COMPLETE",
+      "criteria": 8,
+      "criteria_met": 8,
+      "implementation_file": "llm-mutator/app/filter_valid.py#L111-L135",
+      "key_features": [
+        "subprocess.run() with timeout protection",
+        "Timeout default: 30 seconds (configurable)",
+        "TimeoutExpired exception handling",
+        "Error classification and logging"
+      ]
+    },
+    "4_rule_based_pre_validation": {
+      "status": "COMPLETE",
+      "criteria": 10,
+      "criteria_met": 10,
+      "implementation_file": "llm-mutator/app/utils/rule_validation.py",
+      "checks": [
+        "Function definitions (regex: define\\s+\\S+\\s+@\\w+)",
+        "Balanced braces",
+        "Terminator instructions",
+        "SSA property (no multiple definitions)",
+        "PHI node placement",
+        "Branch target references",
+        "Type consistency"
+      ],
+      "error_categories": [
+        "syntax",
+        "ssa",
+        "type",
+        "cfg",
+        "undef",
+        "other"
+      ]
+    },
+    "5_ir_deduplication": {
+      "status": "COMPLETE",
+      "criteria": 8,
+      "criteria_met": 8,
+      "implementation_file": "llm-mutator/app/utils/ir_helpers.py#L145",
+      "key_features": [
+        "MD5 hashing with normalization",
+        "Removes comments, collapses whitespace, strips register names",
+        "Session-based in-memory tracking (_seen_ir_hashes set)",
+        "is_duplicate marking in metadata",
+        "LLVM validation skipped for duplicates"
+      ]
+    },
+    "6_valid_invalid_manifest_tracking": {
+      "status": "COMPLETE",
+      "criteria": 8,
+      "criteria_met": 8,
+      "implementation_file": "llm-mutator/app/services/manifest_service.py",
+      "output_file": "logs/manifest.json",
+      "schema_fields": [
+        "mutant_id",
+        "file",
+        "source",
+        "mutation_type",
+        "seed_ir_hash",
+        "is_valid",
+        "trivial",
+        "is_duplicate",
+        "content_hash",
+        "error_type",
+        "generation_time_s",
+        "status",
+        "timestamp"
+      ],
+      "summary_statistics": [
+        "total_generated",
+        "valid_count",
+        "invalid_count",
+        "duplicate_count",
+        "trivial_count",
+        "by_mutator_type"
+      ]
+    },
+    "7_integration_with_existing_architecture": {
+      "status": "PARTIAL",
+      "implemented": true,
+      "blocking_issue": "Refinement parameters not exposed via API",
+      "criteria": 8,
+      "criteria_met": 6,
+      "missing": [
+        "GenerateMutantsRequest.refinement_enabled",
+        "GenerateMutantsRequest.max_attempts",
+        "raw_mutants.json missing attempt_number",
+        "raw_mutants.json missing refinement_succeeded"
+      ],
+      "working": [
+        "mutator_type='random' supported",
+        "MutantValidationResult enhanced with new fields",
+        "Environment variables configured",
+        "Backward compatible"
+      ]
+    },
+    "8_configuration_and_feature_flags": {
+      "status": "COMPLETE",
+      "criteria": 8,
+      "criteria_met": 8,
+      "implementation_file": "llm-mutator/app/config.py",
+      "flags": {
+        "ENABLE_REFINEMENT": "default: false",
+        "ENABLE_DEDUPLICATION": "default: true",
+        "ENABLE_RULE_VALIDATION": "default: true"
+      },
+      "timeouts": {
+        "VALIDATION_TIMEOUT": "default: 30 seconds",
+        "MAX_REFINEMENT_ATTEMPTS": "default: 3"
+      },
+      "directories": [
+        "RANDOM_DIR",
+        "SEED_DIR",
+        "MUTANT_DIR",
+        "GRAMMAR_DIR",
+        "VALID_DIR",
+        "INVALID_DIR",
+        "LOGS_DIR"
+      ]
+    },
+    "9_error_handling_and_resilience": {
+      "status": "COMPLETE",
+      "criteria": 8,
+      "criteria_met": 8,
+      "key_features": [
+        "Malformed IR caught by rule validation",
+        "Subprocess timeouts logged",
+        "Hash computation failures handled",
+        "Manifest write failures non-blocking",
+        "Random mutation exception handling",
+        "Refinement exhaustion returns last result",
+        "ERROR level logging with stack traces",
+        "Error summary statistics"
+      ]
+    },
+    "10_testing_and_validation": {
+      "status": "COMPLETE",
+      "criteria": 8,
+      "criteria_met": 8,
+      "test_file": "llm-mutator/tests/test_phase4.py",
+      "test_classes": [
+        "TestRandomMutator (all 5 strategies)",
+        "TestRuleValidator (all error categories)",
+        "Integration tests for refinement",
+        "Subprocess isolation tests",
+        "End-to-end pipeline tests"
+      ]
+    }
+  },
+  "critical_gaps": [
+    {
+      "gap_id": 1,
+      "title": "Refinement Loop Not Exposed via API",
+      "affects": ["Requirement 2", "Requirement 7"],
+      "severity": "HIGH",
+      "root_cause": "GenerateMutantsRequest model doesn't include refinement parameters",
+      "fix_files": [
+        "llm-mutator/app/models/mutants.py",
+        "llm-mutator/app/services/mutant_service.py"
+      ],
+      "estimated_lines": 15,
+      "complexity": "LOW"
+    },
+    {
+      "gap_id": 2,
+      "title": "LLM Mutation Refinement Metadata Not Logged",
+      "affects": ["Requirement 2"],
+      "severity": "MEDIUM",
+      "root_cause": "refinement_metadata from _generate_one() not passed to raw_mutants.json",
+      "fix_files": [
+        "llm-mutator/app/generate_mutants.py"
+      ],
+      "estimated_lines": 5,
+      "complexity": "LOW"
+    }
+  ],
+  "key_file_locations": {
+    "RandomMutator": "llm-mutator/app/generate_mutants.py#L608-L800",
+    "LLMMutator": "llm-mutator/app/generate_mutants.py#L150-L603",
+    "GrammarMutator": "llm-mutator/app/generate_mutants.py#L804-L900",
+    "RuleValidation": "llm-mutator/app/utils/rule_validation.py",
+    "SemanticHelpers": "llm-mutator/app/utils/semantic_helpers.py",
+    "IRHelpers": "llm-mutator/app/utils/ir_helpers.py#L145 (compute_ir_hash)",
+    "FilterValid": "llm-mutator/app/filter_valid.py",
+    "ManifestService": "llm-mutator/app/services/manifest_service.py",
+    "MutantService": "llm-mutator/app/services/mutant_service.py",
+    "Config": "llm-mutator/app/config.py",
+    "Models": "llm-mutator/app/models/mutants.py",
+    "Tests": "llm-mutator/tests/test_phase4.py"
+  },
+  "verification_commands": {
+    "check_feature_flags": "grep -E 'ENABLE_|_TIMEOUT|_DIR' llm-mutator/app/config.py",
+    "test_random_mutator": "pytest llm-mutator/tests/test_phase4.py::TestRandomMutator -v",
+    "test_rule_validator": "pytest llm-mutator/tests/test_phase4.py::TestRuleValidator -v",
+    "check_manifest": "cat logs/manifest.json | jq '.summary'",
+    "check_deduplication": "grep '_seen_ir_hashes' llm-mutator/app/filter_valid.py",
+    "check_subprocess_handling": "grep -A3 'subprocess.TimeoutExpired' llm-mutator/app/filter_valid.py"
+  },
+  "next_steps": [
+    {
+      "priority": 1,
+      "title": "Fix Refinement Loop API Exposure",
+      "files": [
+        "llm-mutator/app/models/mutants.py",
+        "llm-mutator/app/services/mutant_service.py"
+      ],
+      "time_estimate": "15 minutes",
+      "blocks": ["Requirement 2", "Requirement 7"]
+    },
+    {
+      "priority": 2,
+      "title": "Add Refinement Metadata to Logs",
+      "files": [
+        "llm-mutator/app/generate_mutants.py"
+      ],
+      "time_estimate": "5 minutes",
+      "blocks": ["Requirement 2"]
+    }
+  ]
+}

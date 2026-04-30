@@ -75,6 +75,7 @@ export default function DifferentialDashboard({ onCompare }) {
             <option value="all">all</option>
             <option value="llm">llm</option>
             <option value="grammar">grammar</option>
+            <option value="random">random</option>
           </select>
         </label>
         <button id="run-differential-btn" className="btn primary" onClick={handleRun} disabled={running}>

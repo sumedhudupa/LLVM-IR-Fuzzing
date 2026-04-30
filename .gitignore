@@ -179,6 +179,9 @@ mutants_grammar/
 mutants_llm/
 valid_mutants/
 invalid_mutants/
+# Professionalized backend runtime layout
+backend/data/
+backend/test_data/
 # Note: logs/ is already ignored above
 # Note: seeds/ is probably meant to be version controlled, so I'm not ignoring it.
 
