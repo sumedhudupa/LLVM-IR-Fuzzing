@@ -18,6 +18,7 @@ class ManifestEntry:
     mutator_type: str
     mutation_strategy: str
     timestamp: str
+    exists_on_disk: bool = True
     is_valid: bool = False
     error_type: Optional[str] = None
     content_hash: Optional[str] = None
@@ -59,6 +60,16 @@ class ManifestTracker:
         self.raw_mutants_log = logs_dir / "raw_mutants.json"
         self.validity_logs = logs_dir / "validity_logs.json"
         self.manifest_file = logs_dir / "manifest.json"
+        
+        # We need these to check existence
+        try:
+            from app.config import VALID_DIR, INVALID_DIR
+            self.valid_dir = VALID_DIR
+            self.invalid_dir = INVALID_DIR
+        except ImportError:
+            # Fallback if config not available (e.g. during certain tests)
+            self.valid_dir = logs_dir.parent / "valid_mutants"
+            self.invalid_dir = logs_dir.parent / "invalid_mutants"
 
     def compute_seed_ir_hash(self, seed_path: Path) -> Optional[str]:
         """Compute MD5 hash of seed IR file."""
@@ -154,6 +165,10 @@ class ManifestTracker:
             else:
                 status = raw_status
 
+            # Check if file exists on disk
+            exists_on_disk = (self.valid_dir / f"{mutant_id}.ll").exists() or \
+                             (self.invalid_dir / f"{mutant_id}.ll").exists()
+
             # Create manifest entry
             entry = ManifestEntry(
                 mutant_id=mutant_id,
@@ -161,6 +176,7 @@ class ManifestTracker:
                 mutator_type=mutator_type,
                 mutation_strategy=mutation_strategy,
                 timestamp=created_at,
+                exists_on_disk=exists_on_disk,
                 is_valid=is_valid,
                 error_type=error_type,
                 content_hash=content_hash,

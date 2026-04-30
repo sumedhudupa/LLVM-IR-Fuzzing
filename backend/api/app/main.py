@@ -10,7 +10,9 @@ Registers routers from app/routes/:
   differential →  POST /api/v1/differential/run
                →  GET  /api/v1/differential/results
 """
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routes import seeds, mutants, differential, analysis
@@ -42,6 +44,14 @@ app.include_router(seeds.router)
 app.include_router(mutants.router)
 app.include_router(differential.router)
 app.include_router(analysis.router)
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    logger.error("Validation error for %s: %s", request.url, exc.errors())
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors(), "body": str(exc.body)},
+    )
 
 logger.info("Registered routes: %s", [r.path for r in app.routes])
 

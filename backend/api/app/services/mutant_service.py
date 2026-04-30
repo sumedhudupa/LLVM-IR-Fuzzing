@@ -62,7 +62,12 @@ class MutantService:
         if req.mutator_type == "llm":
             mutator  = LLMMutator()
             # LLMMutator.run() is async (uses httpx)
-            written_ids = await mutator.run(req.seed_name, req.count)
+            written_ids = await mutator.run(
+                req.seed_name, 
+                req.count,
+                enable_refinement=req.enable_refinement,
+                max_attempts=req.max_attempts
+            )
         elif req.mutator_type == "random":
             mutator     = RandomMutator()
             written_ids = mutator.run(req.seed_name, req.count)

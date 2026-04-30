@@ -294,7 +294,9 @@ class LLMMutator:
         attempt_metadata = []
         base_temperature = temperature
 
-        for attempt in range(1, max_attempts + 1 if enable_refinement else 1):
+        max_tries = max_attempts if enable_refinement else 1
+        for attempt in range(1, max_tries + 1):
+
             # Increase temperature on retries for more diversity
             current_temp = base_temperature + (0.1 * (attempt - 1)) if attempt > 1 else base_temperature
 
@@ -403,7 +405,7 @@ class LLMMutator:
 
     # ── Main pipeline ────────────────────────────────────────────────────────
 
-    async def run(self, seed_name: str, count: int) -> list[str]:
+    async def run(self, seed_name: str, count: int, enable_refinement: bool = ENABLE_REFINEMENT, max_attempts: int = MAX_REFINEMENT_ATTEMPTS) -> list[str]:
         """
         Full LLM mutation pipeline for one seed file.
 
@@ -457,8 +459,8 @@ class LLMMutator:
                 mutant_id,
                 strategy,
                 temperature,
-                enable_refinement=ENABLE_REFINEMENT,
-                max_attempts=MAX_REFINEMENT_ATTEMPTS,
+                enable_refinement=enable_refinement,
+                max_attempts=max_attempts,
             )
             if ok:
                 is_duplicate, content_hash = _deduplicate_candidate(ir_text, seen_hashes)

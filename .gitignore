@@ -201,3 +201,10 @@ htmlcov/
 *.bc
 *.csv
 CONTEXT.json
+# Agent files
+.claude/
+.kiro/
+.cursor/
+
+#graphify files
+graphify-out/

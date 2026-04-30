@@ -47,8 +47,6 @@ class DifferentialService:
 
     # ── Run ─────────────────────────────────────────────────────────────────
 
-    # ── Run ─────────────────────────────────────────────────────────────────
-
     @staticmethod
     async def run(req: DifferentialRunRequest) -> DifferentialRunResponse:
         """
@@ -204,15 +202,25 @@ class DifferentialService:
     async def get_results() -> DifferentialResultsResponse:
         """
         Read RESULTS_CSV and return typed DifferentialResult rows.
-        Raises FileNotFoundError when logs/results.csv does not exist.
+        Only includes rows where the mutant file still exists on disk.
         """
         if not RESULTS_CSV.exists():
             raise FileNotFoundError(f"results file not found: {RESULTS_CSV}")
 
         rows: list[DifferentialResult] = []
+        from app.config import INVALID_DIR
+        
         with open(RESULTS_CSV, newline="") as f:
             for row in csv.DictReader(f):
                 try:
+                    mutant_id = DifferentialService._safe_str(row.get("mutant_id"))
+                    
+                    # Filter out stale results for deleted mutants
+                    exists = (VALID_DIR / f"{mutant_id}.ll").exists() or \
+                             (INVALID_DIR / f"{mutant_id}.ll").exists()
+                    if not exists:
+                        continue
+
                     mismatch_val = DifferentialService._normalize_mismatch_type(
                         row.get("mismatch_type")
                     )
@@ -221,7 +229,7 @@ class DifferentialService:
 
                     rows.append(
                         DifferentialResult(
-                            mutant_id=DifferentialService._safe_str(row.get("mutant_id")),
+                            mutant_id=mutant_id,
                             baseline_level=DifferentialService._safe_str(row.get("baseline_level")),
                             target_level=DifferentialService._safe_str(row.get("target_level")),
                             is_mismatch=DifferentialService._safe_str(row.get("is_mismatch")).lower() == "true",
@@ -352,4 +360,3 @@ class DifferentialService:
         """Compute and return comparison metrics using Comparison Engine."""
         from app.comparison import compute_comparison_metrics
         return compute_comparison_metrics()
-

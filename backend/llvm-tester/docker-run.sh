@@ -30,7 +30,7 @@ mkdir -p "${VALID_DIR}" "${INVALID_DIR}" "${LOGS_DIR}"
 # Logic matches filter_valid.py but implemented in Bash for the task.
 echo "Starting Stage 1: Validity Filtering..."
 
-for ll_file in /data/mutants_llm/*.ll /data/mutants_grammar/*.ll; do
+for ll_file in /data/mutants_llm/*.ll /data/mutants_grammar/*.ll /data/mutants_random/*.ll; do
     [ -e "$ll_file" ] || continue
     
     filename=$(basename "$ll_file")

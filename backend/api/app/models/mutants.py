@@ -18,6 +18,8 @@ class GenerateMutantsRequest(BaseModel):
     seed_name: str = Field(..., description="filename of seed IR")
     mutator_type: MutatorType = Field(..., description="'llm' or 'grammar'")
     count: int = Field(default=5, ge=1, description="Number of mutants to generate")
+    enable_refinement: bool = Field(default=False, description="Whether to retry failed LLM generations with error feedback")
+    max_attempts: int = Field(default=3, ge=1, description="Max attempts if refinement is enabled")
 
 
 class GenerateMutantsResponse(BaseModel):

@@ -29,6 +29,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /workspace
 
 COPY docker-run.sh /workspace/docker-run.sh
-RUN chmod +x /workspace/docker-run.sh
+RUN sed -i 's/\r$//' /workspace/docker-run.sh && chmod +x /workspace/docker-run.sh
 
 CMD ["/workspace/docker-run.sh"]
