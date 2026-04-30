@@ -16,7 +16,7 @@ from app.models.mutants import (
     ValidateMutantsResponse,
     MutantValidationResult,
 )
-from app.generate_mutants import LLMMutator, GrammarMutator
+from app.generate_mutants import LLMMutator, GrammarMutator, RandomMutator
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -63,6 +63,9 @@ class MutantService:
             mutator  = LLMMutator()
             # LLMMutator.run() is async (uses httpx)
             written_ids = await mutator.run(req.seed_name, req.count)
+        elif req.mutator_type == "random":
+            mutator     = RandomMutator()
+            written_ids = mutator.run(req.seed_name, req.count)
         else:
             # GrammarMutator.run() is sync; wrap to keep interface uniform
             mutator     = GrammarMutator()

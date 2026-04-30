@@ -18,8 +18,10 @@ import httpx
 
 from .config import (
     OLLAMA_HOST, LLM_MODEL,
-    SEED_DIR, MUTANT_DIR, GRAMMAR_DIR, LOGS_DIR,
+    SEED_DIR, MUTANT_DIR, GRAMMAR_DIR, LOGS_DIR, RANDOM_DIR,
+    ENABLE_REFINEMENT, MAX_REFINEMENT_ATTEMPTS,
 )
+from .utils.rule_validation import prevalidate_ir
 from .utils.fs_helpers import build_mutant_id, append_json_log
 from .utils.ir_helpers import extract_ir, is_plausible_ir, sanitize_ir, add_module_header
 from .utils.logger import get_logger
@@ -188,6 +190,41 @@ class LLMMutator:
             "MUTATED LLVM IR:"
         )
 
+    # ── Prompt construction with error feedback ──────────────────────────────
+
+    def _build_refinement_prompt(self, seed_ir: str, strategy: dict,
+                                  error_messages: list[str]) -> str:
+        """
+        Build a refinement prompt that includes previous error messages to guide correction.
+        Source: requirements.md → Requirement 2, Criterion 3
+        """
+        error_context = "\n".join(f"  - {err}" for err in error_messages)
+        return (
+            "You are an LLVM IR expert and mutation tool.\n"
+            "Task: Apply exactly ONE mutation to the provided LLVM IR module.\n\n"
+            "PREVIOUS ATTEMPT ERRORS (fix these issues):\n"
+            f"{error_context}\n\n"
+            "CONSTRAINTS (CRITICAL):\n"
+            "- Output ONLY the complete mutated LLVM IR module.\n"
+            "- No explanations, no markdown prose, no headers outside the code fence.\n"
+            "- Use ONLY ';' for comments. DO NOT use '//'.\n"
+            "- Use ONLY standard LLVM opcodes (e.g. 'add', NOT 'addq' or 'addl').\n"
+            "- DO NOT use inline arithmetic in operands (e.g. '%b+1' is INVALID). Use a new instruction instead.\n"
+            "- All basic block references in 'phi' or 'br' instructions MUST start with '%' (e.g. '[ %val, %entry ]', NOT '[ %val, entry ]').\n"
+            "- Ensure newly created variables have unique names and are correctly used.\n"
+            "- Maintain valid SSA form (every %value defined before use).\n"
+            "- Do NOT truncate the output; provide the FULL module even if only one line changed.\n\n"
+            "EXAMPLE MUTATION (Arithmetic Substitution):\n"
+            "Input: %res = add i64 %a, 1\n"
+            "Mutation: %res = sub i64 %a, 1\n\n"
+            f"MUTATION TO APPLY:\n{strategy['instruction']}\n\n"
+            "ORIGINAL LLVM IR:\n"
+            "```llvm\n"
+            f"{seed_ir}\n"
+            "```\n\n"
+            "MUTATED LLVM IR:"
+        )
+
     # ── Single mutant generation ─────────────────────────────────────────────
 
     async def _generate_one(
@@ -197,47 +234,130 @@ class LLMMutator:
         mutant_id:  str,
         strategy:   dict,
         temperature: float,
-    ) -> tuple[str, bool]:
+        enable_refinement: bool = False,
+        max_attempts: int = 3,
+    ) -> tuple[str, bool, dict]:
         """
-        Attempt to generate one mutant via Ollama.
+        Attempt to generate one mutant via Ollama with optional refinement loop.
+
+        Args:
+            enable_refinement: If True, retry failed generations with error feedback
+            max_attempts: Maximum number of refinement attempts
 
         Returns:
-            (ir_text, True)       on success  – ir_text is the mutated IR
-            (error_msg, False)    on failure  – error_msg is a diagnostic string
+            (ir_text, True, metadata)       on success
+            (error_msg, False, metadata)    on failure
         """
-        prompt = self._build_prompt(seed_ir, strategy)
+        errors: list[str] = []
+        attempt_metadata = []
+        base_temperature = temperature
 
-        try:
-            logger.info(
-                "Ollama call | mutant=%s  strategy=%s  model=%s  temp=%.2f",
-                mutant_id, strategy["name"], self.client.model, temperature,
-            )
-            raw = await self.client.generate(prompt, temperature=temperature)
-        except httpx.HTTPStatusError as exc:
-            logger.error("Ollama HTTP %s for %s: %s",
-                         exc.response.status_code, mutant_id, exc)
-            return f"HTTP error {exc.response.status_code}", False
-        except httpx.RequestError as exc:
-            logger.error("Ollama connection error for %s: %s", mutant_id, exc)
-            return f"Connection error: {exc}", False
+        for attempt in range(1, max_attempts + 1 if enable_refinement else 1):
+            # Increase temperature on retries for more diversity
+            current_temp = base_temperature + (0.1 * (attempt - 1)) if attempt > 1 else base_temperature
 
-        # ── Extract and Sanitize IR ──────────────────────────────────────────
-        ir = extract_ir(raw)
-        if ir is None:
-            logger.warning("No IR extracted from Ollama response for %s", mutant_id)
-            logger.debug("Raw response snippet: %.300s", raw)
-            return "IR extraction failed", False
+            # Build prompt with or without error feedback
+            if attempt == 1:
+                prompt = self._build_prompt(seed_ir, strategy)
+            else:
+                prompt = self._build_refinement_prompt(seed_ir, strategy, errors)
 
-        ir = sanitize_ir(ir)
+            try:
+                logger.info(
+                    "Ollama call | mutant=%s  strategy=%s  model=%s  temp=%.2f  attempt=%d/%d",
+                    mutant_id, strategy["name"], self.client.model, current_temp,
+                    attempt, max_attempts if enable_refinement else 1,
+                )
+                raw = await self.client.generate(prompt, temperature=current_temp)
+            except httpx.HTTPStatusError as exc:
+                logger.error("Ollama HTTP %s for %s: %s",
+                             exc.response.status_code, mutant_id, exc)
+                error_msg = f"HTTP error {exc.response.status_code}"
+                errors.append(error_msg)
+                attempt_metadata.append({
+                    "attempt_number": attempt,
+                    "validation_result": "failed",
+                    "error": error_msg,
+                })
+                continue
+            except httpx.RequestError as exc:
+                logger.error("Ollama connection error for %s: %s", mutant_id, exc)
+                error_msg = f"Connection error: {exc}"
+                errors.append(error_msg)
+                attempt_metadata.append({
+                    "attempt_number": attempt,
+                    "validation_result": "failed",
+                    "error": error_msg,
+                })
+                continue
 
-        # ── Basic plausibility gate (full parse is done later by llvm-as) ────
-        if not is_plausible_ir(ir):
-            logger.warning("Plausibility check failed for %s", mutant_id)
-            logger.debug("Extracted candidate: %.300s", ir)
-            return "IR plausibility check failed", False
+            # ── Extract and Sanitize IR ──────────────────────────────────────
+            ir = extract_ir(raw)
+            if ir is None:
+                logger.warning("No IR extracted from Ollama response for %s", mutant_id)
+                logger.debug("Raw response snippet: %.300s", raw)
+                error_msg = "IR extraction failed"
+                errors.append(error_msg)
+                attempt_metadata.append({
+                    "attempt_number": attempt,
+                    "validation_result": "failed",
+                    "error": error_msg,
+                })
+                continue
 
-        ir = add_module_header(ir, seed_name)
-        return ir, True
+            ir = sanitize_ir(ir)
+
+            # ── Basic plausibility gate ──────────────────────────────────────
+            if not is_plausible_ir(ir):
+                logger.warning("Plausibility check failed for %s", mutant_id)
+                logger.debug("Extracted candidate: %.300s", ir)
+                error_msg = "IR plausibility check failed"
+                errors.append(error_msg)
+                attempt_metadata.append({
+                    "attempt_number": attempt,
+                    "validation_result": "failed",
+                    "error": error_msg,
+                })
+                continue
+
+            # ── Rule-based pre-validation (if refinement enabled) ────────────
+            if enable_refinement:
+                rule_result = prevalidate_ir(ir)
+                if not rule_result.is_valid:
+                    error_msg = "; ".join(rule_result.issues)
+                    errors.append(error_msg)
+                    attempt_metadata.append({
+                        "attempt_number": attempt,
+                        "validation_result": "failed",
+                        "error": error_msg,
+                        "error_type": rule_result.error_type,
+                    })
+                    logger.warning("Refinement attempt %d failed for %s: %s",
+                                   attempt, mutant_id, error_msg)
+                    continue  # Retry with error feedback
+
+            ir = add_module_header(ir, seed_name)
+
+            # Record success metadata
+            attempt_metadata.append({
+                "attempt_number": attempt,
+                "validation_result": "success",
+            })
+
+            refinement_metadata = {
+                "attempts_made": attempt,
+                "refinement_succeeded": attempt == 1,
+                "attempt_details": attempt_metadata,
+            }
+            return ir, True, refinement_metadata
+
+        # All attempts failed
+        refinement_metadata = {
+            "attempts_made": max_attempts if enable_refinement else 1,
+            "refinement_succeeded": False,
+            "attempt_details": attempt_metadata,
+        }
+        return errors[-1] if errors else "All attempts failed", False, refinement_metadata
 
     # ── Main pipeline ────────────────────────────────────────────────────────
 
@@ -485,6 +605,183 @@ class GrammarMutator:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# RandomMutator – Non-grammar-aware random mutations
+# ─────────────────────────────────────────────────────────────────────────────
+class RandomMutator:
+    """
+    Random (non-grammar-aware) LLVM IR mutator for baseline comparison.
+    Source: requirements.md → Requirement 1: Random Mutation Baseline
+
+    Implements five mutation strategies:
+      1. random_char_flip – flips a single character to another
+      2. random_line_delete – deletes one line
+      3. random_line_duplicate – duplicates one line
+      4. random_line_swap – swaps two adjacent lines
+      5. random_word_replace – replaces a word with a similar one
+    """
+
+    RANDOM_STRATEGIES: list[dict] = [
+        {"name": "random_char_flip"},
+        {"name": "random_line_delete"},
+        {"name": "random_line_duplicate"},
+        {"name": "random_line_swap"},
+        {"name": "random_word_replace"},
+    ]
+
+    def __init__(self):
+        self.rng = __import__('random').Random()
+
+    def _random_char_flip(self, ir: str, index: int) -> str:
+        """Flip one character to a different character."""
+        if not ir:
+            return ir
+        lines = ir.splitlines()
+        # Filter non-empty lines
+        non_empty = [(i, line) for i, line in enumerate(lines) if line.strip()]
+        if not non_empty:
+            return ir
+        line_idx, line = non_empty[index % len(non_empty)]
+        if not line:
+            return ir
+        char_idx = index % len(line)
+        # Flip to a different character
+        original = line[char_idx]
+        replacements = [c for c in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' if c != original]
+        if not replacements:
+            return ir
+        new_char = self.rng.choice(replacements)
+        lines[line_idx] = line[:char_idx] + new_char + line[char_idx + 1:]
+        return '\n'.join(lines)
+
+    def _random_line_delete(self, ir: str, index: int) -> str:
+        """Delete one line from the IR."""
+        lines = ir.splitlines()
+        # Don't delete metadata lines or empty lines
+        deletable = [i for i, line in enumerate(lines)
+                     if line.strip() and not line.strip().startswith('!') and not line.strip().startswith(';')]
+        if not deletable:
+            return ir
+        line_idx = deletable[index % len(deletable)]
+        return '\n'.join(lines[:line_idx] + lines[line_idx + 1:])
+
+    def _random_line_duplicate(self, ir: str, index: int) -> str:
+        """Duplicate one line in the IR."""
+        lines = ir.splitlines()
+        # Only duplicate non-metadata, non-empty lines
+        duplicable = [i for i, line in enumerate(lines)
+                      if line.strip() and not line.strip().startswith('!') and not line.strip().startswith(';')]
+        if not duplicable:
+            return ir
+        line_idx = duplicable[index % len(duplicable)]
+        return '\n'.join(lines[:line_idx + 1] + [lines[line_idx]] + lines[line_idx + 1:])
+
+    def _random_line_swap(self, ir: str, index: int) -> str:
+        """Swap two adjacent lines in the IR."""
+        lines = ir.splitlines()
+        if len(lines) < 2:
+            return ir
+        # Find swappable pairs (both non-empty, non-metadata)
+        swappable_pairs = []
+        for i in range(len(lines) - 1):
+            if (lines[i].strip() and lines[i + 1].strip() and
+                not lines[i].strip().startswith('!') and not lines[i + 1].strip().startswith('!')):
+                swappable_pairs.append(i)
+        if not swappable_pairs:
+            return ir
+        line_idx = swappable_pairs[index % len(swappable_pairs)]
+        lines[line_idx], lines[line_idx + 1] = lines[line_idx + 1], lines[line_idx]
+        return '\n'.join(lines)
+
+    def _random_word_replace(self, ir: str, index: int) -> str:
+        """Replace one word with a similar-looking word."""
+        # Common LLVM keywords that can be swapped
+        replacements = {
+            'add': 'sub', 'sub': 'add', 'mul': 'div', 'div': 'mul',
+            'eq': 'ne', 'ne': 'eq', 'slt': 'sgt', 'sgt': 'slt',
+            'and': 'or', 'or': 'and', 'xor': 'and',
+            'load': 'store', 'store': 'load',
+            'icmp': 'fcmp', 'fcmp': 'icmp',
+            'alloca': 'malloc', 'malloc': 'alloca',
+        }
+        for old_word, new_word in replacements.items():
+            if old_word in ir:
+                return ir.replace(old_word, new_word, 1)
+        # Fallback: just return original if no replacements found
+        return ir
+
+    def _mutate_one(self, seed_ir: str, index: int) -> tuple[str, str]:
+        """
+        Apply one random mutation strategy.
+        Returns (mutated_ir, strategy_name).
+        """
+        strategy_id = index % 5
+        strategy = self.RANDOM_STRATEGIES[strategy_id]
+
+        if strategy["name"] == "random_char_flip":
+            return self._random_char_flip(seed_ir, index), strategy["name"]
+        elif strategy["name"] == "random_line_delete":
+            return self._random_line_delete(seed_ir, index), strategy["name"]
+        elif strategy["name"] == "random_line_duplicate":
+            return self._random_line_duplicate(seed_ir, index), strategy["name"]
+        elif strategy["name"] == "random_line_swap":
+            return self._random_line_swap(seed_ir, index), strategy["name"]
+        else:  # random_word_replace
+            return self._random_word_replace(seed_ir, index), strategy["name"]
+
+    def run(self, seed_name: str, count: int) -> list[str]:
+        """
+        Apply random mutations to one seed and write results to RANDOM_DIR.
+
+        Steps:
+          1. Read seed_name from SEED_DIR.
+          2. For each of `count` indices, apply a random mutation.
+          3. Write mutant to RANDOM_DIR/{mutant_id}.ll.
+          4. Log to logs/raw_mutants.json per schema.
+          5. Return list of mutant IDs.
+
+        Raises:
+            FileNotFoundError – seed file missing
+        """
+        seed_path = SEED_DIR / seed_name
+        if not seed_path.exists():
+            raise FileNotFoundError(f"Seed file not found: {seed_path}")
+
+        seed_ir = seed_path.read_text(encoding="utf-8")
+        logger.info("RandomMutator: seed='%s'  count=%d", seed_name, count)
+
+        written_ids: list[str] = []
+
+        for i in range(count):
+            mutant_id = build_mutant_id(seed_name, "random", i)
+            mutant_ir, strategy = self._mutate_one(seed_ir, i)
+            mutant_ir = add_module_header(mutant_ir, seed_name)
+
+            out_path = RANDOM_DIR / f"{mutant_id}.ll"
+            out_path.write_text(mutant_ir, encoding="utf-8")
+            logger.info("Random mutant written: %s  strategy=%s", out_path, strategy)
+            written_ids.append(mutant_id)
+
+            # Log per schema
+            append_json_log(
+                RAW_MUTANTS_LOG,
+                {
+                    "id": mutant_id,
+                    "seed_name": seed_name,
+                    "mutator_type": "random",
+                    "path": str(out_path),
+                    "strategy": strategy,
+                    "seed_size_bytes": len(seed_ir.encode("utf-8")),
+                    "status": "generated",
+                    "created_at": datetime.datetime.utcnow().isoformat() + "Z",
+                },
+            )
+
+        logger.info("RandomMutator done: %d mutants for seed '%s'",
+                    len(written_ids), seed_name)
+        return written_ids
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Convenience wrappers (kept for backward compatibility with existing callers)
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -496,3 +793,8 @@ async def generate_llm_mutants(seed_name: str, count: int = 5) -> list[str]:
 def generate_grammar_mutants(seed_name: str, count: int = 5) -> list[str]:
     """Sync wrapper around GrammarMutator.run()."""
     return GrammarMutator().run(seed_name, count)
+
+
+def generate_random_mutants(seed_name: str, count: int = 5) -> list[str]:
+    """Sync wrapper around RandomMutator.run()."""
+    return RandomMutator().run(seed_name, count)

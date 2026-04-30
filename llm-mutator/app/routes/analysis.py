@@ -10,6 +10,7 @@ from app.models.analysis import (
     StudyRunResponse,
     SeedSensitivityResponse,
     StudyHistoryResponse,
+    ManifestResponse,
 )
 from app.services.analysis_service import AnalysisService
 from app.utils.logger import get_logger
@@ -72,3 +73,17 @@ async def get_study_history(limit: int = 20):
         return {"runs": data, "total": len(data)}
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@router.get(
+    "/manifest",
+    response_model=ManifestResponse,
+    summary="Get comprehensive mutant manifest with metadata and statistics",
+)
+async def get_manifest():
+    logger.info("get_manifest called")
+    try:
+        return await AnalysisService.get_manifest()
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+

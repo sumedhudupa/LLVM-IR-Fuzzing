@@ -137,3 +137,37 @@ def sanitize_ir(ir: str) -> str:
             cleaned = cleaned[: last_brace + 1]
 
     return cleaned.strip()
+
+
+def compute_ir_hash(ir_text: str) -> str:
+    """
+    Compute a normalized MD5 hash of LLVM IR text for deduplication.
+    Normalization steps:
+      1. Remove all comments (lines starting with ;)
+      2. Collapse multiple whitespace to single space
+      3. Strip register names (%identifier -> %)
+      4. Remove leading/trailing whitespace
+    """
+    import hashlib
+
+    # Step 1: Remove comments
+    lines = ir_text.splitlines()
+    no_comments = []
+    for line in lines:
+        # Remove inline comments
+        if ';' in line:
+            line = line[:line.index(';')]
+        no_comments.append(line)
+    ir_no_comments = '\n'.join(no_comments)
+
+    # Step 2: Collapse whitespace
+    ir_collapsed = re.sub(r'\s+', ' ', ir_no_comments)
+
+    # Step 3: Strip register names (%identifier -> %)
+    ir_normalized = re.sub(r'%[a-zA-Z_][a-zA-Z0-9_]*', '%', ir_collapsed)
+
+    # Step 4: Compute MD5 hash
+    ir_normalized = ir_normalized.strip()
+    md5_hash = hashlib.md5(ir_normalized.encode('utf-8')).hexdigest()
+
+    return md5_hash

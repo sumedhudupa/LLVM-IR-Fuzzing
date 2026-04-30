@@ -341,3 +341,13 @@ Work through these in order — each builds on the previous:
 6. **Deduplication** (Section 6) — clean up before running the final study.
 7. **Validation page auto-load** (Section 7) — UX polish, low priority.
 8. **Tests** (Section 8) — add alongside each section above, not at the end.
+
+## graphify
+
+This project has a graphify knowledge graph at graphify-out/.
+
+Rules:
+- Before answering architecture or codebase questions, read graphify-out/GRAPH_REPORT.md for god nodes and community structure
+- If graphify-out/wiki/index.md exists, navigate it instead of reading raw files
+- For cross-module "how does X relate to Y" questions, prefer `graphify query "<question>"`, `graphify path "<A>" "<B>"`, or `graphify explain "<concept>"` over grep — these traverse the graph's EXTRACTED + INFERRED edges instead of scanning files
+- After modifying code files in this session, run `graphify update .` to keep the graph current (AST-only, no API cost)

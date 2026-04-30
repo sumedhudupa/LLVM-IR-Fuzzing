@@ -37,3 +37,38 @@ class SeedSensitivityResponse(BaseModel):
 class StudyHistoryResponse(BaseModel):
     runs: list[dict]
     total: int
+
+
+class ManifestEntryModel(BaseModel):
+    """Per-mutant entry in manifest."""
+    mutant_id: str
+    seed_name: str
+    source: str
+    mutation_type: str
+    seed_ir_hash: str | None = None
+    is_valid: bool = False
+    trivial: bool = False
+    is_duplicate: bool = False
+    content_hash: str | None = None
+    error_type: str | None = None
+    generation_time_s: float | None = None
+    status: str = "generated"
+    timestamp: str = ""
+
+
+class ManifestSummaryModel(BaseModel):
+    """Summary statistics."""
+    total_generated: int = 0
+    valid_count: int = 0
+    invalid_count: int = 0
+    duplicate_count: int = 0
+    trivial_count: int = 0
+    by_mutator_type: dict = {}
+    by_error_type: dict = {}
+
+
+class ManifestResponse(BaseModel):
+    """Manifest response with entries and summary."""
+    generated_at: str
+    mutants: list[ManifestEntryModel]
+    summary: ManifestSummaryModel

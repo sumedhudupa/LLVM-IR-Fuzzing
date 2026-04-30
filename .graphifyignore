@@ -1,0 +1,7 @@
+# .graphifyignore
+vendor/
+node_modules/
+dist/
+*.generated.py
+*.pyc
+__pycache__/

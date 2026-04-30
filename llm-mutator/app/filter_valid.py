@@ -12,11 +12,13 @@ import re
 from pathlib import Path
 from typing import Literal
 
-from .config import MUTANT_DIR, GRAMMAR_DIR, VALID_DIR, INVALID_DIR, LOGS_DIR, SEED_DIR
+from .config import MUTANT_DIR, GRAMMAR_DIR, RANDOM_DIR, VALID_DIR, INVALID_DIR, LOGS_DIR, SEED_DIR, ENABLE_RULE_VALIDATION, ENABLE_DEDUPLICATION, VALIDATION_TIMEOUT
 from .utils.semantic_helpers import is_semantically_trivial
+from .utils.rule_validation import prevalidate_ir
+from .utils.ir_helpers import compute_ir_hash
 
 
-ErrorType = Literal["syntax", "ssa", "type", "cfg", "undef", "other"] | None
+ErrorType = Literal["syntax", "ssa", "type", "cfg", "undef", "other", "timeout"] | None
 
 
 def _extract_seed_name(mutant_id: str) -> str | None:
@@ -51,13 +53,22 @@ def _classify_error(stderr: str) -> ErrorType:
     return "other"
 
 
+# In-memory hash set for session-based deduplication
+_seen_ir_hashes: set[str] = set()
+
+
 def validate_mutant(mutant_id: str, mutator_type: str = "llm") -> dict:
     """
-    Run llvm-as + opt -S -verify on the mutant IR file.
+    Run rule-based pre-validation, then llvm-as + opt -S -verify on the mutant IR file.
     Moves file to VALID_DIR or INVALID_DIR and logs result.
     """
     # 1. Determine source path
-    src_dir = MUTANT_DIR if mutator_type == "llm" else GRAMMAR_DIR
+    if mutator_type == "llm":
+        src_dir = MUTANT_DIR
+    elif mutator_type == "random":
+        src_dir = RANDOM_DIR
+    else:
+        src_dir = GRAMMAR_DIR
     ll_path = src_dir / f"{mutant_id}.ll"
     bc_path = src_dir / f"{mutant_id}.bc"
 
@@ -67,43 +78,87 @@ def validate_mutant(mutant_id: str, mutator_type: str = "llm") -> dict:
     is_valid = False
     error_type: ErrorType = None
     verifier_output = ""
+    rule_check_passed = None
+    is_duplicate = False
+    content_hash = None
 
-    # 2. Run llvm-as
-    as_proc = subprocess.run(
-        ["llvm-as", str(ll_path), "-o", str(bc_path)],
-        capture_output=True,
-        text=True
-    )
+    # Read IR content for deduplication and rule validation
+    ir_text = ll_path.read_text(encoding="utf-8")
 
-    if as_proc.returncode != 0:
-        is_valid = False
-        error_type = "syntax"
-        verifier_output = as_proc.stderr
-    else:
-        # 3. Run opt -passes=verify -disable-output
-        opt_proc = subprocess.run(
-            ["opt", "-S", "-passes=verify", str(bc_path), "-o", "/dev/null"],
-            capture_output=True,
-            text=True
-        )
-        if opt_proc.returncode != 0:
-            is_valid = False
-            error_type = _classify_error(opt_proc.stderr)
-            verifier_output = opt_proc.stderr
+    # 2. Compute content hash for deduplication
+    if ENABLE_DEDUPLICATION:
+        content_hash = compute_ir_hash(ir_text)
+        if content_hash in _seen_ir_hashes:
+            is_duplicate = True
         else:
-            is_valid = True
-            error_type = None
-            verifier_output = "Verification successful."
+            _seen_ir_hashes.add(content_hash)
 
-    # 4. Move file
+    # 3. Rule-based pre-validation (if enabled)
+    if ENABLE_RULE_VALIDATION:
+        rule_result = prevalidate_ir(ir_text)
+        if not rule_result.is_valid:
+            is_valid = False
+            error_type = rule_result.error_type
+            verifier_output = "; ".join(rule_result.issues)
+            rule_check_passed = False
+        else:
+            rule_check_passed = True
+
+    # 4. Run llvm-as (only if rule validation passed or disabled)
+    timeout_occurred = False
+    if rule_check_passed is not False:
+        try:
+            as_proc = subprocess.run(
+                ["llvm-as", str(ll_path), "-o", str(bc_path)],
+                capture_output=True,
+                text=True,
+                timeout=VALIDATION_TIMEOUT
+            )
+        except subprocess.TimeoutExpired:
+            timeout_occurred = True
+            is_valid = False
+            error_type = "timeout"
+            verifier_output = f"llvm-as timed out after {VALIDATION_TIMEOUT} seconds"
+
+        if not timeout_occurred:
+            if as_proc.returncode != 0:
+                is_valid = False
+                error_type = "syntax"
+                verifier_output = as_proc.stderr
+            else:
+                # 5. Run opt -passes=verify -disable-output
+                try:
+                    opt_proc = subprocess.run(
+                        ["opt", "-S", "-passes=verify", str(bc_path), "-o", "/dev/null"],
+                        capture_output=True,
+                        text=True,
+                        timeout=VALIDATION_TIMEOUT
+                    )
+                except subprocess.TimeoutExpired:
+                    timeout_occurred = True
+                    is_valid = False
+                    error_type = "timeout"
+                    verifier_output = f"opt -passes=verify timed out after {VALIDATION_TIMEOUT} seconds"
+
+                if not timeout_occurred:
+                    if opt_proc.returncode != 0:
+                        is_valid = False
+                        error_type = _classify_error(opt_proc.stderr)
+                        verifier_output = opt_proc.stderr
+                    else:
+                        is_valid = True
+                        error_type = None
+                        verifier_output = "Verification successful."
+
+    # 6. Move file
     target_dir = VALID_DIR if is_valid else INVALID_DIR
     shutil.move(str(ll_path), target_dir / ll_path.name)
-    
+
     # Cleanup .bc if it exists
     if bc_path.exists():
         bc_path.unlink()
 
-    # 5. Check semantic equivalence if valid
+    # 7. Check semantic equivalence if valid
     is_trivial = False
     if is_valid:
         seed_name = _extract_seed_name(mutant_id)
@@ -112,17 +167,21 @@ def validate_mutant(mutant_id: str, mutator_type: str = "llm") -> dict:
             target_path = target_dir / ll_path.name
             is_trivial = is_semantically_trivial(seed_path, target_path)
 
-    # 6. Prepare log entry
+    # 8. Prepare log entry
     log_entry = {
         "mutant_id": mutant_id,
         "is_valid": is_valid,
         "error_type": error_type,
         "verifier_output": verifier_output.strip(),
         "trivial": is_trivial,
+        "is_duplicate": is_duplicate,
+        "content_hash": content_hash,
+        "rule_check_passed": rule_check_passed,
+        "timeout_occurred": timeout_occurred,
         "created_at": datetime.datetime.utcnow().isoformat() + "Z",
     }
 
-    # 6. Append to logs/validity_logs.json
+    # 9. Append to logs/validity_logs.json
     log_file = LOGS_DIR / "validity_logs.json"
     logs = []
     if log_file.exists():
@@ -131,7 +190,7 @@ def validate_mutant(mutant_id: str, mutator_type: str = "llm") -> dict:
                 logs = json.load(f)
         except json.JSONDecodeError:
             logs = []
-    
+
     logs.append(log_entry)
     with open(log_file, "w") as f:
         json.dump(logs, f, indent=2)

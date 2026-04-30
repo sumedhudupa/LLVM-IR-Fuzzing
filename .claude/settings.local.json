@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:claude.ai)",
+      "Bash(python -m pytest tests/test_phase3.py -v --tb=short)",
+      "Bash(python -m pytest tests/ -v --tb=short)",
+      "Bash(python -m pytest tests/test_phase4.py -v --tb=short)",
+      "Bash(python -c \"s='domination broken'; print\\('dominate' in s\\)\")",
+      "Bash(python -c \"s='terminator instruction error'; print\\('terminate' in s\\)\")",
+      "Bash(python *)"
+    ]
+  }
+}

@@ -8,11 +8,12 @@ import re
 from collections import Counter
 from pathlib import Path
 
-from app.config import LOGS_DIR
+from app.config import LOGS_DIR, SEED_DIR
 from app.models.analysis import StudyRunRequest
 from app.models.differential import DifferentialRunRequest
 from app.services.differential_service import DifferentialService
 from app.services.mutant_service import MutantService
+from app.services.manifest_service import ManifestTracker
 from app.models.mutants import GenerateMutantsRequest, ValidateMutantsRequest
 from app.utils.fs_helpers import append_json_log
 
@@ -257,3 +258,30 @@ class AnalysisService:
 
         # Return last N runs, newest first
         return runs[-limit:][::-1]
+
+    @staticmethod
+    async def get_manifest() -> dict:
+        """
+        Generate and retrieve comprehensive manifest with all mutant metadata.
+        Aggregates raw_mutants.json and validity_logs.json into structured manifest.
+        """
+        tracker = ManifestTracker(LOGS_DIR)
+        manifest_path = tracker.save_manifest(SEED_DIR)
+
+        # Load and return manifest
+        if manifest_path.exists():
+            return json.loads(manifest_path.read_text(encoding="utf-8"))
+        return {
+            "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
+            "mutants": [],
+            "summary": {
+                "total_generated": 0,
+                "valid_count": 0,
+                "invalid_count": 0,
+                "duplicate_count": 0,
+                "trivial_count": 0,
+                "by_mutator_type": {},
+                "by_error_type": {},
+            }
+        }
+

@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 
 # ── Source: CONTEXT.json apis.endpoints[POST /api/v1/mutants/generate] ────────
 
-MutatorType = Literal["llm", "grammar"]
+MutatorType = Literal["llm", "grammar", "random"]
 
 class GenerateMutantsRequest(BaseModel):
     """Request body for POST /api/v1/mutants/generate."""
@@ -31,7 +31,7 @@ class GenerateMutantsResponse(BaseModel):
 
 # ── Source: CONTEXT.json apis.endpoints[POST /api/v1/mutants/validate] ────────
 
-ErrorType = Literal["syntax", "ssa", "type", "cfg", "undef", "other"] | None
+ErrorType = Literal["syntax", "ssa", "type", "cfg", "undef", "other", "timeout"] | None
 
 class ValidateMutantsRequest(BaseModel):
     """Request body for POST /api/v1/mutants/validate."""
@@ -45,6 +45,10 @@ class MutantValidationResult(BaseModel):
     error_type: ErrorType = None
     verifier_output: str = ""
     trivial: bool = False  # True if valid but semantically equivalent to seed
+    is_duplicate: bool = False  # True if IR hash matches previously seen mutant
+    content_hash: str | None = None  # Normalized MD5 hash of IR
+    rule_check_passed: bool | None = None  # True if rule-based pre-validation passed
+    timeout_occurred: bool = False  # True if subprocess timeout occurred during validation
     created_at: str        # ISO 8601
 
 
