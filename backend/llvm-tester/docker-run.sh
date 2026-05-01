@@ -90,7 +90,7 @@ echo "Starting Stage 2: Differential Testing..."
 
 # Pre-emptive header check
 if [ ! -f "$RESULTS_CSV" ]; then
-    echo "mutant_id,baseline_level,target_level,is_mismatch,mismatch_type,runtime_ms_baseline,runtime_ms_target,created_at" > "$RESULTS_CSV"
+    echo "mutant_id,baseline_level,target_level,is_mismatch,mismatch_type,mutator_type,execution_mode,failure_stage,harness_entry,runtime_ms_baseline,runtime_ms_target,created_at,run_id" > "$RESULTS_CSV"
 fi
 
 for valid_ll in "${VALID_DIR}"/*.ll; do
@@ -144,8 +144,15 @@ for valid_ll in "${VALID_DIR}"/*.ll; do
     fi
     
     # 6. Log to results.csv
+    MUT_TYPE="unknown"
+    if [[ "$mutant_id" == *"_llm_"* ]]; then MUT_TYPE="llm"
+    elif [[ "$mutant_id" == *"_grammar_"* ]]; then MUT_TYPE="grammar"
+    elif [[ "$mutant_id" == *"_random_"* ]]; then MUT_TYPE="random"
+    fi
+    
     CREATED_AT=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-    echo "$mutant_id,-O0,-O2,$IS_MISMATCH,$MISMATCH_TYPE,$RT_O0,$RT_O2,$CREATED_AT" >> "$RESULTS_CSV"
+    # mutant_id,baseline_level,target_level,is_mismatch,mismatch_type,mutator_type,execution_mode,failure_stage,harness_entry,runtime_ms_baseline,runtime_ms_target,created_at,run_id
+    echo "$mutant_id,-O0,-O2,$IS_MISMATCH,$MISMATCH_TYPE,$MUT_TYPE,direct,execute,,$RT_O0,$RT_O2,$CREATED_AT," >> "$RESULTS_CSV"
     
     rm -f /tmp/bin_O0 /tmp/bin_O2 /tmp/out_O0.txt /tmp/out_O2.txt
 done

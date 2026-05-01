@@ -207,18 +207,17 @@ class DifferentialService:
         if not RESULTS_CSV.exists():
             raise FileNotFoundError(f"results file not found: {RESULTS_CSV}")
 
-        rows: list[DifferentialResult] = []
-        from app.config import INVALID_DIR
+        # Use a dict to keep the latest result per mutant_id
+        latest_results: dict[str, DifferentialResult] = {}
         
         with open(RESULTS_CSV, newline="") as f:
             for row in csv.DictReader(f):
                 try:
                     mutant_id = DifferentialService._safe_str(row.get("mutant_id"))
                     
-                    # Filter out stale results for deleted mutants
-                    exists = (VALID_DIR / f"{mutant_id}.ll").exists() or \
-                             (INVALID_DIR / f"{mutant_id}.ll").exists()
-                    if not exists:
+                    # Filter: Only include if the mutant is currently in VALID_DIR
+                    # If it was moved to INVALID_DIR or deleted, we skip its stale results
+                    if not (VALID_DIR / f"{mutant_id}.ll").exists():
                         continue
 
                     mismatch_val = DifferentialService._normalize_mismatch_type(
@@ -227,26 +226,28 @@ class DifferentialService:
                     rt_base_raw = DifferentialService._safe_str(row.get("runtime_ms_baseline"))
                     rt_tgt_raw = DifferentialService._safe_str(row.get("runtime_ms_target"))
 
-                    rows.append(
-                        DifferentialResult(
-                            mutant_id=mutant_id,
-                            baseline_level=DifferentialService._safe_str(row.get("baseline_level")),
-                            target_level=DifferentialService._safe_str(row.get("target_level")),
-                            is_mismatch=DifferentialService._safe_str(row.get("is_mismatch")).lower() == "true",
-                            mismatch_type=mismatch_val,
-                            mutator_type=DifferentialService._safe_str(row.get("mutator_type"), "unknown"),
-                            execution_mode=DifferentialService._safe_str(row.get("execution_mode"), "unknown"),
-                            failure_stage=DifferentialService._safe_str(row.get("failure_stage")) or None,
-                            harness_entry=DifferentialService._safe_str(row.get("harness_entry")) or None,
-                            runtime_ms_baseline=float(rt_base_raw) if rt_base_raw else None,
-                            runtime_ms_target=float(rt_tgt_raw) if rt_tgt_raw else None,
-                            created_at=DifferentialService._safe_str(row.get("created_at")),
-                        )
+                    res = DifferentialResult(
+                        mutant_id=mutant_id,
+                        baseline_level=DifferentialService._safe_str(row.get("baseline_level")),
+                        target_level=DifferentialService._safe_str(row.get("target_level")),
+                        is_mismatch=DifferentialService._safe_str(row.get("is_mismatch")).lower() == "true",
+                        mismatch_type=mismatch_val,
+                        mutator_type=DifferentialService._safe_str(row.get("mutator_type"), "unknown"),
+                        execution_mode=DifferentialService._safe_str(row.get("execution_mode"), "unknown"),
+                        failure_stage=DifferentialService._safe_str(row.get("failure_stage")) or None,
+                        harness_entry=DifferentialService._safe_str(row.get("harness_entry")) or None,
+                        runtime_ms_baseline=float(rt_base_raw) if rt_base_raw else None,
+                        runtime_ms_target=float(rt_tgt_raw) if rt_tgt_raw else None,
+                        created_at=DifferentialService._safe_str(row.get("created_at")),
                     )
+                    # Always overwrite with latest found row
+                    latest_results[mutant_id] = res
                 except Exception as exc:
                     logger.warning("Skipping malformed differential row: %s", exc)
                     continue
-        logger.info("get_results: %d rows from %s", len(rows), RESULTS_CSV)
+        
+        rows = list(latest_results.values())
+        logger.info("get_results: %d unique rows from %s", len(rows), RESULTS_CSV)
         return DifferentialResultsResponse(results=rows)
 
     # ── Helper ──────────────────────────────────────────────────────────────
