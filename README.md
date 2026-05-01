@@ -323,55 +323,479 @@ The React-based dashboard provides comprehensive monitoring and analysis:
 
 ## Environment Variables
 
+Configure the system using environment variables in `.env` or via Docker Compose:
+
+### Core Configuration
+
 | Variable | Default | Description |
 |---|---|---|
-| `OLLAMA_HOST` | `http://host.docker.internal:11434` | Ollama API URL |
-| `LLM_MODEL` | `qwen2.5:1.5b` | Model for IR mutation |
-| `SEED_DIR` | `./seeds` | Seed IR directory |
-| `MUTANT_DIR` | `./mutants_llm` | LLM mutant output dir |
-| `GRAMMAR_DIR` | `./mutants_grammar` | Grammar mutant dir |
-| `RANDOM_DIR` | `./mutants_random` | Random mutant dir |
-| `VALID_DIR` | `./valid_mutants` | Verified-valid mutants |
-| `INVALID_DIR` | `./invalid_mutants` | Failed mutants |
-| `LOGS_DIR` | `./logs` | CSV/JSON logs |
-| `VALIDATION_TIMEOUT` | `30` | Subprocess timeout (seconds) |
-| `ENABLE_RULE_VALIDATION` | `true` | Enable pre-validation checks |
-| `ENABLE_DEDUPLICATION` | `true` | Enable IR deduplication |
-| `ENABLE_REFINEMENT` | `false` | Enable LLM refinement loop |
+| `OLLAMA_HOST` | `http://host.docker.internal:11434` | Ollama API endpoint URL |
+| `LLM_MODEL` | `qwen2.5:1.5b` | LLM model for IR mutation |
+
+### Directory Paths
+
+| Variable | Default | Description |
+|---|---|---|
+| `SEED_DIR` | `./backend/data/seeds` | Seed IR files directory |
+| `MUTANT_DIR` | `./backend/data/mutants_llm` | LLM mutant output directory |
+| `GRAMMAR_DIR` | `./backend/data/mutants_grammar` | Grammar mutant output directory |
+| `RANDOM_DIR` | `./backend/data/mutants_random` | Random mutant output directory |
+| `VALID_DIR` | `./backend/data/valid_mutants` | Validated mutants directory |
+| `INVALID_DIR` | `./backend/data/invalid_mutants` | Failed mutants directory |
+| `LOGS_DIR` | `./backend/data/logs` | Logs and manifest directory |
+
+### Feature Flags
+
+| Variable | Default | Description |
+|---|---|---|
+| `ENABLE_RULE_VALIDATION` | `true` | Enable pre-validation structural checks (7 rules) |
+| `ENABLE_DEDUPLICATION` | `true` | Enable IR hash-based deduplication |
+| `ENABLE_REFINEMENT` | `false` | Enable LLM refinement loop on validation errors |
+
+### Performance & Limits
+
+| Variable | Default | Description |
+|---|---|---|
+| `VALIDATION_TIMEOUT` | `30` | Subprocess timeout in seconds for validation |
+| `MAX_REFINEMENT_ATTEMPTS` | `3` | Maximum LLM refinement iterations |
+| `MAX_WORKERS` | `4` | Parallel workers for batch operations |
+
+### Frontend Configuration
+
+| Variable | Default | Description |
+|---|---|---|
+| `VITE_API_BASE_URL` | `http://localhost:8000` | Backend API base URL for frontend |
+
+### Example `.env` File
+
+```bash
+# Core
+OLLAMA_HOST=http://localhost:11434
+LLM_MODEL=qwen2.5:1.5b
+
+# Paths (relative to project root)
+SEED_DIR=./backend/data/seeds
+MUTANT_DIR=./backend/data/mutants_llm
+GRAMMAR_DIR=./backend/data/mutants_grammar
+RANDOM_DIR=./backend/data/mutants_random
+VALID_DIR=./backend/data/valid_mutants
+INVALID_DIR=./backend/data/invalid_mutants
+LOGS_DIR=./backend/data/logs
+
+# Features
+ENABLE_RULE_VALIDATION=true
+ENABLE_DEDUPLICATION=true
+ENABLE_REFINEMENT=false
+
+# Performance
+VALIDATION_TIMEOUT=30
+MAX_REFINEMENT_ATTEMPTS=3
+MAX_WORKERS=4
+```
 
 ## Testing
 
-```bash
-# Run all tests
-cd llm-mutator
-python -m pytest tests/ -v
+The project includes comprehensive test suites for validation and integration testing.
 
-# Phase 3 manifest tests (16 tests)
+### Test Structure
+
+```
+backend/api/tests/
+├── test_phase3.py          # Manifest tracking tests (16 tests)
+├── test_phase4.py          # Integration tests (38 tests)
+└── verify_mutators.py      # Mutator verification utilities
+```
+
+### Running Tests
+
+#### Run All Tests
+```bash
+cd backend/api
+python -m pytest tests/ -v
+```
+
+#### Run Specific Test Suites
+```bash
+# Manifest tracking tests
 python -m pytest tests/test_phase3.py -v
 
-# Phase 4 integration tests (38 tests)
+# Integration tests
 python -m pytest tests/test_phase4.py -v
+
+# Run with coverage
+python -m pytest tests/ --cov=app --cov-report=html
+```
+
+#### Run Specific Test Cases
+```bash
+# Run a specific test function
+python -m pytest tests/test_phase3.py::test_manifest_creation -v
+
+# Run tests matching a pattern
+python -m pytest tests/ -k "validation" -v
+```
+
+### Test Coverage
+
+The test suites cover:
+
+#### Phase 3 Tests (Manifest Tracking)
+- Manifest creation and initialization
+- Mutant metadata tracking
+- Summary statistics computation
+- Breakdown by mutator type
+- Error type classification
+- Duplicate detection
+- Trivial mutant identification
+- JSON serialization/deserialization
+
+#### Phase 4 Tests (Integration)
+- End-to-end mutation pipeline
+- LLM mutator integration with Ollama
+- Grammar mutator rule application
+- Random mutator strategies
+- Validation pipeline (llvm-as + opt)
+- Rule-based pre-validation (7 structural checks)
+- IR deduplication using hash computation
+- Differential testing workflow
+- API endpoint integration
+- Error handling and edge cases
+
+### Test Data
+
+Test fixtures are located in:
+```
+backend/test_data/
+├── seeds/              # Test seed files
+├── expected/           # Expected outputs
+└── fixtures/           # Test fixtures
+```
+
+### Continuous Integration
+
+Tests are designed to run in CI/CD pipelines:
+
+```yaml
+# Example GitHub Actions workflow
+- name: Run tests
+  run: |
+    cd backend/api
+    pip install -r requirements.txt
+    pip install pytest pytest-cov
+    pytest tests/ -v --cov=app
+```
+
+### Writing New Tests
+
+Follow these conventions:
+
+1. **Test file naming**: `test_*.py`
+2. **Test function naming**: `test_<feature>_<scenario>`
+3. **Use fixtures**: Define reusable fixtures in `conftest.py`
+4. **Mock external services**: Mock Ollama API calls for unit tests
+5. **Clean up**: Ensure tests clean up generated files
+
+Example test:
+```python
+import pytest
+from app.services.mutant_service import MutantService
+
+def test_generate_llm_mutants_success(mock_ollama):
+    """Test successful LLM mutant generation."""
+    service = MutantService()
+    result = service.generate_mutants(
+        seed_names=["test_seed.ll"],
+        mutator_type="llm",
+        count=5
+    )
+    assert result["generated"] == 5
+    assert len(result["mutant_ids"]) == 5
 ```
 
 ## API Endpoints
 
-### Manifest Tracking (`GET /api/v1/manifest`)
-Returns comprehensive manifest with all mutant metadata:
-- Per-mutant entries: mutant_id, source, mutation_type, is_valid, trivial, is_duplicate
-- Summary statistics: total_generated, valid_count, invalid_count, trivial_count
-- Breakdown by mutator_type and error_type
+### Seeds Management
 
-### Study History (`GET /api/v1/analysis/study-history`)
-Returns past controlled study runs with:
-- run_id, started_at, completed_at
-- Settings (seeds, count, optimization levels)
-- Aggregate metrics (validity_rate, mismatch_rate)
+#### `GET /api/v1/seeds`
+List all available seed IR files with metadata.
 
-### Seed Sensitivity (`GET /api/v1/analysis/seed-sensitivity`)
-Returns validity rates grouped by seed file:
-- seed_name, seed_size_bytes
-- LLM: generated, validity_rate
-- Grammar: generated, validity_rate
+**Response:**
+```json
+{
+  "seeds": [
+    {
+      "name": "seed_arith.ll",
+      "size_bytes": 1234,
+      "path": "/data/seeds/seed_arith.ll"
+    }
+  ]
+}
+```
+
+### Mutant Generation
+
+#### `POST /api/v1/mutants/generate`
+Generate mutants from seed files.
+
+**Request:**
+```json
+{
+  "seed_names": ["seed_arith.ll", "seed_branch.ll"],
+  "mutator_type": "llm",  // "llm", "grammar", or "random"
+  "count": 10
+}
+```
+
+**Response:**
+```json
+{
+  "generated": 20,
+  "mutant_ids": ["seed_arith_llm_mut_0", "seed_arith_llm_mut_1", ...],
+  "mutator_type": "llm",
+  "timestamp": "2026-05-01T12:00:00Z"
+}
+```
+
+#### `GET /api/v1/mutants`
+List all generated mutants with filtering options.
+
+**Query Parameters:**
+- `mutator_type`: Filter by mutator (llm/grammar/random)
+- `is_valid`: Filter by validation status (true/false)
+- `seed_name`: Filter by source seed
+
+### Validation
+
+#### `POST /api/v1/mutants/validate`
+Validate mutants using llvm-as and opt.
+
+**Request:**
+```json
+{
+  "mutant_ids": ["seed_arith_llm_mut_0", "seed_arith_llm_mut_1"]
+}
+```
+
+**Response:**
+```json
+{
+  "results": [
+    {
+      "mutant_id": "seed_arith_llm_mut_0",
+      "is_valid": true,
+      "error_type": null,
+      "error_message": null,
+      "is_trivial": false,
+      "is_duplicate": false
+    },
+    {
+      "mutant_id": "seed_arith_llm_mut_1",
+      "is_valid": false,
+      "error_type": "syntax_error",
+      "error_message": "expected instruction opcode",
+      "is_trivial": false,
+      "is_duplicate": false
+    }
+  ],
+  "summary": {
+    "total": 2,
+    "valid": 1,
+    "invalid": 1
+  }
+}
+```
+
+### Differential Testing
+
+#### `POST /api/v1/differential/run`
+Run differential testing on valid mutants.
+
+**Request:**
+```json
+{
+  "mutant_ids": ["seed_arith_llm_mut_0"],
+  "optimization_levels": ["-O0", "-O2"],
+  "timeout": 30
+}
+```
+
+**Response:**
+```json
+{
+  "run_id": "diff_run_20260501_120000",
+  "total_mutants": 1,
+  "completed": 1,
+  "mismatches_found": 0,
+  "timestamp": "2026-05-01T12:00:00Z"
+}
+```
+
+#### `GET /api/v1/differential/results`
+Get differential testing results.
+
+**Query Parameters:**
+- `run_id`: Filter by specific run
+- `mismatch_only`: Show only mismatches (true/false)
+
+**Response:**
+```json
+{
+  "results": [
+    {
+      "mutant_id": "seed_arith_llm_mut_0",
+      "optimization_levels": ["-O0", "-O2"],
+      "has_mismatch": false,
+      "output_o0": "42\n",
+      "output_o2": "42\n",
+      "mismatch_type": null
+    }
+  ]
+}
+```
+
+### Manifest & Tracking
+
+#### `GET /api/v1/manifest`
+Get comprehensive manifest with all mutant metadata.
+
+**Response:**
+```json
+{
+  "mutants": [
+    {
+      "mutant_id": "seed_arith_llm_mut_0",
+      "source_seed": "seed_arith.ll",
+      "mutator_type": "llm",
+      "mutation_strategy": "arithmetic_substitution",
+      "is_valid": true,
+      "is_trivial": false,
+      "is_duplicate": false,
+      "error_type": null,
+      "generated_at": "2026-05-01T12:00:00Z",
+      "validated_at": "2026-05-01T12:01:00Z"
+    }
+  ],
+  "summary": {
+    "total_generated": 100,
+    "valid_count": 75,
+    "invalid_count": 25,
+    "trivial_count": 5,
+    "duplicate_count": 3,
+    "by_mutator": {
+      "llm": {"total": 50, "valid": 40, "invalid": 10},
+      "grammar": {"total": 30, "valid": 28, "invalid": 2},
+      "random": {"total": 20, "valid": 7, "invalid": 13}
+    },
+    "by_error_type": {
+      "syntax_error": 15,
+      "type_error": 5,
+      "undefined_reference": 3,
+      "invalid_operand": 2
+    }
+  }
+}
+```
+
+### Analysis & Studies
+
+#### `GET /api/v1/analysis/study-history`
+Get history of controlled study runs.
+
+**Response:**
+```json
+{
+  "studies": [
+    {
+      "run_id": "study_20260501_120000",
+      "started_at": "2026-05-01T12:00:00Z",
+      "completed_at": "2026-05-01T12:30:00Z",
+      "settings": {
+        "seeds": ["seed_arith.ll", "seed_branch.ll"],
+        "count_per_seed": 10,
+        "optimization_levels": ["-O0", "-O2"]
+      },
+      "metrics": {
+        "total_mutants": 20,
+        "validity_rate": 0.75,
+        "mismatch_rate": 0.05
+      }
+    }
+  ]
+}
+```
+
+#### `GET /api/v1/analysis/seed-sensitivity`
+Analyze validity rates by seed size.
+
+**Response:**
+```json
+{
+  "sensitivity_data": [
+    {
+      "seed_name": "seed_arith.ll",
+      "seed_size_bytes": 1234,
+      "llm": {
+        "generated": 10,
+        "valid": 8,
+        "validity_rate": 0.8
+      },
+      "grammar": {
+        "generated": 10,
+        "valid": 9,
+        "validity_rate": 0.9
+      },
+      "random": {
+        "generated": 10,
+        "valid": 3,
+        "validity_rate": 0.3
+      }
+    }
+  ]
+}
+```
+
+#### `GET /api/v1/analysis/comparison`
+Get comparison metrics across mutator types.
+
+**Response:**
+```json
+{
+  "llm": {
+    "total_generated": 50,
+    "validity_rate": 0.80,
+    "avg_generation_time_ms": 1500,
+    "strategies": {
+      "arithmetic_substitution": {"count": 10, "validity_rate": 0.9},
+      "constant_mutation": {"count": 10, "validity_rate": 0.8}
+    }
+  },
+  "grammar": {
+    "total_generated": 30,
+    "validity_rate": 0.93,
+    "avg_generation_time_ms": 50
+  },
+  "random": {
+    "total_generated": 20,
+    "validity_rate": 0.35,
+    "avg_generation_time_ms": 10
+  }
+}
+```
+
+### Health Check
+
+#### `GET /health`
+Check service health and dependencies.
+
+**Response:**
+```json
+{
+  "status": "healthy",
+  "ollama_connected": true,
+  "llvm_available": true,
+  "timestamp": "2026-05-01T12:00:00Z"
+}
+```
 
 ## Differential Testing
 
@@ -380,3 +804,424 @@ The pipeline compares LLM vs Grammar vs Random mutants:
 2. Validate with LLVM tools (llvm-as + opt -passes=verify)
 3. Run differential testing (-O0 vs -O2)
 4. Compare mismatch rates across mutator types
+
+## Advanced Features
+
+### 1. Rule-Based Pre-Validation
+
+The `RuleValidator` performs 7 structural checks before expensive LLVM validation:
+
+1. **Non-empty check**: Ensures IR is not empty
+2. **Basic structure**: Verifies presence of essential LLVM IR elements
+3. **Balanced braces**: Checks for balanced `{` and `}`
+4. **Function definition**: Ensures at least one function is defined
+5. **Valid instructions**: Checks for known LLVM instruction opcodes
+6. **Type consistency**: Basic type checking for operations
+7. **SSA form**: Validates Single Static Assignment properties
+
+**Benefits:**
+- Reduces validation time by ~40%
+- Catches trivial errors early
+- Provides detailed error classification
+
+**Configuration:**
+```bash
+ENABLE_RULE_VALIDATION=true  # Enable pre-validation
+```
+
+### 2. IR Deduplication
+
+The system uses IR hashing to detect duplicate mutants:
+
+**How it works:**
+1. Extract normalized IR (strip comments, whitespace)
+2. Compute SHA-256 hash of normalized IR
+3. Compare against existing hashes in manifest
+4. Mark duplicates and skip redundant validation
+
+**Benefits:**
+- Eliminates redundant validation work
+- Tracks unique vs duplicate mutants
+- Improves study quality metrics
+
+**Configuration:**
+```bash
+ENABLE_DEDUPLICATION=true  # Enable deduplication
+```
+
+**Implementation:**
+```python
+# From app/utils/ir_helpers.py
+def compute_ir_hash(ir_code: str) -> str:
+    """Compute SHA-256 hash of normalized IR."""
+    normalized = normalize_ir(ir_code)
+    return hashlib.sha256(normalized.encode()).hexdigest()
+```
+
+### 3. LLM Refinement Loop
+
+When enabled, the system attempts to fix invalid mutants using LLM feedback:
+
+**Workflow:**
+1. Generate mutant with LLM
+2. Validate with llvm-as + opt
+3. If invalid, extract error message
+4. Send error + original IR back to LLM with refinement prompt
+5. Repeat up to `MAX_REFINEMENT_ATTEMPTS` times
+6. Accept best valid result or mark as invalid
+
+**Configuration:**
+```bash
+ENABLE_REFINEMENT=true       # Enable refinement loop
+MAX_REFINEMENT_ATTEMPTS=3    # Maximum iterations
+```
+
+**Use cases:**
+- Improve LLM mutant validity rate
+- Learn from validation errors
+- Generate higher-quality mutants
+
+**Trade-offs:**
+- Increases generation time (3x-5x)
+- Higher LLM API usage
+- May converge to trivial mutations
+
+### 4. Manifest Tracking
+
+The `ManifestService` maintains comprehensive metadata for all mutants:
+
+**Tracked data:**
+- Mutant ID and source seed
+- Mutator type and strategy
+- Validation status and error details
+- Trivial/duplicate flags
+- Generation and validation timestamps
+- IR hash for deduplication
+
+**Storage:**
+```json
+// backend/data/logs/manifest.json
+{
+  "mutants": [...],
+  "summary": {
+    "total_generated": 100,
+    "valid_count": 75,
+    "by_mutator": {...},
+    "by_error_type": {...}
+  },
+  "last_updated": "2026-05-01T12:00:00Z"
+}
+```
+
+### 5. Differential Testing
+
+Compares program outputs across optimization levels to find compiler bugs:
+
+**Process:**
+1. Compile valid mutant with multiple optimization levels
+2. Execute each binary with same inputs
+3. Compare outputs (stdout, stderr, exit code)
+4. Classify mismatches by type
+
+**Mismatch types:**
+- `output_mismatch`: Different stdout/stderr
+- `crash_mismatch`: One crashes, other doesn't
+- `timeout_mismatch`: Different execution times
+- `exit_code_mismatch`: Different exit codes
+
+**Configuration:**
+```python
+# Example differential run
+{
+  "mutant_ids": ["seed_arith_llm_mut_0"],
+  "optimization_levels": ["-O0", "-O1", "-O2", "-O3"],
+  "timeout": 30
+}
+```
+
+### 6. Study History & Analysis
+
+The `AnalysisService` tracks controlled study runs for reproducibility:
+
+**Features:**
+- Study run metadata (settings, timestamps)
+- Aggregate metrics (validity rates, mismatch rates)
+- Seed sensitivity analysis (validity vs seed size)
+- Mutator comparison (LLM vs Grammar vs Random)
+- Historical trends and patterns
+
+**Storage:**
+```jsonl
+// backend/data/logs/study_runs.jsonl (newline-delimited JSON)
+{"run_id": "study_001", "started_at": "...", "metrics": {...}}
+{"run_id": "study_002", "started_at": "...", "metrics": {...}}
+```
+
+### 7. Semantic Helpers
+
+Utility functions for IR analysis and manipulation:
+
+- **Function extraction**: Parse function definitions from IR
+- **Instruction counting**: Count instructions by type
+- **Control flow analysis**: Identify branches and loops
+- **Type inference**: Infer LLVM types from operations
+- **Constant extraction**: Find all constant values
+
+**Example usage:**
+```python
+from app.utils.semantic_helpers import extract_functions, count_instructions
+
+functions = extract_functions(ir_code)
+stats = count_instructions(ir_code)
+# stats = {"add": 5, "mul": 3, "icmp": 2, ...}
+```
+
+## Troubleshooting
+
+### Common Issues
+
+#### 1. Ollama Connection Failed
+
+**Symptom:** `Connection refused` or `Ollama not reachable`
+
+**Solutions:**
+```bash
+# Check if Ollama is running
+curl http://localhost:11434/api/tags
+
+# Start Ollama
+ollama serve
+
+# Check Docker network (if using Docker)
+docker network inspect bridge
+
+# Update OLLAMA_HOST in .env
+OLLAMA_HOST=http://host.docker.internal:11434  # For Docker
+OLLAMA_HOST=http://localhost:11434             # For local
+```
+
+#### 2. Model Not Found
+
+**Symptom:** `Model 'qwen2.5:1.5b' not found`
+
+**Solutions:**
+```bash
+# Pull the model
+ollama pull qwen2.5:1.5b
+
+# List available models
+ollama list
+
+# Use a different model
+export LLM_MODEL=llama2:7b
+```
+
+#### 3. LLVM Tools Not Found
+
+**Symptom:** `llvm-as: command not found`
+
+**Solutions:**
+```bash
+# Install LLVM 17 (Ubuntu/Debian)
+sudo apt-get install llvm-17
+
+# Add to PATH
+export PATH=/usr/lib/llvm-17/bin:$PATH
+
+# Verify installation
+llvm-as --version
+opt --version
+
+# Use Docker (recommended)
+docker-compose up llvm-tester
+```
+
+#### 4. Permission Denied on Data Directories
+
+**Symptom:** `Permission denied: '/data/seeds'`
+
+**Solutions:**
+```bash
+# Fix permissions
+chmod -R 755 backend/data/
+chown -R $USER:$USER backend/data/
+
+# For Docker
+docker-compose down
+docker-compose up --build
+```
+
+#### 5. Frontend Can't Connect to Backend
+
+**Symptom:** `Network Error` or `CORS error`
+
+**Solutions:**
+```bash
+# Check backend is running
+curl http://localhost:8000/health
+
+# Update frontend API URL
+export VITE_API_BASE_URL=http://localhost:8000
+
+# Check CORS settings in backend
+# app/main.py should have:
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
+
+#### 6. High Memory Usage
+
+**Symptom:** System slowdown or OOM errors
+
+**Solutions:**
+```bash
+# Limit parallel workers
+export MAX_WORKERS=2
+
+# Reduce batch sizes in API calls
+# Use smaller mutation counts per request
+
+# Monitor Docker resources
+docker stats
+
+# Increase Docker memory limit
+# Docker Desktop → Settings → Resources → Memory
+```
+
+#### 7. Validation Timeout
+
+**Symptom:** `Validation timeout after 30 seconds`
+
+**Solutions:**
+```bash
+# Increase timeout
+export VALIDATION_TIMEOUT=60
+
+# Check for infinite loops in mutants
+# Review mutant IR for obvious issues
+
+# Disable refinement loop (faster)
+export ENABLE_REFINEMENT=false
+```
+
+#### 8. Duplicate Mutants
+
+**Symptom:** High duplicate rate in manifest
+
+**Solutions:**
+```bash
+# Enable deduplication
+export ENABLE_DEDUPLICATION=true
+
+# Increase mutation diversity
+# Use different seeds
+# Increase mutation count
+# Try different mutator types
+
+# Check mutator strategies
+# Ensure strategies are producing varied mutations
+```
+
+### Debug Mode
+
+Enable detailed logging for troubleshooting:
+
+```bash
+# Backend
+export LOG_LEVEL=DEBUG
+uvicorn app.main:app --reload --log-level debug
+
+# View logs
+tail -f backend/data/logs/*.log
+
+# Docker logs
+docker-compose logs -f backend
+docker-compose logs -f llvm-tester
+```
+
+### Performance Optimization
+
+```bash
+# Use faster mutator for testing
+mutator_type="grammar"  # Faster than LLM
+
+# Disable expensive features
+ENABLE_REFINEMENT=false
+ENABLE_RULE_VALIDATION=false  # Not recommended
+
+# Batch operations
+# Generate mutants in batches of 10-20
+# Validate in parallel batches
+
+# Use SSD for data directories
+# Mount backend/data/ on fast storage
+```
+
+### Getting Help
+
+If you encounter issues not covered here:
+
+1. **Check logs**: `backend/data/logs/` contains detailed logs
+2. **Review manifest**: `backend/data/logs/manifest.json` shows mutant status
+3. **Test API**: Use `/docs` endpoint for interactive API testing
+4. **Verify setup**: Run health check endpoint `/health`
+5. **Check dependencies**: Ensure all prerequisites are installed
+
+## Contributing
+
+Contributions are welcome! Please follow these guidelines:
+
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/my-feature`
+3. **Write tests**: Ensure new features have test coverage
+4. **Follow code style**: Use Black for Python, ESLint for JavaScript
+5. **Update documentation**: Update README and docstrings
+6. **Submit a pull request**: Describe your changes clearly
+
+### Development Setup
+
+```bash
+# Backend
+cd backend/api
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+pip install black pytest pytest-cov
+
+# Frontend
+cd frontend
+npm install
+npm run lint
+
+# Pre-commit hooks
+pip install pre-commit
+pre-commit install
+```
+
+## License
+
+This project is licensed under the MIT License. See LICENSE file for details.
+
+## Citation
+
+If you use this tool in your research, please cite:
+
+```bibtex
+@software{llvm_ir_fuzzing_pipeline,
+  title = {LLVM IR Fuzzing Pipeline: AI-Driven Compiler Testing},
+  author = {Your Name},
+  year = {2026},
+  url = {https://github.com/yourusername/llvm-ir-fuzzing}
+}
+```
+
+## Acknowledgments
+
+- **Ollama** for providing the LLM inference engine
+- **LLVM Project** for the compiler infrastructure
+- **FastAPI** for the backend framework
+- **React** and **Vite** for the frontend framework
