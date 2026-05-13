@@ -309,6 +309,47 @@ def validate_batch(mutant_ids: list[str]) -> list[dict]:
     """Validate a list of mutant IDs and return per-mutant results."""
     results = []
     for mid in mutant_ids:
+        # If the mutant was already validated and moved to VALID_DIR/INVALID_DIR,
+        # avoid re-running llvm-as/opt which looks for files in the original
+        # mutator output directories. Prefer returning the existing log entry
+        # when present, otherwise report current on-disk status.
+        log_file = LOGS_DIR / "validity_logs.json"
+        if (VALID_DIR / f"{mid}.ll").exists() or (INVALID_DIR / f"{mid}.ll").exists():
+            existing_entry = None
+            if log_file.exists():
+                try:
+                    with open(log_file, "r") as f:
+                        logs = json.load(f)
+                    for e in logs:
+                        if e.get("mutant_id") == mid:
+                            existing_entry = e
+                            break
+                except Exception:
+                    existing_entry = None
+
+            if existing_entry is not None:
+                results.append(existing_entry)
+                continue
+            else:
+                # No log entry found — return a best-effort status from file location
+                is_in_valid = (VALID_DIR / f"{mid}.ll").exists()
+                results.append({
+                    "mutant_id": mid,
+                    "seed_name": _extract_seed_name(mid) or "",
+                    "mutator_type": "unknown",
+                    "mutation_strategy": "",
+                    "is_valid": bool(is_in_valid),
+                    "error_type": None if is_in_valid else "other",
+                    "verifier_output": "Already validated (no log entry).",
+                    "trivial": False,
+                    "is_duplicate": False,
+                    "content_hash": None,
+                    "rule_check_passed": None,
+                    "timeout_occurred": False,
+                    "created_at": datetime.datetime.utcnow().isoformat() + "Z",
+                    "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+                })
+                continue
         candidate_types = ["llm", "grammar", "random"]
         validated = False
         for candidate_type in candidate_types:

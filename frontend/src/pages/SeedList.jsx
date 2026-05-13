@@ -54,7 +54,7 @@ export default function SeedList({ onGenerate }) {
         <div>
           <input 
             type="file" 
-            accept=".ll" 
+            accept=".c,.ll" 
             id="seed-upload" 
             style={{ display: 'none' }} 
             onChange={handleFileUpload}
@@ -70,7 +70,7 @@ export default function SeedList({ onGenerate }) {
         </div>
       </div>
       {seeds.length === 0 ? (
-        <p className="empty">No seed files found in <code>seeds/</code>. Add <code>.ll</code> files to get started.</p>
+        <p className="empty">No seed files found in <code>seeds/</code>. Upload a <code>.c</code> or <code>.ll</code> file to get started.</p>
       ) : (
         <table id="seed-file-table">
           <thead>

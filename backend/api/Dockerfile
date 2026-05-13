@@ -8,7 +8,7 @@ FROM python:3.11-slim-bookworm
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install LLVM-17 and dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update -o Acquire::Retries=5 -o Acquire::http::Timeout=30 && apt-get install -y --no-install-recommends \
         wget \
         ca-certificates \
         gnupg \
@@ -16,7 +16,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor -o /etc/apt/trusted.gpg.d/llvm.gpg \
     && echo "deb http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm-17 main" \
        > /etc/apt/sources.list.d/llvm-17.list \
-    && apt-get update && apt-get install -y --no-install-recommends \
+    && apt-get update -o Acquire::Retries=5 -o Acquire::http::Timeout=30 \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
         clang-17 \
         llvm-17 \
         llvm-17-tools \
