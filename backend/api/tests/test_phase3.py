@@ -262,8 +262,8 @@ class TestManifestTracker:
         entry = ManifestEntry(
             mutant_id="test_mut_0",
             seed_name="test.ll",
-            source="llm",
-            mutation_type="arithmetic_substitution",
+            mutator_type="llm",
+            mutation_strategy="arithmetic_substitution",
             seed_ir_hash="abc123",
             is_valid=True,
             trivial=False,

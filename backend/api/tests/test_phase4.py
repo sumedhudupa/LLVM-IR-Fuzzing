@@ -794,8 +794,43 @@ class TestMutantServiceIntegration:
         try:
             result = asyncio.run(run_test())
         except Exception as e:
-            # Even if Ollama isn't running, the request should be structured correctly
-            assert "Ollama" in str(e) or "connection" in str(e).lower() or "HTTP" in str(e)
+            # If anything fails due to external LLM availability, ensure the error is recognizable.
+            msg = str(e).lower()
+            assert (
+                "llm provider" in msg
+                or "ollama" in msg
+                or "groq" in msg
+                or "connection" in msg
+                or "http" in msg
+            )
+
+
+class TestLLMProviderSelection:
+    def test_create_llm_client_selects_groq_when_configured(self, monkeypatch):
+        """Ensure provider switch selects Groq client without making network calls."""
+        import app.generate_mutants as gm
+
+        monkeypatch.setattr(gm, "LLM_PROVIDER", "groq")
+        monkeypatch.setattr(gm, "GROQ_API_KEY", "test-key")
+        monkeypatch.setattr(gm, "GROQ_MODEL", "llama-3.3-70b-versatile")
+
+        client = gm.create_llm_client()
+        assert isinstance(client, gm.GroqClient)
+        assert client.model == "llama-3.3-70b-versatile"
+
+    def test_groq_requires_api_key(self, monkeypatch):
+        """When LLM_PROVIDER=groq, missing key should fail early."""
+        import app.generate_mutants as gm
+
+        monkeypatch.setattr(gm, "LLM_PROVIDER", "groq")
+        monkeypatch.setattr(gm, "GROQ_API_KEY", "")
+        monkeypatch.setattr(gm, "GROQ_MODEL", "llama-3.3-70b-versatile")
+
+        try:
+            gm.create_llm_client()
+            assert False, "Expected ValueError"
+        except ValueError as e:
+            assert "groq_api_key" in str(e).lower()
 
 
 # ─────────────────────────────────────────────────────────────────────────────

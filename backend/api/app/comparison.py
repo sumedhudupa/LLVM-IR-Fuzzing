@@ -62,11 +62,14 @@ def compute_comparison_metrics() -> dict:
             "compile_or_link_errors": 0, "runtime_failures": 0,
         }
     
-    mutator_types = sorted({
+    found_types = {
         m.get("mutator_type", "unknown")
         for m in raw_mutants
         if m.get("mutator_type")
-    } or {"llm", "grammar", "random"})
+    }
+    # Backward compatibility: always include all expected mutator types so the UI
+    # can rely on stable keys even when logs only contain one type.
+    mutator_types = sorted(found_types | {"llm", "grammar", "random"})
     stats = {mutator_type: _init_stats() for mutator_type in mutator_types}
     
     # Map IDs for fast lookup

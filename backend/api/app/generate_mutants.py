@@ -12,12 +12,17 @@ Two mutators are provided:
 import re
 import datetime
 import asyncio
+import random
+import json
 from pathlib import Path
 
 import httpx
 
 from .config import (
     OLLAMA_HOST, LLM_MODEL,
+    LLM_PROVIDER,
+    GROQ_API_KEY, GROQ_BASE_URL, GROQ_MODEL, GROQ_MAX_TOKENS, GROQ_REASONING_FORMAT,
+    GROQ_MAX_RETRIES, GROQ_RETRY_BASE_SLEEP_S, GROQ_RETRY_MAX_SLEEP_S,
     SEED_DIR, MUTANT_DIR, GRAMMAR_DIR, LOGS_DIR, RANDOM_DIR,
     ENABLE_REFINEMENT, MAX_REFINEMENT_ATTEMPTS,
 )
@@ -188,6 +193,143 @@ class OllamaClient:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# GroqClient (OpenAI-compatible chat-completions)
+# ─────────────────────────────────────────────────────────────────────────────
+class GroqClient:
+    """Async HTTP wrapper for Groq (groq.com) OpenAI-compatible API."""
+
+    CHAT_COMPLETIONS_PATH = "/chat/completions"
+    MODELS_PATH = "/models"
+
+    def __init__(
+        self,
+        api_key: str = GROQ_API_KEY,
+        base_url: str = GROQ_BASE_URL,
+        model: str = GROQ_MODEL,
+        max_tokens: int = GROQ_MAX_TOKENS,
+        reasoning_format: str = GROQ_REASONING_FORMAT,
+        max_retries: int = GROQ_MAX_RETRIES,
+        retry_base_sleep_s: float = GROQ_RETRY_BASE_SLEEP_S,
+        retry_max_sleep_s: float = GROQ_RETRY_MAX_SLEEP_S,
+    ):
+        self.host = base_url.rstrip("/")
+        self.model = model
+        self.max_tokens = max_tokens
+        self.reasoning_format = reasoning_format.strip()
+
+        self.max_retries = max(0, int(max_retries))
+        self.retry_base_sleep_s = max(0.0, float(retry_base_sleep_s))
+        self.retry_max_sleep_s = max(0.0, float(retry_max_sleep_s))
+
+        if not api_key:
+            raise ValueError(
+                "GROQ_API_KEY is required when LLM_PROVIDER=groq. "
+                "Set GROQ_API_KEY (preferred) or GROK_API_KEY (legacy)."
+            )
+        self._api_key = api_key
+
+        self._chat_url = self.host + self.CHAT_COMPLETIONS_PATH
+        self._models_url = self.host + self.MODELS_PATH
+
+    def _headers(self) -> dict:
+        return {
+            "Authorization": f"Bearer {self._api_key}",
+            "Content-Type": "application/json",
+        }
+
+    async def generate(self, prompt: str, temperature: float = 0.7) -> str:
+        """POST to /chat/completions. Returns choices[0].message.content."""
+        payload: dict = {
+            "model": self.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": self.max_tokens,
+            "temperature": temperature,
+            "top_p": 0.90,
+        }
+        if self.reasoning_format:
+            payload["reasoning_format"] = self.reasoning_format
+
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            last_resp: httpx.Response | None = None
+            max_attempts = self.max_retries + 1
+
+            for attempt in range(1, max_attempts + 1):
+                logger.debug("POST %s  model=%s  temp=%.2f  attempt=%d/%d",
+                             self._chat_url, self.model, temperature, attempt, max_attempts)
+                resp = await client.post(self._chat_url, json=payload, headers=self._headers())
+                last_resp = resp
+
+                # Handle Groq rate limiting / transient upstream errors.
+                if resp.status_code in {429, 500, 502, 503, 504} and attempt < max_attempts:
+                    retry_after = resp.headers.get("retry-after")
+                    wait_s: float
+
+                    if retry_after:
+                        try:
+                            wait_s = float(retry_after)
+                        except ValueError:
+                            wait_s = self.retry_base_sleep_s * (2 ** (attempt - 1))
+                    else:
+                        wait_s = self.retry_base_sleep_s * (2 ** (attempt - 1))
+
+                    # Add small jitter to avoid thundering herd.
+                    wait_s = wait_s + random.uniform(0.0, 0.25)
+                    wait_s = min(wait_s, self.retry_max_sleep_s)
+                    wait_s = max(0.0, wait_s)
+
+                    logger.warning(
+                        "Groq request failed (HTTP %s). Backing off %.2fs (attempt %d/%d)",
+                        resp.status_code, wait_s, attempt, max_attempts,
+                    )
+                    await asyncio.sleep(wait_s)
+                    continue
+
+                resp.raise_for_status()
+                data = resp.json()
+                return data["choices"][0]["message"]["content"]
+
+            # Exhausted retries.
+            assert last_resp is not None
+            last_resp.raise_for_status()
+            return ""  # unreachable
+
+    async def check_alive(self) -> bool:
+        """Return True if Groq is reachable and the API key is accepted."""
+        try:
+            async with httpx.AsyncClient(timeout=8.0) as client:
+                r = await client.get(self._models_url, headers=self._headers())
+                return r.status_code == 200
+        except Exception:
+            return False
+
+    async def model_available(self) -> bool:
+        """Return True if GROQ_MODEL is listed by /models."""
+        try:
+            async with httpx.AsyncClient(timeout=8.0) as client:
+                r = await client.get(self._models_url, headers=self._headers())
+                r.raise_for_status()
+                items = r.json().get("data", [])
+                ids = [m.get("id", "") for m in items]
+                return self.model in ids
+        except Exception:
+            return False
+
+
+def create_llm_client():
+    if LLM_PROVIDER == "ollama":
+        return OllamaClient()
+    if LLM_PROVIDER == "groq":
+        return GroqClient(
+            api_key=GROQ_API_KEY,
+            base_url=GROQ_BASE_URL,
+            model=GROQ_MODEL,
+            max_tokens=GROQ_MAX_TOKENS,
+            reasoning_format=GROQ_REASONING_FORMAT,
+        )
+    raise ValueError(f"Unsupported LLM_PROVIDER: {LLM_PROVIDER}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # LLMMutator
 # ─────────────────────────────────────────────────────────────────────────────
 class LLMMutator:
@@ -198,7 +340,7 @@ class LLMMutator:
     """
 
     def __init__(self):
-        self.client = OllamaClient()
+        self.client = create_llm_client()
 
     # ── Prompt construction ──────────────────────────────────────────────────
 
@@ -308,14 +450,13 @@ class LLMMutator:
 
             try:
                 logger.info(
-                    "Ollama call | mutant=%s  strategy=%s  model=%s  temp=%.2f  attempt=%d/%d",
-                    mutant_id, strategy["name"], self.client.model, current_temp,
+                    "LLM call | provider=%s  mutant=%s  strategy=%s  model=%s  temp=%.2f  attempt=%d/%d",
+                    LLM_PROVIDER, mutant_id, strategy["name"], self.client.model, current_temp,
                     attempt, max_attempts if enable_refinement else 1,
                 )
                 raw = await self.client.generate(prompt, temperature=current_temp)
             except httpx.HTTPStatusError as exc:
-                logger.error("Ollama HTTP %s for %s: %s",
-                             exc.response.status_code, mutant_id, exc)
+                logger.error("LLM HTTP %s for %s: %s", exc.response.status_code, mutant_id, exc)
                 error_msg = f"HTTP error {exc.response.status_code}"
                 errors.append(error_msg)
                 attempt_metadata.append({
@@ -325,7 +466,7 @@ class LLMMutator:
                 })
                 continue
             except httpx.RequestError as exc:
-                logger.error("Ollama connection error for %s: %s", mutant_id, exc)
+                logger.error("LLM connection error for %s: %s", mutant_id, exc)
                 error_msg = f"Connection error: {exc}"
                 errors.append(error_msg)
                 attempt_metadata.append({
@@ -431,16 +572,16 @@ class LLMMutator:
         seed_ir = seed_path.read_text(encoding="utf-8")
         logger.info("Seed loaded: '%s'  (%d bytes)", seed_name, len(seed_ir))
 
-        # ── Ollama reachability check ─────────────────────────────────────────
+        # ── LLM provider reachability check ───────────────────────────────────
         if not await self.client.check_alive():
             raise RuntimeError(
-                f"Ollama not reachable at {self.client.host}. "
-                "Ensure Ollama is running (ollama serve) and OLLAMA_HOST is correct."
+                f"LLM provider '{LLM_PROVIDER}' not reachable at {self.client.host}. "
+                "Verify your provider configuration and connectivity."
             )
         if not await self.client.model_available():
             logger.warning(
-                "Model '%s' not found in Ollama – it may need to be pulled first: "
-                "ollama pull %s", self.client.model, self.client.model,
+                "Model '%s' not found in provider '%s' model list.",
+                self.client.model, LLM_PROVIDER,
             )
 
         written_ids: list[str] = []
@@ -462,6 +603,8 @@ class LLMMutator:
                 enable_refinement=enable_refinement,
                 max_attempts=max_attempts,
             )
+
+            metadata = {"provider": LLM_PROVIDER, "model": self.client.model, **(metadata or {})}
             if ok:
                 is_duplicate, content_hash = _deduplicate_candidate(ir_text, seen_hashes)
                 if is_duplicate:
@@ -479,6 +622,26 @@ class LLMMutator:
                     continue
                 out_path = MUTANT_DIR / f"{mutant_id}.ll"
                 out_path.write_text(ir_text, encoding="utf-8")
+                    # Write a sidecar metadata JSON next to the mutant file so consumers
+                    # can inspect which LLM/provider/settings produced this mutant.
+                    sidecar = {
+                        "mutant_id": mutant_id,
+                        "provider": LLM_PROVIDER,
+                        "model": self.client.model,
+                        "strategy": strategy["name"],
+                        "temperature": temperature,
+                        "seed_name": seed_name,
+                        "seed_size_bytes": len(seed_ir.encode("utf-8")),
+                        "content_hash": content_hash,
+                        "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
+                        "generation_metadata": metadata,
+                    }
+                    sidecar_path = MUTANT_DIR / f"{mutant_id}.meta.json"
+                    try:
+                        with open(sidecar_path, "w", encoding="utf-8") as sf:
+                            json.dump(sidecar, sf, indent=2)
+                    except Exception:
+                        logger.exception("Failed to write sidecar metadata for %s", mutant_id)
                 logger.info("Written: %s  (%d bytes)", out_path, len(ir_text))
                 written_ids.append(mutant_id)
                 _log_raw_mutant(

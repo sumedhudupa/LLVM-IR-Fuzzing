@@ -1,10 +1,10 @@
 # LLVM IR Fuzzing Pipeline
 
-> AI-driven LLVM IR mutation, validity filtering, and differential testing using Ollama LLMs.
+> AI-driven LLVM IR mutation, validity filtering, and differential testing using Ollama or Groq LLMs.
 
 ## Project Overview
 
-This tool uses large language models (via Ollama) to mutate LLVM IR seed files, validates the output with `llvm-as` and `opt -passes=verify`, then runs differential testing (`-O0` vs `-O2`) to discover compiler bugs. The system features three mutation strategies (LLM-guided, grammar-based, and random), comprehensive validation with rule-based pre-checks, IR deduplication, and a React-based dashboard for monitoring and analysis.
+This tool uses large language models (via Ollama or Groq) to mutate LLVM IR seed files, validates the output with `llvm-as` and `opt -passes=verify`, then runs differential testing (`-O0` vs `-O2`) to discover compiler bugs. The system features three mutation strategies (LLM-guided, grammar-based, and random), comprehensive validation with rule-based pre-checks, IR deduplication, and a React-based dashboard for monitoring and analysis.
 
 ## Table of Contents
 
@@ -329,8 +329,27 @@ Configure the system using environment variables in `.env` or via Docker Compose
 
 | Variable | Default | Description |
 |---|---|---|
+| `LLM_PROVIDER` | `ollama` | LLM provider used by `mutator_type="llm"` (`ollama` or `groq`) |
 | `OLLAMA_HOST` | `http://host.docker.internal:11434` | Ollama API endpoint URL |
 | `LLM_MODEL` | `qwen2.5:1.5b` | LLM model for IR mutation |
+
+### Groq Configuration (when `LLM_PROVIDER=groq`)
+
+| Variable | Default | Description |
+|---|---|---|
+| `GROQ_API_KEY` | *(required)* | Groq API key (preferred). `GROK_API_KEY` is supported as a legacy alias |
+| `GROQ_BASE_URL` | `https://api.groq.com/openai/v1` | Groq OpenAI-compatible base URL |
+| `GROQ_MODEL` | `llama-3.3-70b-versatile` | Groq model used for mutation |
+| `GROQ_MAX_TOKENS` | `1500` | Max tokens for the mutation response |
+| `GROQ_REASONING_FORMAT` | *(empty)* | For Qwen reasoning models set to `hidden` to avoid thinking tokens |
+| `GROQ_MAX_RETRIES` | `6` | Retries on rate limit (HTTP 429) and transient 5xx |
+| `GROQ_RETRY_BASE_SLEEP_S` | `1.0` | Base sleep seconds for exponential backoff |
+| `GROQ_RETRY_MAX_SLEEP_S` | `30.0` | Max sleep seconds per retry (cap) |
+
+Recommended Groq models (ranked for single-edit LLVM IR mutation):
+- Tier 1: `qwen/qwen-3-32b` (preview; use `GROQ_REASONING_FORMAT=hidden`), `llama-3.3-70b-versatile` (production), `moonshotai/kimi-k2-instruct-0905` (preview; large context)
+- Tier 2: `openai/gpt-oss-20b`, `meta-llama/llama-4-scout-17b-16e-instruct`
+- Tier 3 (avoid): `llama-3.1-8b-instant`, `openai/gpt-oss-120b`
 
 ### Directory Paths
 
@@ -370,8 +389,21 @@ Configure the system using environment variables in `.env` or via Docker Compose
 
 ```bash
 # Core
+LLM_PROVIDER=ollama
 OLLAMA_HOST=http://localhost:11434
 LLM_MODEL=qwen2.5:1.5b
+
+# Groq (when LLM_PROVIDER=groq)
+# GROQ_API_KEY=your-key-here
+GROQ_BASE_URL=https://api.groq.com/openai/v1
+GROQ_MODEL=llama-3.3-70b-versatile
+GROQ_MAX_TOKENS=1500
+# GROQ_REASONING_FORMAT=hidden
+
+# Groq retry/backoff (handles 429 Too Many Requests)
+GROQ_MAX_RETRIES=6
+GROQ_RETRY_BASE_SLEEP_S=1.0
+GROQ_RETRY_MAX_SLEEP_S=30.0
 
 # Paths (relative to project root)
 SEED_DIR=./backend/data/seeds
@@ -1015,6 +1047,15 @@ ollama list
 # Use a different model
 export LLM_MODEL=llama2:7b
 ```
+
+#### 2b. Groq Rate Limit (HTTP 429)
+
+**Symptom:** `429 Too Many Requests` while generating mutants with `LLM_PROVIDER=groq`
+
+**Solutions:**
+- Reduce request volume: lower `count`, increase time between runs
+- Reduce token usage: lower `GROQ_MAX_TOKENS` if output truncation is not occurring
+- Tune retry/backoff: `GROQ_MAX_RETRIES`, `GROQ_RETRY_BASE_SLEEP_S`, `GROQ_RETRY_MAX_SLEEP_S`
 
 #### 3. LLVM Tools Not Found
 
