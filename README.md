@@ -20,6 +20,87 @@ This tool uses large language models (via Ollama) to mutate LLVM IR seed files, 
 - [Advanced Features](#advanced-features)
 - [Troubleshooting](#troubleshooting)
 
+## Documentation
+
+| Document | Description |
+|---|---|
+| [README.md](README.md) | This file — what the project is and how to run it |
+| [DESIGN.md](DESIGN.md) | Design approach, architecture, and alternatives considered |
+| [IMPLEMENTATION.md](IMPLEMENTATION.md) | LLVM IR details, toolchain integration, mutation techniques |
+| [EVALUATION.md](EVALUATION.md) | Metrics, baseline comparison, ≥7 test cases, demo instructions |
+
+## Quick Start (Scripts)
+
+```bash
+# 1. Build everything (Docker images + seed deployment + model pull)
+./build.sh
+
+# 2. Run the pipeline
+./run.sh
+
+# 3. Run with automated evaluation across all test cases
+./run.sh --eval
+
+# 4. Stop all services
+./run.sh --stop
+
+# 5. View live logs
+./run.sh --logs
+```
+
+## Repository Structure
+
+```
+.
+├── README.md                    # What + How to run
+├── DESIGN.md                    # Approach + Alternatives
+├── IMPLEMENTATION.md            # LLVM details
+├── EVALUATION.md                # Metrics + Comparison + Test cases
+├── build.sh                     # → scripts/build.sh
+├── run.sh                       # → scripts/run.sh
+├── docker-compose.yml           # Multi-service orchestration
+│
+├── scripts/                     # Build and run scripts
+│   ├── build.sh                 # Build Docker images, deploy seeds
+│   └── run.sh                   # Start services, run evaluation
+│
+├── src/                         # Source code directory (see README inside)
+│   └── README.md                # Maps to actual source locations
+│
+├── testcases/                   # LLVM IR seed files for evaluation
+│   ├── seed_arith.ll            # Basic arithmetic (exit code: 50)
+│   ├── seed_branch.ll           # Conditional branching (exit code: 1)
+│   ├── seed_loop.ll             # Loop with PHI nodes (exit code: 10)
+│   ├── seed_multifunction.ll    # Multiple functions (exit code: 42)
+│   ├── seed_bitwise.ll          # Bitwise operations (exit code: 63)
+│   ├── seed_memory.ll           # Memory ops (exit code: 50)
+│   └── seed_nested_branch.ll    # Nested conditionals (exit code: 100)
+│
+├── backend/                     # Backend services
+│   ├── api/                     # FastAPI application (src/)
+│   │   ├── app/                 # Main application code
+│   │   │   ├── main.py          # Entry point
+│   │   │   ├── config.py        # Configuration
+│   │   │   ├── generate_mutants.py  # Mutation engine
+│   │   │   ├── filter_valid.py  # Validation pipeline
+│   │   │   ├── comparison.py    # Metrics engine
+│   │   │   ├── models/          # Pydantic schemas
+│   │   │   ├── routes/          # API endpoints
+│   │   │   ├── services/        # Business logic
+│   │   │   └── utils/           # Helpers (rule validation, IR parsing)
+│   │   └── tests/               # Test suites (54+ tests)
+│   ├── llvm-tester/             # LLVM-17 validation container
+│   └── data/                    # Runtime data (seeds, mutants, logs)
+│
+├── frontend/                    # React + Vite dashboard
+│   └── src/pages/               # UI pages (5 views)
+│
+└── docs/                        # Additional documentation
+    ├── PAPER.tex                 # IEEE research paper
+    ├── FINAL_REPORT.md           # Project report
+    └── SYNOPSIS.md               # Project synopsis
+```
+
 ## Prerequisites
 
 Before running this project, ensure you have:
