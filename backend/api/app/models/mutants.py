@@ -20,6 +20,7 @@ class GenerateMutantsRequest(BaseModel):
     count: int = Field(default=5, ge=1, description="Number of mutants to generate")
     enable_refinement: bool = Field(default=False, description="Whether to retry failed LLM generations with error feedback")
     max_attempts: int = Field(default=3, ge=1, description="Max attempts if refinement is enabled")
+    run_tag: str | None = Field(default=None, description="Optional run tag to separate LLM model runs")
 
 
 class GenerateMutantsResponse(BaseModel):

@@ -11,6 +11,7 @@ from app.models.analysis import (
     SeedSensitivityResponse,
     StudyHistoryResponse,
     ManifestResponse,
+    LLMSummaryResponse,
 )
 from app.services.analysis_service import AnalysisService
 from app.utils.logger import get_logger
@@ -84,6 +85,19 @@ async def get_manifest():
     logger.info("get_manifest called")
     try:
         return await AnalysisService.get_manifest()
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@router.get(
+    "/llm-summary",
+    response_model=LLMSummaryResponse,
+    summary="Get per-LLM benchmark summary",
+)
+async def get_llm_summary() -> LLMSummaryResponse:
+    logger.info("get_llm_summary called")
+    try:
+        return await AnalysisService.get_llm_summary()
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 

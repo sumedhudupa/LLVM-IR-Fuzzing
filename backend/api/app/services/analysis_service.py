@@ -5,6 +5,7 @@ Analysis services for invalid taxonomy and controlled study runs.
 import datetime
 import json
 import re
+import csv
 from collections import Counter
 from pathlib import Path
 
@@ -20,6 +21,9 @@ from app.utils.fs_helpers import append_json_log
 VALIDITY_LOG = LOGS_DIR / "validity_logs.json"
 STUDY_RUNS_LOG = LOGS_DIR / "study_runs.jsonl"
 RAW_MUTANTS_LOG = LOGS_DIR / "raw_mutants.json"
+RESULTS_CSV = LOGS_DIR / "results.csv"
+LLM_SUMMARY_CSV = LOGS_DIR / "llm_summary.csv"
+LLM_PER_SEED_SUMMARY_CSV = LOGS_DIR / "llm_per_seed_summary.csv"
 
 
 class AnalysisService:
@@ -112,6 +116,7 @@ class AnalysisService:
                         seed_name=seed_name,
                         mutator_type=mutator,
                         count=req.count_per_seed,
+                        run_tag=req.run_tag if mutator == "llm" else None,
                     )
                 )
 
@@ -293,4 +298,284 @@ class AnalysisService:
                 "by_error_type": {},
             }
         }
+
+    @staticmethod
+    async def get_llm_summary() -> dict:
+        """
+        Aggregate per-LLM metrics across raw_mutants, validity logs, and results.csv.
+        Returns a dict with per-LLM rows and per-seed rows, and writes summary CSVs.
+        """
+        raw_mutants = AnalysisService._load_json_log(RAW_MUTANTS_LOG)
+        validity_logs = AnalysisService._load_validity_logs()
+
+        results_rows = []
+        if RESULTS_CSV.exists():
+            with open(RESULTS_CSV, newline="") as f:
+                results_rows = list(csv.DictReader(f))
+
+        def _safe_int(value: object) -> int | None:
+            try:
+                return int(value)
+            except (TypeError, ValueError):
+                return None
+
+        def _safe_float(value: object) -> float | None:
+            try:
+                return float(value)
+            except (TypeError, ValueError):
+                return None
+
+        def _infer_llm_key(raw_entry: dict) -> tuple[str, str | None, str | None, str | None]:
+            meta = raw_entry.get("metadata") or {}
+            run_tag = raw_entry.get("run_tag") or meta.get("run_tag")
+            provider = meta.get("provider") or raw_entry.get("provider")
+            model = meta.get("model") or raw_entry.get("model")
+
+            if run_tag:
+                return run_tag, run_tag, provider, model
+            if provider and model:
+                return f"{provider}/{model}", None, provider, model
+            if model:
+                return model, None, provider, model
+            if provider:
+                return provider, None, provider, None
+            return "unknown", None, None, None
+
+        error_keys = ["syntax", "ssa", "type", "cfg", "undef", "other", "timeout"]
+
+        def _init_stats(llm_key: str, run_tag: str | None, provider: str | None, model: str | None,
+                        seed_name: str | None = None) -> dict:
+            return {
+                "llm_key": llm_key,
+                "run_tag": run_tag,
+                "provider": provider,
+                "model": model,
+                "seed_name": seed_name,
+                "generated": 0,
+                "duplicate_skipped": 0,
+                "valid": 0,
+                "invalid": 0,
+                "diff_total": 0,
+                "diff_mismatches": 0,
+                "attempts_sum": 0,
+                "attempts_count": 0,
+                "gen_time_sum": 0.0,
+                "gen_time_count": 0,
+                "refinement_success": 0,
+                "refinement_count": 0,
+                "errors": {k: 0 for k in error_keys},
+            }
+
+        def _add_generation(s: dict, status: str) -> None:
+            if status == "duplicate_skipped":
+                s["duplicate_skipped"] += 1
+            else:
+                s["generated"] += 1
+
+        def _add_meta(s: dict, meta: dict) -> None:
+            attempts_made = _safe_int(meta.get("attempts_made"))
+            if attempts_made is not None:
+                s["attempts_sum"] += attempts_made
+                s["attempts_count"] += 1
+
+            gen_time_ms = _safe_float(meta.get("generation_time_ms"))
+            if gen_time_ms is not None:
+                s["gen_time_sum"] += gen_time_ms
+                s["gen_time_count"] += 1
+
+            refinement_succeeded = meta.get("refinement_succeeded")
+            if refinement_succeeded is not None:
+                s["refinement_count"] += 1
+                if bool(refinement_succeeded):
+                    s["refinement_success"] += 1
+
+        def _add_validity(s: dict, vlog: dict) -> None:
+            if vlog.get("is_valid"):
+                s["valid"] += 1
+            else:
+                s["invalid"] += 1
+                etype = (vlog.get("error_type") or "other").strip().lower()
+                if etype not in error_keys:
+                    etype = "other"
+                s["errors"][etype] += 1
+
+        def _add_diff(s: dict, row: dict) -> None:
+            s["diff_total"] += 1
+            if str(row.get("is_mismatch", "")).lower() == "true":
+                s["diff_mismatches"] += 1
+
+        def _build_row(s: dict, include_seed: bool = False) -> dict:
+            generated = s["generated"]
+            valid = s["valid"]
+            invalid = s["invalid"]
+            diff_total = s["diff_total"]
+            diff_mismatches = s["diff_mismatches"]
+
+            validity_rate = round(valid / generated, 4) if generated else 0.0
+            bug_rate = round(diff_mismatches / diff_total, 4) if diff_total else 0.0
+            avg_generation_ms = (
+                round(s["gen_time_sum"] / s["gen_time_count"], 2)
+                if s["gen_time_count"]
+                else None
+            )
+            avg_attempts = (
+                round(s["attempts_sum"] / s["attempts_count"], 2)
+                if s["attempts_count"]
+                else None
+            )
+            refinement_success_rate = (
+                round(s["refinement_success"] / s["refinement_count"], 4)
+                if s["refinement_count"]
+                else None
+            )
+
+            row = {
+                "llm_key": s["llm_key"],
+                "run_tag": s["run_tag"],
+                "provider": s["provider"],
+                "model": s["model"],
+                "generated": generated,
+                "valid": valid,
+                "invalid": invalid,
+                "duplicate_skipped": s["duplicate_skipped"],
+                "validity_rate": validity_rate,
+                "diff_total": diff_total,
+                "diff_mismatches": diff_mismatches,
+                "bug_rate": bug_rate,
+                "avg_generation_ms": avg_generation_ms,
+                "avg_attempts": avg_attempts,
+                "refinement_success_rate": refinement_success_rate,
+                "error_syntax": s["errors"]["syntax"],
+                "error_ssa": s["errors"]["ssa"],
+                "error_type": s["errors"]["type"],
+                "error_cfg": s["errors"]["cfg"],
+                "error_undef": s["errors"]["undef"],
+                "error_other": s["errors"]["other"],
+                "error_timeout": s["errors"]["timeout"],
+            }
+            if include_seed:
+                row["seed_name"] = s["seed_name"] or "unknown"
+            return row
+
+        stats: dict[str, dict] = {}
+        per_seed_stats: dict[tuple[str, str], dict] = {}
+        id_to_key: dict[str, str] = {}
+        id_to_seed: dict[str, str] = {}
+
+        for entry in raw_mutants:
+            if entry.get("mutator_type") != "llm":
+                continue
+
+            mutant_id = entry.get("id") or entry.get("mutant_id")
+            if not mutant_id:
+                continue
+
+            seed_name = entry.get("seed_name") or "unknown"
+            llm_key, run_tag, provider, model = _infer_llm_key(entry)
+
+            if llm_key not in stats:
+                stats[llm_key] = _init_stats(llm_key, run_tag, provider, model)
+
+            seed_key = (llm_key, seed_name)
+            if seed_key not in per_seed_stats:
+                per_seed_stats[seed_key] = _init_stats(llm_key, run_tag, provider, model, seed_name)
+
+            id_to_key[mutant_id] = llm_key
+            id_to_seed[mutant_id] = seed_name
+
+            status = entry.get("status", "generated")
+            _add_generation(stats[llm_key], status)
+            _add_generation(per_seed_stats[seed_key], status)
+
+            meta = entry.get("metadata") or {}
+            _add_meta(stats[llm_key], meta)
+            _add_meta(per_seed_stats[seed_key], meta)
+
+        for vlog in validity_logs:
+            mutant_id = vlog.get("mutant_id")
+            llm_key = id_to_key.get(mutant_id)
+            if not llm_key:
+                continue
+
+            seed_name = id_to_seed.get(mutant_id) or vlog.get("seed_name") or "unknown"
+            seed_key = (llm_key, seed_name)
+            if seed_key not in per_seed_stats:
+                s = stats.get(llm_key)
+                per_seed_stats[seed_key] = _init_stats(
+                    llm_key,
+                    s["run_tag"] if s else None,
+                    s["provider"] if s else None,
+                    s["model"] if s else None,
+                    seed_name,
+                )
+
+            _add_validity(stats[llm_key], vlog)
+            _add_validity(per_seed_stats[seed_key], vlog)
+
+        for row in results_rows:
+            mutant_id = row.get("mutant_id")
+            llm_key = id_to_key.get(mutant_id)
+            if not llm_key:
+                continue
+
+            seed_name = id_to_seed.get(mutant_id) or "unknown"
+            seed_key = (llm_key, seed_name)
+            if seed_key not in per_seed_stats:
+                s = stats.get(llm_key)
+                per_seed_stats[seed_key] = _init_stats(
+                    llm_key,
+                    s["run_tag"] if s else None,
+                    s["provider"] if s else None,
+                    s["model"] if s else None,
+                    seed_name,
+                )
+
+            _add_diff(stats[llm_key], row)
+            _add_diff(per_seed_stats[seed_key], row)
+
+        rows = [_build_row(s) for s in stats.values()]
+        rows.sort(key=lambda r: r["llm_key"])
+
+        per_seed_rows = [_build_row(s, include_seed=True) for s in per_seed_stats.values()]
+        per_seed_rows.sort(key=lambda r: (r["llm_key"], r["seed_name"]))
+
+        csv_columns = [
+            "llm_key",
+            "run_tag",
+            "provider",
+            "model",
+            "generated",
+            "valid",
+            "invalid",
+            "duplicate_skipped",
+            "validity_rate",
+            "diff_total",
+            "diff_mismatches",
+            "bug_rate",
+            "avg_generation_ms",
+            "avg_attempts",
+            "refinement_success_rate",
+            "error_syntax",
+            "error_ssa",
+            "error_type",
+            "error_cfg",
+            "error_undef",
+            "error_other",
+            "error_timeout",
+        ]
+
+        with open(LLM_SUMMARY_CSV, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=csv_columns)
+            writer.writeheader()
+            for row in rows:
+                writer.writerow(row)
+
+        per_seed_columns = ["seed_name"] + csv_columns
+        with open(LLM_PER_SEED_SUMMARY_CSV, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=per_seed_columns)
+            writer.writeheader()
+            for row in per_seed_rows:
+                writer.writerow(row)
+
+        return {"llms": rows, "per_seed": per_seed_rows, "total": len(rows)}
 

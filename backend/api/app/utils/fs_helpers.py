@@ -6,16 +6,28 @@ Source: CONTEXT.json → database.tables[raw_mutants] (id field format)
 """
 import json
 import datetime
+import re
 from pathlib import Path
 
 
-def build_mutant_id(seed_name: str, mutator_type: str, index: int) -> str:
+def normalize_run_tag(run_tag: str) -> str:
+    tag = re.sub(r"[^A-Za-z0-9-]+", "-", run_tag.strip().lower())
+    tag = re.sub(r"-+", "-", tag).strip("-")
+    return tag
+
+
+def build_mutant_id(seed_name: str, mutator_type: str, index: int, run_tag: str | None = None) -> str:
     """
     Build a mutant ID following the format defined in CONTEXT.json:
         database.tables[raw_mutants].fields[id]: "seed_name_mut_idx"
     Example: "add_llvm_mut_0", "loop_grammar_mut_3"
+    If run_tag is provided, it is inserted before the "_mut_" suffix.
     """
     stem = Path(seed_name).stem
+    if run_tag:
+        safe_tag = normalize_run_tag(run_tag)
+        if safe_tag:
+            return f"{stem}_{mutator_type}_{safe_tag}_mut_{index}"
     return f"{stem}_{mutator_type}_mut_{index}"
 
 

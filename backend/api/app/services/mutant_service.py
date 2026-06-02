@@ -66,7 +66,8 @@ class MutantService:
                 req.seed_name, 
                 req.count,
                 enable_refinement=req.enable_refinement,
-                max_attempts=req.max_attempts
+                max_attempts=req.max_attempts,
+                run_tag=req.run_tag,
             )
         elif req.mutator_type == "random":
             mutator     = RandomMutator()

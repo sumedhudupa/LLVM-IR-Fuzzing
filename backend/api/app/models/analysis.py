@@ -18,6 +18,7 @@ class StudyRunRequest(BaseModel):
     baseline_opt: str = Field(default="-O0")
     target_opt: str = Field(default="-O2")
     mutators: list[Literal["llm", "grammar", "random"]] = Field(default=["llm", "grammar", "random"])
+    run_tag: str | None = Field(default=None, description="Optional run tag to separate LLM model runs")
 
 
 class StudyRunResponse(BaseModel):
@@ -76,3 +77,60 @@ class ManifestResponse(BaseModel):
     generated_at: str
     mutants: list[ManifestEntryModel]
     summary: ManifestSummaryModel
+
+
+class LLMSummaryRow(BaseModel):
+    llm_key: str
+    run_tag: str | None = None
+    provider: str | None = None
+    model: str | None = None
+    generated: int
+    valid: int
+    invalid: int
+    duplicate_skipped: int
+    validity_rate: float
+    diff_total: int
+    diff_mismatches: int
+    bug_rate: float
+    avg_generation_ms: float | None = None
+    avg_attempts: float | None = None
+    refinement_success_rate: float | None = None
+    error_syntax: int = 0
+    error_ssa: int = 0
+    error_type: int = 0
+    error_cfg: int = 0
+    error_undef: int = 0
+    error_other: int = 0
+    error_timeout: int = 0
+
+
+class LLMSeedSummaryRow(BaseModel):
+    llm_key: str
+    run_tag: str | None = None
+    provider: str | None = None
+    model: str | None = None
+    seed_name: str
+    generated: int
+    valid: int
+    invalid: int
+    duplicate_skipped: int
+    validity_rate: float
+    diff_total: int
+    diff_mismatches: int
+    bug_rate: float
+    avg_generation_ms: float | None = None
+    avg_attempts: float | None = None
+    refinement_success_rate: float | None = None
+    error_syntax: int = 0
+    error_ssa: int = 0
+    error_type: int = 0
+    error_cfg: int = 0
+    error_undef: int = 0
+    error_other: int = 0
+    error_timeout: int = 0
+
+
+class LLMSummaryResponse(BaseModel):
+    llms: list[LLMSummaryRow]
+    per_seed: list[LLMSeedSummaryRow]
+    total: int

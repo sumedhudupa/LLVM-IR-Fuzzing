@@ -177,6 +177,7 @@ venv.bak/
 # Project specific outputs
 mutants_grammar/
 mutants_llm/
+mutants_random/
 valid_mutants/
 invalid_mutants/
 # Professionalized backend runtime layout

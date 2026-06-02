@@ -14,6 +14,7 @@ import datetime
 import asyncio
 import random
 import json
+import time
 from pathlib import Path
 
 import httpx
@@ -27,7 +28,7 @@ from .config import (
     ENABLE_REFINEMENT, MAX_REFINEMENT_ATTEMPTS,
 )
 from .utils.rule_validation import prevalidate_ir
-from .utils.fs_helpers import build_mutant_id, append_json_log
+from .utils.fs_helpers import build_mutant_id, append_json_log, normalize_run_tag
 from .utils.ir_helpers import (
     extract_ir,
     is_plausible_ir,
@@ -53,6 +54,7 @@ def _log_raw_mutant(
     path: str = "",
     content_hash: str | None = None,
     metadata: dict | None = None,
+    run_tag: str | None = None,
 ) -> None:
     entry = {
         "id": mutant_id,
@@ -65,6 +67,8 @@ def _log_raw_mutant(
         "content_hash": content_hash,
         "created_at": datetime.datetime.utcnow().isoformat() + "Z",
     }
+    if run_tag:
+        entry["run_tag"] = run_tag
     if metadata:
         entry["metadata"] = metadata
     append_json_log(RAW_MUTANTS_LOG, entry)
@@ -435,6 +439,7 @@ class LLMMutator:
         errors: list[str] = []
         attempt_metadata = []
         base_temperature = temperature
+        total_elapsed_ms = 0.0
 
         max_tries = max_attempts if enable_refinement else 1
         for attempt in range(1, max_tries + 1):
@@ -454,8 +459,12 @@ class LLMMutator:
                     LLM_PROVIDER, mutant_id, strategy["name"], self.client.model, current_temp,
                     attempt, max_attempts if enable_refinement else 1,
                 )
+                start_time = time.perf_counter()
                 raw = await self.client.generate(prompt, temperature=current_temp)
+                elapsed_ms = (time.perf_counter() - start_time) * 1000.0
             except httpx.HTTPStatusError as exc:
+                elapsed_ms = (time.perf_counter() - start_time) * 1000.0
+                total_elapsed_ms += elapsed_ms
                 logger.error("LLM HTTP %s for %s: %s", exc.response.status_code, mutant_id, exc)
                 error_msg = f"HTTP error {exc.response.status_code}"
                 errors.append(error_msg)
@@ -463,9 +472,13 @@ class LLMMutator:
                     "attempt_number": attempt,
                     "validation_result": "failed",
                     "error": error_msg,
+                    "temperature": current_temp,
+                    "elapsed_ms": round(elapsed_ms, 2),
                 })
                 continue
             except httpx.RequestError as exc:
+                elapsed_ms = (time.perf_counter() - start_time) * 1000.0
+                total_elapsed_ms += elapsed_ms
                 logger.error("LLM connection error for %s: %s", mutant_id, exc)
                 error_msg = f"Connection error: {exc}"
                 errors.append(error_msg)
@@ -473,8 +486,12 @@ class LLMMutator:
                     "attempt_number": attempt,
                     "validation_result": "failed",
                     "error": error_msg,
+                    "temperature": current_temp,
+                    "elapsed_ms": round(elapsed_ms, 2),
                 })
                 continue
+
+            total_elapsed_ms += elapsed_ms
 
             # ── Extract and Sanitize IR ──────────────────────────────────────
             ir = extract_ir(raw)
@@ -487,6 +504,8 @@ class LLMMutator:
                     "attempt_number": attempt,
                     "validation_result": "failed",
                     "error": error_msg,
+                    "temperature": current_temp,
+                    "elapsed_ms": round(elapsed_ms, 2),
                 })
                 continue
 
@@ -502,6 +521,8 @@ class LLMMutator:
                     "attempt_number": attempt,
                     "validation_result": "failed",
                     "error": error_msg,
+                    "temperature": current_temp,
+                    "elapsed_ms": round(elapsed_ms, 2),
                 })
                 continue
 
@@ -516,6 +537,8 @@ class LLMMutator:
                         "validation_result": "failed",
                         "error": error_msg,
                         "error_type": rule_result.error_type,
+                        "temperature": current_temp,
+                        "elapsed_ms": round(elapsed_ms, 2),
                     })
                     logger.warning("Refinement attempt %d failed for %s: %s",
                                    attempt, mutant_id, error_msg)
@@ -527,12 +550,15 @@ class LLMMutator:
             attempt_metadata.append({
                 "attempt_number": attempt,
                 "validation_result": "success",
+                "temperature": current_temp,
+                "elapsed_ms": round(elapsed_ms, 2),
             })
 
             refinement_metadata = {
                 "attempts_made": attempt,
                 "refinement_succeeded": attempt > 1,
                 "attempt_details": attempt_metadata,
+                "generation_time_ms": round(total_elapsed_ms, 2),
             }
             return ir, True, refinement_metadata
 
@@ -541,12 +567,20 @@ class LLMMutator:
             "attempts_made": max_attempts if enable_refinement else 1,
             "refinement_succeeded": False,
             "attempt_details": attempt_metadata,
+            "generation_time_ms": round(total_elapsed_ms, 2),
         }
         return errors[-1] if errors else "All attempts failed", False, refinement_metadata
 
     # ── Main pipeline ────────────────────────────────────────────────────────
 
-    async def run(self, seed_name: str, count: int, enable_refinement: bool = ENABLE_REFINEMENT, max_attempts: int = MAX_REFINEMENT_ATTEMPTS) -> list[str]:
+    async def run(
+        self,
+        seed_name: str,
+        count: int,
+        enable_refinement: bool = ENABLE_REFINEMENT,
+        max_attempts: int = MAX_REFINEMENT_ATTEMPTS,
+        run_tag: str | None = None,
+    ) -> list[str]:
         """
         Full LLM mutation pipeline for one seed file.
 
@@ -572,6 +606,8 @@ class LLMMutator:
         seed_ir = seed_path.read_text(encoding="utf-8")
         logger.info("Seed loaded: '%s'  (%d bytes)", seed_name, len(seed_ir))
 
+        run_tag_value = normalize_run_tag(run_tag) if run_tag else None
+
         # ── LLM provider reachability check ───────────────────────────────────
         if not await self.client.check_alive():
             raise RuntimeError(
@@ -590,7 +626,7 @@ class LLMMutator:
 
         for i in range(count):
             strategy    = MUTATION_STRATEGIES[i % len(MUTATION_STRATEGIES)]
-            mutant_id   = build_mutant_id(seed_name, "llm", i)
+            mutant_id   = build_mutant_id(seed_name, "llm", i, run_tag=run_tag_value)
             # Gradually raise temperature for more diverse outputs
             temperature = round(min(0.60 + i * 0.05, 0.90), 2)
 
@@ -604,7 +640,12 @@ class LLMMutator:
                 max_attempts=max_attempts,
             )
 
-            metadata = {"provider": LLM_PROVIDER, "model": self.client.model, **(metadata or {})}
+            metadata = metadata or {}
+            metadata["provider"] = LLM_PROVIDER
+            metadata["model"] = self.client.model
+            metadata["reasoning_format"] = getattr(self.client, "reasoning_format", "")
+            if run_tag_value:
+                metadata["run_tag"] = run_tag_value
             if ok:
                 is_duplicate, content_hash = _deduplicate_candidate(ir_text, seen_hashes)
                 if is_duplicate:
@@ -618,30 +659,33 @@ class LLMMutator:
                         status="duplicate_skipped",
                         content_hash=content_hash,
                         metadata=metadata,
+                        run_tag=run_tag_value,
                     )
                     continue
                 out_path = MUTANT_DIR / f"{mutant_id}.ll"
                 out_path.write_text(ir_text, encoding="utf-8")
-                    # Write a sidecar metadata JSON next to the mutant file so consumers
-                    # can inspect which LLM/provider/settings produced this mutant.
-                    sidecar = {
-                        "mutant_id": mutant_id,
-                        "provider": LLM_PROVIDER,
-                        "model": self.client.model,
-                        "strategy": strategy["name"],
-                        "temperature": temperature,
-                        "seed_name": seed_name,
-                        "seed_size_bytes": len(seed_ir.encode("utf-8")),
-                        "content_hash": content_hash,
-                        "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
-                        "generation_metadata": metadata,
-                    }
-                    sidecar_path = MUTANT_DIR / f"{mutant_id}.meta.json"
-                    try:
-                        with open(sidecar_path, "w", encoding="utf-8") as sf:
-                            json.dump(sidecar, sf, indent=2)
-                    except Exception:
-                        logger.exception("Failed to write sidecar metadata for %s", mutant_id)
+                # Write a sidecar metadata JSON next to the mutant file so consumers
+                # can inspect which LLM/provider/settings produced this mutant.
+                sidecar = {
+                    "mutant_id": mutant_id,
+                    "provider": LLM_PROVIDER,
+                    "model": self.client.model,
+                    "reasoning_format": getattr(self.client, "reasoning_format", ""),
+                    "run_tag": run_tag_value,
+                    "strategy": strategy["name"],
+                    "temperature": temperature,
+                    "seed_name": seed_name,
+                    "seed_size_bytes": len(seed_ir.encode("utf-8")),
+                    "content_hash": content_hash,
+                    "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
+                    "generation_metadata": metadata,
+                }
+                sidecar_path = MUTANT_DIR / f"{mutant_id}.meta.json"
+                try:
+                    with open(sidecar_path, "w", encoding="utf-8") as sf:
+                        json.dump(sidecar, sf, indent=2)
+                except Exception:
+                    logger.exception("Failed to write sidecar metadata for %s", mutant_id)
                 logger.info("Written: %s  (%d bytes)", out_path, len(ir_text))
                 written_ids.append(mutant_id)
                 _log_raw_mutant(
@@ -654,6 +698,7 @@ class LLMMutator:
                     path=str(out_path),
                     content_hash=content_hash,
                     metadata=metadata,
+                    run_tag=run_tag_value,
                 )
             else:
                 failed_count += 1
@@ -666,6 +711,7 @@ class LLMMutator:
                     seed_ir=seed_ir,
                     status="failed",
                     metadata=metadata,
+                    run_tag=run_tag_value,
                 )
 
             # ── Log per CONTEXT.json database.tables[raw_mutants] schema ───────

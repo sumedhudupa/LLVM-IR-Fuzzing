@@ -23,20 +23,40 @@ from .utils.ir_helpers import compute_ir_hash
 ErrorType = Literal["syntax", "ssa", "type", "cfg", "undef", "other", "timeout"] | None
 
 
+_MUTANT_ID_RE = re.compile(
+    r"^(?P<seed>.+?)_(?P<mutator>llm|grammar|random)(?:_(?P<run_tag>[A-Za-z0-9-]+))?_mut_\d+$"
+)
+
+
+def _parse_mutant_id(mutant_id: str) -> dict | None:
+    match = _MUTANT_ID_RE.match(mutant_id)
+    if not match:
+        return None
+    return match.groupdict()
+
+
 def _extract_seed_name(mutant_id: str) -> str | None:
-    """Extract seed name from mutant_id like 'seed_arith_llm_mut_0' -> 'seed_arith.ll'."""
-    # Remove _llm_ or _grammar_ suffix and everything after
-    import re
-    match = re.match(r'^(.+)_(llm|grammar|random)_mut_\d+$', mutant_id)
-    if match:
-        base = match.group(1)
-        # The base might have underscores from original filename
-        # Try common extensions
-        for ext in ['.ll', '']:
-            candidate = base + ext
-            if (SEED_DIR / candidate).exists():
-                return candidate
+    """Extract seed name from mutant_id like 'seed_arith_llm_x_mut_0' -> 'seed_arith.ll'."""
+    parsed = _parse_mutant_id(mutant_id)
+    if not parsed:
+        return None
+    base = parsed.get("seed") or ""
+    if not base:
+        return None
+    # The base might have underscores from original filename
+    # Try common extensions
+    for ext in [".ll", ""]:
+        candidate = base + ext
+        if (SEED_DIR / candidate).exists():
+            return candidate
     return None
+
+
+def _extract_run_tag(mutant_id: str) -> str | None:
+    parsed = _parse_mutant_id(mutant_id)
+    if not parsed:
+        return None
+    return parsed.get("run_tag") or None
 
 
 def _classify_error(stderr: str) -> ErrorType:
@@ -173,6 +193,7 @@ def validate_mutant(mutant_id: str, mutator_type: str = "llm") -> dict:
     log_entry = {
         "mutant_id": mutant_id,
         "seed_name": _extract_seed_name(mutant_id) or "",
+        "run_tag": _extract_run_tag(mutant_id),
         "mutator_type": mutator_type,
         "mutation_strategy": "",
         "is_valid": is_valid,
@@ -211,6 +232,7 @@ def _validate_mutant_worker(mutant_id: str, mutator_type: str, queue: mp.Queue) 
         queue.put({
             "mutant_id": mutant_id,
             "seed_name": _extract_seed_name(mutant_id) or "",
+            "run_tag": _extract_run_tag(mutant_id),
             "mutator_type": mutator_type,
             "mutation_strategy": "",
             "is_valid": False,
@@ -252,6 +274,7 @@ def _run_validation_isolated(mutant_id: str, mutator_type: str) -> dict:
         return {
             "mutant_id": mutant_id,
             "seed_name": _extract_seed_name(mutant_id) or "",
+            "run_tag": _extract_run_tag(mutant_id),
             "mutator_type": mutator_type,
             "mutation_strategy": "",
             "is_valid": False,
@@ -270,6 +293,7 @@ def _run_validation_isolated(mutant_id: str, mutator_type: str) -> dict:
         return {
             "mutant_id": mutant_id,
             "seed_name": _extract_seed_name(mutant_id) or "",
+            "run_tag": _extract_run_tag(mutant_id),
             "mutator_type": mutator_type,
             "mutation_strategy": "",
             "is_valid": False,
@@ -288,6 +312,7 @@ def _run_validation_isolated(mutant_id: str, mutator_type: str) -> dict:
         return {
             "mutant_id": mutant_id,
             "seed_name": _extract_seed_name(mutant_id) or "",
+            "run_tag": _extract_run_tag(mutant_id),
             "mutator_type": mutator_type,
             "mutation_strategy": "",
             "is_valid": False,
@@ -336,6 +361,7 @@ def validate_batch(mutant_ids: list[str]) -> list[dict]:
                 results.append({
                     "mutant_id": mid,
                     "seed_name": _extract_seed_name(mid) or "",
+                    "run_tag": _extract_run_tag(mid),
                     "mutator_type": "unknown",
                     "mutation_strategy": "",
                     "is_valid": bool(is_in_valid),
@@ -364,6 +390,7 @@ def validate_batch(mutant_ids: list[str]) -> list[dict]:
             results.append({
                 "mutant_id": mid,
                 "seed_name": _extract_seed_name(mid) or "",
+                "run_tag": _extract_run_tag(mid),
                 "mutator_type": "unknown",
                 "mutation_strategy": "",
                 "is_valid": False,
